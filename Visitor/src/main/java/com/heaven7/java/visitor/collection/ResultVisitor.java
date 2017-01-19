@@ -1,10 +1,12 @@
 package com.heaven7.java.visitor.collection;
 
+import com.heaven7.java.visitor.Visitor;
+
 /**
  * the result visitor
  * Created by heaven7 on 2017/1/16.
  */
-public interface ResultVisitor<T, Result> {
+public interface ResultVisitor<T, Result> extends Visitor{
 
     /**
      * called when visit the target element.
