@@ -1,6 +1,6 @@
 package com.heaven7.java.visitor.collection;
 
-public class Visitors {
+public final class Visitors {
 
 	@SuppressWarnings("unchecked")
 	public static <T>IterateVisitor<T> trueIterateVisitor(){

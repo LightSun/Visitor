@@ -2,13 +2,9 @@ package com.heaven7.java.visitor.collection;
 
 import java.util.Collection;
 import java.util.ListIterator;
+import static com.heaven7.java.visitor.collection.VisitService.*;
 
 public class Operation<T> {
-
-	private static final int OP_DELETE = 1;
-	private static final int OP_FILTER = 2;
-	private static final int OP_UPDATE = 3;
-	private static final int OP_INSERT = 4;
 
 	private int mOp;
 	private T mNewT;

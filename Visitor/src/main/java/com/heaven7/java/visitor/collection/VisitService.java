@@ -6,6 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import static com.heaven7.java.visitor.collection.VisitService.OP_DELETE;
+import static com.heaven7.java.visitor.collection.VisitService.OP_FILTER;
+import static com.heaven7.java.visitor.collection.VisitService.OP_INSERT;
+import static com.heaven7.java.visitor.collection.VisitService.OP_UPDATE;
 import static com.heaven7.java.visitor.util.Throwables.*;
 
 /**
@@ -17,46 +21,60 @@ import static com.heaven7.java.visitor.util.Throwables.*;
  * @param <T>
  *            the type of visit
  */
-public class VisitService<T> {
+public abstract class VisitService<T> {
 
 	/**
 	 * the visit rule: visit all.
 	 */
-	public static final int VISIT_RULE_ALL = 1;
+	public static final int VISIT_RULE_ALL = 11;
 	/**
-	 * the visit rule: until null
+	 * the visit rule: until success
 	 */
-	public static final int VISIT_RULE_UNTIL_SUCCESS = 2;
+	public static final int VISIT_RULE_UNTIL_SUCCESS = 12;
 	/**
-	 * the visit rule: until not null.
+	 * the visit rule: until failed.
 	 */
-	public static final int VISIT_RULE_UNTIL_FAILED = 3;
+	public static final int VISIT_RULE_UNTIL_FAILED = 13;
 
+	public static final int OP_DELETE = 1;
+	public static final int OP_FILTER = 2;
+	public static final int OP_UPDATE = 3;
+	public static final int OP_INSERT = 4;
+
+	private final ArrayList<Integer> mOrderOps = new ArrayList<Integer>(6);
+	private final ArrayList<Integer> mInterceptOps = new ArrayList<Integer>(6);
 	// OP_QUERY ;
 	// limitSize ,limit filter size. limit null size.
 
-	protected Collection<T> mCollection;
+	protected final Collection<T> mCollection;
 	protected List<Operation<T>> mInserts;
 	protected List<Operation<T>> mUpdates;
 	private Operation<T> mFilterOp;
 	private Operation<T> mDeleteOp;
 
-	protected VisitService() {
+	protected VisitService(Collection<T> collection) {
 		super();
-	}
-
-	public static <T> VisitService<T> newService() {
-		return new VisitService<T>();
-	}
-	public static <T> VisitService<T> newService(Collection<T> collection) {
-		return new VisitService<T>().view(collection);
-	}
-
-	public VisitService<T> view(Collection<T> collection) {
 		checkNull(collection);
-		reset();
 		this.mCollection = collection;
-		return this;
+
+		// by default only delete and fiter op will intercept iteration.
+		// that means if success the iterator will skip and continue next
+		// iteration.
+		mInterceptOps.add(OP_DELETE);
+		mInterceptOps.add(OP_FILTER);
+
+		/**
+		 * default order is delete -> filter -> update -> insert
+		 */
+		mOrderOps.add(OP_DELETE);
+		mOrderOps.add(OP_FILTER);
+		mOrderOps.add(OP_UPDATE);
+		mOrderOps.add(OP_INSERT);
+	}
+
+	public static <T> VisitService<T> from(Collection<T> collection) {
+		return new VisitService<T>(collection) {
+		};
 	}
 
 	public VisitService<T> filter(PredicateVisitor<? super T> filter) {
@@ -131,6 +149,27 @@ public class VisitService<T> {
 		info.setOriginSize(size);
 		info.setCurrentSize(size);
 
+		return visitImpl(rule, param, breakVisitor, info);
+	}
+
+	protected boolean onInterceptIteration(Iterator<T> it, T t, Object param, IterationInfo info) {
+		if (shouldDelete(t, param)) {
+			it.remove(); // 之前必须调用next().
+			info.incrementDelete();
+			return true;
+		}
+		if (shouldFilter(t, param)) {
+			info.incrementFilter();
+			return true;
+		}
+		if (handleUpdate(it, t, param)) {
+			info.incrementUpdate();
+		}
+		return false;
+	}
+
+	protected boolean visitImpl(int rule, Object param, IterateVisitor<? super T> breakVisitor,
+			final IterationInfo info) {
 		boolean result = false;
 		Boolean visitResult;
 
@@ -140,18 +179,10 @@ public class VisitService<T> {
 		case VISIT_RULE_UNTIL_FAILED: {
 			for (; it.hasNext();) {
 				T t = it.next();
-				if (shouldDelete(t, param)) {
-					it.remove();
-					info.incrementDelete();
+				if (onInterceptIteration(it, t, param, info)) {
 					continue;
 				}
-				if (shouldFilter(t, param)) {
-					info.incrementFilter();
-					continue;
-				}
-				if (handleUpdate(it, t, param)) {
-					info.incrementUpdate();
-				}
+				// insert, update(之后 是否continye ? ) . breakVisitor 访问顺序？
 				visitResult = breakVisitor.visit(t, param, info);
 				if (visitResult == null || !visitResult) {
 					result = true;
@@ -164,17 +195,8 @@ public class VisitService<T> {
 		case VISIT_RULE_UNTIL_SUCCESS: {
 			for (; it.hasNext();) {
 				T t = it.next();
-				if (shouldDelete(t, param)) {
-					it.remove();
-					info.incrementDelete();
+				if (onInterceptIteration(it, t, param, info)) {
 					continue;
-				}
-				if (shouldFilter(t, param)) {
-					info.incrementFilter();
-					continue;
-				}
-				if (handleUpdate(it, t, param)) {
-					info.incrementUpdate();
 				}
 				visitResult = breakVisitor.visit(t, param, info);
 				if (visitResult != null && visitResult) {
@@ -188,17 +210,8 @@ public class VisitService<T> {
 		case VISIT_RULE_ALL: {
 			for (; it.hasNext();) {
 				T t = it.next();
-				if (shouldDelete(t, param)) {
-					it.remove();
-					info.incrementDelete();
+				if (onInterceptIteration(it, t, param, info)) {
 					continue;
-				}
-				if (shouldFilter(t, param)) {
-					info.incrementFilter();
-					continue;
-				}
-				if (handleUpdate(it, t, param)) {
-					info.incrementUpdate();
 				}
 				breakVisitor.visit(t, param, info);
 			}
@@ -209,7 +222,9 @@ public class VisitService<T> {
 		default:
 			throw new RuntimeException("unsupport rule = " + rule);
 		}
-		handleInsert(param, info);
+		if (result) {
+			handleInsert(param, info);
+		}
 		return result;
 	}
 
@@ -236,8 +251,6 @@ public class VisitService<T> {
 			}
 		}
 	}
-
-	// private boolean handleInsert()
 
 	private boolean handleUpdate(Iterator<T> lit, T t, Object param) {
 		final List<Operation<T>> mUpdates = this.mUpdates;
@@ -276,6 +289,89 @@ public class VisitService<T> {
 		if (mUpdates == null) {
 			mUpdates = new ArrayList<>();
 		}
+	}
+
+	public IterateControl<VisitService<T>> startIterateControl() {
+		return new ProcessController(this);
+	}
+
+	private final class ProcessController extends IterateControl<VisitService<T>> {
+
+		protected ProcessController(VisitService<T> src) {
+			super(src);
+		}
+
+		@Override
+		public ProcessController interceptIfSuccess(int operate) {
+			int index = mInterceptOps.indexOf(operate);
+			if (index == -1) {
+				mInterceptOps.add(operate);
+			}
+			return this;
+		}
+
+		@Override
+		public ProcessController first(int operate) {
+			int index = mOrderOps.indexOf(operate);
+			if (index != -1) {
+				mOrderOps.remove(index);
+			} else {
+				throw new IllegalArgumentException("unsupport operate.");
+			}
+			mOrderOps.add(0, operate);
+			return this;
+		}
+
+		@Override
+		public ProcessController second(int operate) {
+			int index = mOrderOps.indexOf(operate);
+			if (index != -1) {
+				mOrderOps.remove(index);
+			} else {
+				throw new IllegalArgumentException("unsupport operate.");
+			}
+			mOrderOps.add(mOrderOps.size() > 0 ? 1 : 0, operate);
+			return this;
+		}
+
+		@Override
+		public ProcessController then(int operate) {
+			int index = mOrderOps.indexOf(operate);
+			if (index != -1) {
+				mOrderOps.remove(index);
+			} else {
+				throw new IllegalArgumentException("unsupport operate.");
+			}
+			final int size = mOrderOps.size();
+			switch (size) {
+			case 0:
+				index = 0;
+				break;
+
+			case 1:
+				index = 1;
+				break;
+
+			default:
+				index = 2;
+				break;
+			}
+			mOrderOps.add(index, operate);
+			return this;
+		}
+
+		@Override
+		public ProcessController last(int operate) {
+			int index = mOrderOps.indexOf(operate);
+			if (index != -1) {
+				mOrderOps.remove(index);
+			} else {
+				throw new IllegalArgumentException("unsupport operate.");
+			}
+			mOrderOps.add(mOrderOps.size(), operate);
+			return this;
+		}
+
 	}
 
 }
