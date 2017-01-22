@@ -1,16 +1,25 @@
 package com.heaven7.java.visitor.collection;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.ListIterator;
 import static com.heaven7.java.visitor.collection.VisitService.*;
 
 public class Operation<T> {
 
 	private int mOp;
-	private T mNewT;
+	/** used to update or insert */
+	private T mNewElement;
+	/** only used to insert */
+	private List<T> mNewElements;
 
+	/** ths extra param for current operation. */
 	private Object mParam;
+	/** used to common operate, eg : filter, update, delete */
 	private PredicateVisitor<? super T> mVisitor;
+	/**
+	 * only used to insert (because we care about the capacity of collection)
+	 */
 	private IterateVisitor<? super T> mIteratorVisitor;
 
 	private Operation() {
@@ -27,7 +36,7 @@ public class Operation<T> {
 	public static <T> Operation<T> createUpdate(T newT, Object param, PredicateVisitor<? super T> visitor) {
 		Operation<T> operation = new Operation<T>();
 		operation.mOp = OP_UPDATE;
-		operation.mNewT = newT;
+		operation.mNewElement = newT;
 		operation.mParam = param;
 		operation.mVisitor = visitor;
 		return operation;
@@ -44,7 +53,16 @@ public class Operation<T> {
 	public static <T> Operation<T> createInsert(T newT, Object param, IterateVisitor<? super T> insertVisitor) {
 		Operation<T> operation = new Operation<T>();
 		operation.mOp = OP_INSERT;
-		operation.mNewT = newT;
+		operation.mNewElement = newT;
+		operation.mParam = param;
+		operation.mIteratorVisitor = insertVisitor;
+		return operation;
+	}
+
+	public static <T> Operation<T> createInsert(List<T> list, Object param, IterateVisitor<? super T> insertVisitor) {
+		Operation<T> operation = new Operation<T>();
+		operation.mOp = OP_INSERT;
+		operation.mNewElements = list;
 		operation.mParam = param;
 		operation.mIteratorVisitor = insertVisitor;
 		return operation;
@@ -54,7 +72,7 @@ public class Operation<T> {
 	public boolean update(T t, Object defaultParam) {
 		if (shouldUpdate(t, defaultParam)) {
 			if (t instanceof Updatable) {
-				((Updatable<T>) t).updateFrom(mNewT);
+				((Updatable<T>) t).updateFrom(mNewElement);
 				return true;
 			}
 		}
@@ -63,7 +81,7 @@ public class Operation<T> {
 
 	public boolean update(ListIterator<T> lit, T t, Object defaultParam) {
 		if (shouldUpdate(t, defaultParam)) {
-			lit.set(mNewT);
+			lit.set(mNewElement);
 			return true;
 		}
 		return false;
@@ -102,16 +120,26 @@ public class Operation<T> {
 		return false;
 	}
 
-	public boolean insert(Collection<? super T> collection, Object param, IterationInfo info) {
+	public boolean insertLast(Collection<? super T> collection, Object param, IterationInfo info) {
 		if (shouldInsert(null, param, info)) {
-			return collection.add(mNewT);
+			if (mNewElements != null && mNewElements.size() > 0) {
+				return collection.addAll(mNewElements);
+			}
+			return collection.add(mNewElement);
 		}
 		return false;
 	}
 
-	public boolean insert(T t, Object param, IterationInfo info, Collection<? super T> collection) {
+	public boolean insert(ListIterator<T> lit, T t, Object param, IterationInfo info) {
 		if (shouldInsert(t, param, info)) {
-			return collection.add(mNewT);
+			if (mNewElements != null && mNewElements.size() > 0) {
+				for (int i = 0, size = mNewElements.size(); i < size; i++) {
+					lit.add(mNewElements.get(i));
+				}
+				return true;
+			}
+			lit.add(mNewElement);
+			return true;
 		}
 		return false;
 	}

@@ -1,17 +1,10 @@
 package com.heaven7.java.visitor.collection;
 
 public abstract class IterateControl<T> {
-
-	private final T src;
-
-	 IterateControl(T src) {
-		super();
-		this.src = src;
-	}
 	
-	public T end() {
-		return src;
-	}
+	IterateControl(){}
+
+	public abstract T end();
 
 	public abstract IterateControl<T> interceptIfSuccess(int operate);
 

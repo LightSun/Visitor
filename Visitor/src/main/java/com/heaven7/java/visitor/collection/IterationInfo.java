@@ -70,6 +70,9 @@ public class IterationInfo {
 	public void incrementCurrentSize() {
 		++currentSize;
 	}
+	public void decrementCurrentSize() {
+		--currentSize;
+	}
 
 	@Override
 	public String toString() {
