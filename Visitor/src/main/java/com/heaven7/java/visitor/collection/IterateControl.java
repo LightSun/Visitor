@@ -1,5 +1,6 @@
 package com.heaven7.java.visitor.collection;
 
+
 public abstract class IterateControl<T> {
 	
 	IterateControl(){}

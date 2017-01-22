@@ -40,15 +40,29 @@ public class VisitServiceTest extends TestCase {
 		return mStus.size();
 	}
 	
+	/**
+	 * the operate order is: 
+OP_FILTER
+OP_INSERT
+OP_DELETE
+OP_UPDATE
+	 */
 	public void testIterationControl3(){
 		//default order delete -> filter -> update -> insert
 		mService.beginIterateControl()
-		.second(OP_UPDATE) //4  
-		.second(OP_FILTER) //1
-		.second(OP_DELETE) //3
-		//.second(OP_INSERT) //2
+		.second(OP_UPDATE)   //  delete -> update -> filter -> insert
+		.second(OP_FILTER)   //  delete -> filter -> update -> insert
+		.second(OP_DELETE)   //  filter -> delete -> update -> insert
+		.second(OP_INSERT)   //  filter -> insert ->delete -> update 
 		.end();
 	}
+	/**
+	 * the operate order is: 
+OP_INSERT
+OP_DELETE
+OP_FILTER
+OP_UPDATE
+	 */
 	public void testIterationControl2(){
 		mService.beginIterateControl()
 		.first(OP_UPDATE) // 4
@@ -58,6 +72,13 @@ public class VisitServiceTest extends TestCase {
 		.end();
 	}
 	
+	/**
+	 * the operate order is: 
+OP_UPDATE
+OP_FILTER
+OP_DELETE
+OP_INSERT
+	 */
 	public void testIterationControl(){
 		mService.beginIterateControl()
 		.first(OP_UPDATE)
