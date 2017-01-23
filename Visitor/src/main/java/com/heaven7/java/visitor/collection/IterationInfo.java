@@ -73,6 +73,16 @@ public class IterationInfo {
 	public void decrementCurrentSize() {
 		--currentSize;
 	}
+	
+	public void reset() {
+		deleteCount = 0;
+		updateCount = 0;
+		filterCount = 0;
+		insertCount = 0;
+		originSize = 0;
+		currentSize = 0;
+		currentIndex = -1;
+	}
 
 	@Override
 	public String toString() {
@@ -80,7 +90,7 @@ public class IterationInfo {
 				+ filterCount + ", insertCount=" + insertCount + ", originSize=" + originSize + ", currentSize="
 				+ currentSize + ", currentIndex=" + currentIndex + "]";
 	}
-	
+
 	
 
 }

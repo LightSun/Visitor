@@ -1,9 +1,16 @@
 package com.heaven7.java.visitor.collection;
 
+import static com.heaven7.java.visitor.collection.VisitService.OP_DELETE;
+import static com.heaven7.java.visitor.collection.VisitService.OP_FILTER;
+import static com.heaven7.java.visitor.collection.VisitService.OP_INSERT;
+import static com.heaven7.java.visitor.collection.VisitService.OP_UPDATE;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
-import static com.heaven7.java.visitor.collection.VisitService.*;
+
+import com.heaven7.java.visitor.IterateVisitor;
+import com.heaven7.java.visitor.PredicateVisitor;
 
 public class Operation<T> {
 
@@ -18,7 +25,7 @@ public class Operation<T> {
 	/** used to common operate, eg : filter, update, delete */
 	private PredicateVisitor<? super T> mVisitor;
 	/**
-	 * only used to insert (because we care about the capacity of collection)
+	 * only used to insert/finalInsert (because we care about the capacity of collection)
 	 */
 	private IterateVisitor<? super T> mIteratorVisitor;
 

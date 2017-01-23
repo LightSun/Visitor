@@ -1,10 +1,9 @@
-package com.heaven7.java.visitor.collection;
+package com.heaven7.java.visitor;
 
 /**
  * the predicate of element
  *
  * @param <T> the  item type
- * @since 1.1.0
  */
 public interface PredicateVisitor<T> extends ResultVisitor<T, Boolean> {
 

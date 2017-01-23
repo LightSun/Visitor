@@ -1,19 +1,22 @@
 package com.heaven7.java.visitor.test;
 
-import junit.framework.TestCase;
-import static com.heaven7.java.visitor.test.help.TestUtil.*;
+import static com.heaven7.java.visitor.test.help.TestUtil.createStudent;
+import static com.heaven7.java.visitor.test.help.TestUtil.createStudent2;
+import static com.heaven7.java.visitor.test.help.TestUtil.syso;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.heaven7.java.visitor.collection.VisitService;
+import com.heaven7.java.visitor.IterateVisitor;
+import com.heaven7.java.visitor.PredicateVisitor;
+import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.collection.IterationInfo;
-import com.heaven7.java.visitor.collection.PredicateVisitor;
-import com.heaven7.java.visitor.collection.Visitors;
-import com.heaven7.java.visitor.collection.IterateVisitor;
+import com.heaven7.java.visitor.collection.VisitService;
 import com.heaven7.java.visitor.test.help.Student;
 import com.heaven7.java.visitor.test.help.Student2;
+
+import junit.framework.TestCase;
 
 /**
  * default test , eg: for Set.
@@ -45,7 +48,7 @@ public class DefaultServiceTest extends TestCase {
 		int size = getStudentSize();
 		mService.beginOperateManager()
 				.insertFinally(createStudent("new_stu"), "testComposeVisitInsert", Visitors.trueIterateVisitor()).end()
-				.visitAll("testComposeVisitFilter_2", new LogVisitor());
+				.visitAll("testComposeVisitFilter_2");
 		assertEquals(getStudentSize(), size + 1);
 	}
 
@@ -55,7 +58,7 @@ public class DefaultServiceTest extends TestCase {
 			public Boolean visit(Student t, Object param) {
 				return t.getId() == 3;
 			}
-		}).end().visitAll("testComposeVisitFilter_2", new LogVisitor());
+		}).end().visitAll("testComposeVisitFilter_2");
 	}
 
 	public void testComposeVisitDelete() {
@@ -65,7 +68,7 @@ public class DefaultServiceTest extends TestCase {
 			public Boolean visit(Student t, Object param) {
 				return t.getId() == 3;
 			}
-		}).end().visitAll("testCompiseVisitDelete_2", new LogVisitor());
+		}).end().visitAll("testCompiseVisitDelete_2");
 
 		assertEquals(getStudentSize(), size - 1);
 	}
@@ -74,7 +77,7 @@ public class DefaultServiceTest extends TestCase {
 		// class Student not implements Updatable
 		mService.beginOperateManager()
 				.update(createStudent("new_stu"), "testComposeVisit_1", Visitors.truePredicateVisitor()).end()
-				.visitAll("testComposeVisit_2", new LogVisitor());
+				.visitAll("testComposeVisit_2");
 
 		for (Student stu : mStus) {
 			// note this is diff with list
@@ -84,9 +87,8 @@ public class DefaultServiceTest extends TestCase {
 		// class Student2 has implements Updatable
 		List<Student2> list = createStudent2(6);
 		VisitService.from(list).beginOperateManager()
-		      .update(new Student2("new_stu"), "testComposeVisit_1", Visitors.truePredicateVisitor())
-		      .end()
-			.visitAll("testComposeVisit_2", new LogVisitor());
+				.update(new Student2("new_stu"), "testComposeVisit_1", Visitors.truePredicateVisitor()).end()
+				.visitAll("testComposeVisit_2");
 
 		for (Student stu : list) {
 			assertEquals("new_stu", stu.getName());
@@ -97,16 +99,15 @@ public class DefaultServiceTest extends TestCase {
 		// here 每迭代一次，加入一个元素
 		int size = getStudentSize();
 		mService.beginOperateManager()
-				.insert(createStudent("new_stu"), "testComposeVisit_1", Visitors.trueIterateVisitor())
-				.end()
-			.visitAll("testComposeVisit_2", new LogVisitor());
+				.insert(createStudent("new_stu"), "testComposeVisit_1", Visitors.trueIterateVisitor()).end()
+				.visitAll("testComposeVisit_2");
 
 		assertEquals(getStudentSize(), size * 2);
 	}
 
 	public void testVisitAll() {
 		int size = getStudentSize();
-		mService.visitAll("testBaseVisit1", new LogVisitor());
+		mService.visitAll("testBaseVisit1");
 		assertEquals(getStudentSize(), size);
 	}
 

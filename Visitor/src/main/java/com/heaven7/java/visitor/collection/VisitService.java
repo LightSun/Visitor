@@ -1,13 +1,20 @@
 package com.heaven7.java.visitor.collection;
 
+import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
+import static com.heaven7.java.visitor.util.Throwables.checkNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import com.heaven7.java.visitor.util.SparseArray;
 
-import static com.heaven7.java.visitor.util.Throwables.*;
+import com.heaven7.java.visitor.IterateVisitor;
+import com.heaven7.java.visitor.PredicateVisitor;
+import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.anno.Nullable;
+import com.heaven7.java.visitor.internal.IterateState;
+import com.heaven7.java.visitor.util.SparseArray;
 
 /**
  * 
@@ -16,45 +23,46 @@ import static com.heaven7.java.visitor.util.Throwables.*;
  * @author heaven7
  *
  * @param <T>
- *            the type of visit
+ *            the type of element
+ * @see ListVisitService           
  */
-public abstract class VisitService<T> {
-	
+public abstract class VisitService<T> extends AbstractVisitService<T> implements IVisitService<T> {
+
 	protected static final boolean DEBUG = true;
 
-	/**
-	 * the visit rule: visit all.
-	 */
-	public static final int VISIT_RULE_ALL = 11;
-	/**
-	 * the visit rule: until success. this is useless for the 'Set' of
-	 * 'Collection'
-	 */
-	public static final int VISIT_RULE_UNTIL_SUCCESS = 12;
-	/**
-	 * the visit rule: until failed. this is useless for the 'Set' of
-	 * 'Collection'
-	 */
-	public static final int VISIT_RULE_UNTIL_FAILED = 13;
 
+	/** indicate the operate of delete */
 	public static final int OP_DELETE = 1;
+	/** indicate the operate of filter */
 	public static final int OP_FILTER = 2;
+	/** indicate the operate of update */
 	public static final int OP_UPDATE = 3;
+	/** indicate the operate of insert */
 	public static final int OP_INSERT = 4;
 
+	/** the ordered operate */
 	private final ArrayList<Integer> mOrderOps = new ArrayList<Integer>(6);
+	/** the intercept operate */
 	private final ArrayList<Integer> mInterceptOps = new ArrayList<Integer>(6);
+	/** the operate interceptor */
 	private final GroupOperateInterceptor mGroupInterceptor = new GroupOperateInterceptor();
 
 	// OP_QUERY ;
 	// limitSize ,limit filter size. limit null size.
 
 	private final Collection<T> mCollection;
+	/** the all Operation/operate of insert in iteration */
 	private List<Operation<T>> mInserts;
+	/** the all Operation/operate of final insert after iteration */
 	private List<Operation<T>> mFinalInserts;
+	/** the all Operation/operate of update in iteration */
 	private List<Operation<T>> mUpdates;
+	/** the Operation/operate of filter */
 	private Operation<T> mFilterOp;
+	/** the Operation/operate of delete or remove. */
 	private Operation<T> mDeleteOp;
+
+	private IterationInfo mIterationInfo;
 
 	protected VisitService(Collection<T> collection) {
 		super();
@@ -90,33 +98,67 @@ public abstract class VisitService<T> {
 	}
 
 	// =============================================================================//
+	@Override
+	public <R> R visitForResult(Object param, PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor) {
 
+		checkNull(predicate);
+		checkNull(resultVisitor);
+		final IterationInfo info = getAndInitIterationInfo();
+		R r = IterateState.<T,R>singleIterateState().visitForResult(mCollection, hasExtraOperateInIteration(),
+				mGroupInterceptor, info, param, predicate, resultVisitor, null);
+		handleFinalInsert(param, info);
+		return r;
+	}
+	@Override
+	public <R> List<R> visitForResult(Object param, PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor,
+			List<R> out) {
+
+		checkNull(predicate);
+		checkNull(resultVisitor);
+		if (out == null) {
+			out = new ArrayList<R>();
+		}
+		final IterationInfo info = getAndInitIterationInfo();
+		IterateState.<T, R>multipleIterateState().visitForResult(mCollection, hasExtraOperateInIteration(),
+				mGroupInterceptor, info, param, predicate, resultVisitor, out);
+		handleFinalInsert(param, info);
+		return out;
+	}
+
+	@Override
+	public List<T> visitForQuery(Object param, PredicateVisitor<? super T> predicate, @Nullable List<T> out) {
+		checkNull(predicate);
+		if (out == null) {
+			out = new ArrayList<T>();
+		}
+		final IterationInfo info = getAndInitIterationInfo();
+		IterateState.<T,T>multipleIterateState().visit(mCollection, hasExtraOperateInIteration(), mGroupInterceptor, info, param,
+				predicate,  out);
+		handleFinalInsert(param, info);
+		return out;
+	}
+	@Override
+	public T visitForQuery(Object param, PredicateVisitor<? super T> predicate) {
+		checkNull(predicate);
+
+		final IterationInfo info = getAndInitIterationInfo();
+		T result = IterateState.<T,T>singleIterateState().visit(mCollection, hasExtraOperateInIteration(), mGroupInterceptor,
+				info, param, predicate, null);
+		handleFinalInsert(param, info);
+		return result;
+	}
+
+	/*// this just for test
 	public boolean visitAll(Object param, IterateVisitor<? super T> breakVisitor) {
 		return visit(VISIT_RULE_ALL, param, breakVisitor);
-	}
-	
-	public boolean visitAll(Object param) {
-		return visit(VISIT_RULE_ALL, param, null);
-	}
+	}*/
 
-	public boolean visitUntilSuccess(Object param, IterateVisitor<? super T> breakVisitor) {
-		checkNull(breakVisitor);
-		return visit(VISIT_RULE_UNTIL_SUCCESS, param, breakVisitor);
-	}
-
-	public boolean visitUntilFailed(Object param, IterateVisitor<? super T> breakVisitor) {
-		checkNull(breakVisitor);
-		return visit(VISIT_RULE_UNTIL_FAILED, param, breakVisitor);
-	}
-
-	private boolean visit(int rule, Object param, IterateVisitor<? super T> breakVisitor) {
-		int size = mCollection.size();
-		if (size == 0) {
+	@Override
+	protected boolean visit(int rule, Object param, IterateVisitor<? super T> breakVisitor) {
+		if (mCollection.size() == 0) {
 			return false;
 		}
-		final IterationInfo info = new IterationInfo();
-		info.setOriginSize(size);
-		info.setCurrentSize(size);
+		final IterationInfo info = getAndInitIterationInfo();
 
 		mGroupInterceptor.begin();
 		boolean result = visitImpl(mCollection, rule, param, mGroupInterceptor, breakVisitor, info);
@@ -129,17 +171,21 @@ public abstract class VisitService<T> {
 	protected boolean visitImpl(Collection<T> collection, int rule, Object param, OperateInterceptor<T> interceptor,
 			IterateVisitor<? super T> breakVisitor, final IterationInfo info) {
 
-		final Iterator<T> it = collection.iterator();
-		T t;
-		for (; it.hasNext();) {
-			t = it.next();
-			if (interceptor.intercept(it, t, param, info)) {
-				continue;
+		final boolean hasExtra = hasExtraOperateInIteration();
+
+		if (hasExtra) {
+			final Iterator<T> it = collection.iterator();
+			T t;
+			for (; it.hasNext();) {
+				t = it.next();
+				if (interceptor.intercept(it, t, param, info)) {
+					continue;
+				}
+				// ignore break , there is no need to break. just for test.
+				/*
+				 * if(DEBUG){ breakVisitor.visit(t, param, info); }
+				 */
 			}
-			// ignore break , there is no need to break. just for test.
-			/*if(DEBUG){
-				breakVisitor.visit(t, param, info);
-			}*/
 		}
 		return true;
 	}
@@ -174,6 +220,7 @@ public abstract class VisitService<T> {
 	private void handleFinalInsert(Object param, final IterationInfo info) {
 		info.setCurrentSize(mCollection.size());
 		if (mFinalInserts != null) {
+			// final boolean hasInfo = info != null;
 			final List<Operation<T>> mInserts = this.mFinalInserts;
 			try {
 				for (int i = 0, len = mInserts.size(); i < len; i++) {
@@ -184,7 +231,7 @@ public abstract class VisitService<T> {
 				}
 			} catch (UnsupportedOperationException e) {
 				System.err.println("insert failed. caused by the list is fixed. "
-						+ "so can't modified. are your list comes from 'Arrays.asList(...)'");
+						+ "so can't modified. are your list comes from 'Arrays.asList(...)' ? ");
 				return;
 			}
 		}
@@ -211,7 +258,7 @@ public abstract class VisitService<T> {
 			}
 		} catch (UnsupportedOperationException e) {
 			System.err.println("update failed. caused by the list is fixed. "
-					+ "so can't modified. are your list comes from 'Arrays.asList(...)'");
+					+ "so can't modified. are your list comes from 'Arrays.asList(...)'? ");
 			return false;
 		}
 		if (modified) {
@@ -228,7 +275,7 @@ public abstract class VisitService<T> {
 				info.decrementCurrentSize();
 			} catch (UnsupportedOperationException e) {
 				System.err.println("update failed. caused by the list is fixed. "
-						+ "so can't modified. are your list comes from 'Arrays.asList(...)'");
+						+ "so can't modified. are your list comes from 'Arrays.asList(...)' ? ");
 				return false;
 			}
 			return true;
@@ -242,6 +289,24 @@ public abstract class VisitService<T> {
 			return true;
 		}
 		return false;
+	}
+
+	private IterationInfo getAndInitIterationInfo() {
+		if (mIterationInfo != null) {
+			mIterationInfo.reset();
+		} else {
+			mIterationInfo = new IterationInfo();
+		}
+		int size = mCollection.size();
+		mIterationInfo.setOriginSize(size);
+		mIterationInfo.setCurrentSize(size);
+		return mIterationInfo;
+	}
+
+	/** indicate if has extra operate in iteration. */
+	public boolean hasExtraOperateInIteration() {
+		return mDeleteOp != null || mFilterOp != null || (mInserts != null && mInserts.size() > 0)
+				|| (mUpdates != null && mUpdates.size() > 0);
 	}
 
 	private void ensureInserts() {
@@ -265,11 +330,12 @@ public abstract class VisitService<T> {
 	public IterateControl<VisitService<T>> beginIterateControl() {
 		return new ProcessController();
 	}
-	public OperareManager<VisitService<T>, T> beginOperateManager() {
+
+	public OperateManager<VisitService<T>, T> beginOperateManager() {
 		return new OperateManagerImpl();
 	}
 
-	private class GroupOperateInterceptor extends OperateInterceptor<T> {
+	public class GroupOperateInterceptor extends OperateInterceptor<T> {
 
 		final SparseArray<OperateInterceptor<T>> mInterceptorMap;
 		final List<OperateInterceptor<T>> mOrderInerceptors;
@@ -365,16 +431,16 @@ public abstract class VisitService<T> {
 		}
 
 	}
-	
-	private class OperateManagerImpl extends OperareManager<VisitService<T>, T>{
-		
+
+	private class OperateManagerImpl extends OperateManager<VisitService<T>, T> {
+
 		@Override
-		public VisitService<T> end() {
+		public VisitService<T>  end() {
 			return VisitService.this;
 		}
 
 		@Override
-		public OperareManager<VisitService<T>, T> filter(Object param, PredicateVisitor<? super T> filter) {
+		public OperateManager<VisitService<T>, T> filter(Object param, PredicateVisitor<? super T> filter) {
 			checkNull(filter);
 			if (mFilterOp != null) {
 				throw new IllegalArgumentException("filter can only set once");
@@ -384,7 +450,7 @@ public abstract class VisitService<T> {
 		}
 
 		@Override
-		public OperareManager<VisitService<T>, T> delete(Object param, PredicateVisitor<? super T> delete) {
+		public OperateManager<VisitService<T>, T> delete(Object param, PredicateVisitor<? super T> delete) {
 			checkNull(delete);
 			if (mDeleteOp != null) {
 				throw new IllegalArgumentException("deleteOn can only set once");
@@ -394,7 +460,7 @@ public abstract class VisitService<T> {
 		}
 
 		@Override
-		public OperareManager<VisitService<T>, T> update(T newT, Object param, PredicateVisitor<? super T> update) {
+		public OperateManager<VisitService<T>, T> update(T newT, Object param, PredicateVisitor<? super T> update) {
 			checkNull(newT);
 			checkNull(update);
 			ensureUpdates();
@@ -403,7 +469,7 @@ public abstract class VisitService<T> {
 		}
 
 		@Override
-		public OperareManager<VisitService<T>, T> insert(List<T> list, Object param, IterateVisitor<? super T> insert) {
+		public OperateManager<VisitService<T>, T> insert(List<T> list, Object param, IterateVisitor<? super T> insert) {
 			checkEmpty(list);
 			ensureInserts();
 			mInserts.add(Operation.createInsert(list, param, insert));
@@ -411,7 +477,7 @@ public abstract class VisitService<T> {
 		}
 
 		@Override
-		public OperareManager<VisitService<T>, T> insert(T newT, Object param, IterateVisitor<? super T> insert) {
+		public OperateManager<VisitService<T>, T> insert(T newT, Object param, IterateVisitor<? super T> insert) {
 			checkNull(newT);
 			ensureInserts();
 			mInserts.add(Operation.createInsert(newT, param, insert));
@@ -419,7 +485,8 @@ public abstract class VisitService<T> {
 		}
 
 		@Override
-		public OperareManager<VisitService<T>, T> insertFinally(T newT, Object param, IterateVisitor<? super T> insert) {
+		public OperateManager<VisitService<T>, T> insertFinally(T newT, Object param,
+				IterateVisitor<? super T> insert) {
 			checkNull(newT);
 			ensureFinalInserts();
 			mFinalInserts.add(Operation.createInsert(newT, param, insert));
@@ -427,14 +494,14 @@ public abstract class VisitService<T> {
 		}
 
 		@Override
-		public OperareManager<VisitService<T>, T> insertFinally(List<T> list, Object param,
+		public OperateManager<VisitService<T>, T> insertFinally(List<T> list, Object param,
 				IterateVisitor<? super T> insert) {
 			checkEmpty(list);
 			ensureFinalInserts();
 			mFinalInserts.add(Operation.createInsert(list, param, insert));
 			return this;
 		}
-		
+
 	}
 
 	private final class ProcessController extends IterateControl<VisitService<T>> {
@@ -468,9 +535,9 @@ public abstract class VisitService<T> {
 			} else {
 				throw new IllegalArgumentException("unsupport operate.");
 			}
-			/*if(DEBUG){
-				System.err.println();
-			}*/
+			/*
+			 * if(DEBUG){ System.err.println(); }
+			 */
 			mOrderOps.add(mOrderOps.size() > 0 ? 1 : 0, operate);
 			return this;
 		}
@@ -484,9 +551,9 @@ public abstract class VisitService<T> {
 				throw new IllegalArgumentException("unsupport operate.");
 			}
 			final int size = mOrderOps.size();
-			if(size >= 3){
+			if (size >= 3) {
 				mOrderOps.add(2, operate);
-			}else{
+			} else {
 				mOrderOps.add(operate);
 			}
 			return this;
@@ -506,9 +573,9 @@ public abstract class VisitService<T> {
 
 		@Override
 		public VisitService<T> end() {
-			if(DEBUG){
+			if (DEBUG) {
 				System.out.println("the operate order is: ");
-				for(int op : mOrderOps){
+				for (int op : mOrderOps) {
 					System.out.println(op2String(op));
 				}
 				System.out.println();
@@ -516,18 +583,18 @@ public abstract class VisitService<T> {
 			return VisitService.this;
 		}
 	}
-	
-	private static String op2String(int op){
+
+	private static String op2String(int op) {
 		switch (op) {
 		case OP_DELETE:
 			return "OP_DELETE";
-			
+
 		case OP_FILTER:
 			return "OP_FILTER";
-			
+
 		case OP_UPDATE:
 			return "OP_UPDATE";
-			
+
 		case OP_INSERT:
 			return "OP_INSERT";
 		default:

@@ -5,7 +5,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-final class ListVisitService<T> extends VisitService<T> {
+import com.heaven7.java.visitor.IterateVisitor;
+/**
+ * list visit service
+ * @author heaven7
+ *
+ * @param <T>
+ */
+final class ListVisitService<T> extends VisitService<T> implements IVisitService<T>  {
 
 	protected ListVisitService(List<T> collection) {
 		super(collection);
@@ -15,48 +22,75 @@ final class ListVisitService<T> extends VisitService<T> {
 	protected boolean visitImpl(Collection<T> collection, int rule, Object param, OperateInterceptor<T> interceptor,
 			IterateVisitor<? super T> breakVisitor, final IterationInfo info) {
 
+		final boolean hasExtra = hasExtraOperateInIteration();
 		final Iterator<T> it = ((List<T>) collection).listIterator();
 		
 		boolean result = false;
 		Boolean visitResult;
 		T t;
 
+		//list support break
 		switch (rule) {
 		case VISIT_RULE_UNTIL_FAILED: {
-			for (; it.hasNext();) {
-				t = it.next();
-				if (interceptor.intercept(it, t, param, info)) {
-					continue;
+			if(hasExtra){
+				for (; it.hasNext();) {
+					t = it.next();
+					if (interceptor.intercept(it, t, param, info)) {
+						continue;
+					}
+					visitResult = breakVisitor.visit(t, param, info);
+					if (visitResult == null || !visitResult) {
+						result = true;
+						break;
+					}
 				}
-				visitResult = breakVisitor.visit(t, param, info);
-				if (visitResult == null || !visitResult) {
-					result = true;
-					break;
+			}else{
+				for (; it.hasNext();) {
+					t = it.next();
+					visitResult = breakVisitor.visit(t, param, info);
+					if (visitResult == null || !visitResult) {
+						result = true;
+						break;
+					}
 				}
 			}
 		}
 			break;
 
 		case VISIT_RULE_UNTIL_SUCCESS: {
-			for (; it.hasNext();) {
-				t = it.next();
-				if (interceptor.intercept(it, t, param, info)) {
-					continue;
+			if(hasExtra){
+				for (; it.hasNext();) {
+					t = it.next();
+					if (interceptor.intercept(it, t, param, info)) {
+						continue;
+					}
+					
+					visitResult = breakVisitor.visit(t, param, info);
+					if (visitResult != null && visitResult) {
+						result = true;
+						break;
+					}
 				}
-				
-				visitResult = breakVisitor.visit(t, param, info);
-				if (visitResult != null && visitResult) {
-					result = true;
-					break;
+			}else{
+				for (; it.hasNext();) {
+					t = it.next();
+					
+					visitResult = breakVisitor.visit(t, param, info);
+					if (visitResult != null && visitResult) {
+						result = true;
+						break;
+					}
 				}
 			}
 		}
 			break;
 
 		case VISIT_RULE_ALL: {
-			for (; it.hasNext();) {
-				t = it.next();
-				interceptor.intercept(it, t, param, info);
+			if(hasExtra){
+				for (; it.hasNext();) {
+					t = it.next();
+					interceptor.intercept(it, t, param, info);
+				}
 			}
 			result = true;
 		}
@@ -74,6 +108,7 @@ final class ListVisitService<T> extends VisitService<T> {
 		final ListIterator<T> lit = (ListIterator<T>) it;
 		info.setCurrentIndex(lit.previousIndex());
 
+		//final boolean hasInfo = info != null;
 		try {
 			Operation<T> op;
 			for (ListIterator<Operation<T>> olit = inserts.listIterator(); olit.hasNext();) {
@@ -86,7 +121,7 @@ final class ListVisitService<T> extends VisitService<T> {
 			}
 		} catch (UnsupportedOperationException e) {
 			System.err.println("insert failed. caused by the list is fixed. "
-					+ "so can't modified. are your list comes from 'Arrays.asList(...)'");
+					+ "so can't modified. are your list comes from 'Arrays.asList(...)' ? ");
             return false;
 		}
 		return false;
