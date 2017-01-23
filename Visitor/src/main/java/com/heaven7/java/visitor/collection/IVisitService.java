@@ -87,7 +87,7 @@ public interface IVisitService<T> {
 	 *
 	 * @param predicate
 	 *            the predicate visitor
-	 * @param visitor
+	 * @param resultVisitor
 	 *            the result visitor
 	 * @param out
 	 *            the out list. can be null.
