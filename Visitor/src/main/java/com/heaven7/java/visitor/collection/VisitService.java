@@ -114,7 +114,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 
 	// =============================================================================//
 	@Override
-	public <R> R visitForResult(Object param, PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor) {
+	public <R> R visitForResult(@Nullable Object param, PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor) {
 
 		checkNull(predicate);
 		checkNull(resultVisitor);
@@ -125,8 +125,8 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		return r;
 	}
 	@Override
-	public <R> List<R> visitForResult(Object param, PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor,
-			List<R> out) {
+	public <R> List<R> visitForResult(@Nullable Object param, PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor,
+			@Nullable List<R> out) {
 
 		checkNull(predicate);
 		checkNull(resultVisitor);
@@ -141,7 +141,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 	}
 
 	@Override
-	public List<T> visitForQuery(Object param, PredicateVisitor<? super T> predicate, @Nullable List<T> out) {
+	public List<T> visitForQuery(@Nullable Object param, PredicateVisitor<? super T> predicate, @Nullable List<T> out) {
 		checkNull(predicate);
 		if (out == null) {
 			out = new ArrayList<T>();
@@ -154,7 +154,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		return out;
 	}
 	@Override
-	public T visitForQuery(Object param, PredicateVisitor<? super T> predicate) {
+	public T visitForQuery(@Nullable Object param, PredicateVisitor<? super T> predicate) {
 		checkNull(predicate);
 
 		final IterationInfo info = getAndInitIterationInfo();
@@ -170,7 +170,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 	}*/
 
 	@Override
-	protected boolean visit(int rule, Object param, IterateVisitor<? super T> breakVisitor) {
+	protected boolean visit(int rule,@Nullable Object param, IterateVisitor<? super T> breakVisitor) {
 		if (mCollection.size() == 0) {
 			return false;
 		}
@@ -184,7 +184,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		return result;
 	}
 
-	protected boolean visitImpl(Collection<T> collection, int rule, Object param, OperateInterceptor<T> interceptor,
+	protected boolean visitImpl(Collection<T> collection, int rule, @Nullable Object param, OperateInterceptor<T> interceptor,
 			IterateVisitor<? super T> breakVisitor, final IterationInfo info) {
 
 		final boolean hasExtra = hasExtraOperateInIteration();
@@ -465,7 +465,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		}
 
 		@Override
-		public OperateManager<VisitService<T>, T> filter(Object param, PredicateVisitor<? super T> filter) {
+		public OperateManager<VisitService<T>, T> filter(@Nullable Object param, PredicateVisitor<? super T> filter) {
 			checkNull(filter);
 			if (mFilterOp != null) {
 				throw new IllegalArgumentException("filter can only set once");
@@ -475,7 +475,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		}
 
 		@Override
-		public OperateManager<VisitService<T>, T> delete(Object param, PredicateVisitor<? super T> delete) {
+		public OperateManager<VisitService<T>, T> delete(@Nullable Object param, PredicateVisitor<? super T> delete) {
 			checkNull(delete);
 			if (mDeleteOp != null) {
 				throw new IllegalArgumentException("deleteOn can only set once");
@@ -485,7 +485,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		}
 
 		@Override
-		public OperateManager<VisitService<T>, T> update(T newT, Object param, PredicateVisitor<? super T> update) {
+		public OperateManager<VisitService<T>, T> update(T newT,@Nullable Object param, PredicateVisitor<? super T> update) {
 			checkNull(newT);
 			checkNull(update);
 			ensureUpdates();
@@ -494,7 +494,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		}
 
 		@Override
-		public OperateManager<VisitService<T>, T> insert(List<T> list, Object param, IterateVisitor<? super T> insert) {
+		public OperateManager<VisitService<T>, T> insert(List<T> list,@Nullable Object param, IterateVisitor<? super T> insert) {
 			checkEmpty(list);
 			ensureInserts();
 			mInserts.add(Operation.createInsert(list, param, insert));
@@ -502,7 +502,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		}
 
 		@Override
-		public OperateManager<VisitService<T>, T> insert(T newT, Object param, IterateVisitor<? super T> insert) {
+		public OperateManager<VisitService<T>, T> insert(T newT,@Nullable Object param, IterateVisitor<? super T> insert) {
 			checkNull(newT);
 			ensureInserts();
 			mInserts.add(Operation.createInsert(newT, param, insert));
@@ -510,7 +510,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		}
 
 		@Override
-		public OperateManager<VisitService<T>, T> insertFinally(T newT, Object param,
+		public OperateManager<VisitService<T>, T> insertFinally(T newT,@Nullable Object param,
 				IterateVisitor<? super T> insert) {
 			checkNull(newT);
 			ensureFinalInserts();
@@ -519,7 +519,7 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		}
 
 		@Override
-		public OperateManager<VisitService<T>, T> insertFinally(List<T> list, Object param,
+		public OperateManager<VisitService<T>, T> insertFinally(List<T> list,@Nullable Object param,
 				IterateVisitor<? super T> insert) {
 			checkEmpty(list);
 			ensureFinalInserts();
