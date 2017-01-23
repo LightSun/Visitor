@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 /**
  * here just for list test.
  * 
- * @author don
+ * @author heaven7
  *
  */
 public class VisitServiceTest extends TestCase {
@@ -45,6 +45,8 @@ public class VisitServiceTest extends TestCase {
 	protected int getStudentSize() {
 		return mStus.size();
 	}
+	
+	
 	
 	/**
 	 * the operate order is: 
