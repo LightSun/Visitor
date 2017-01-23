@@ -4,6 +4,7 @@ import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
 import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -88,11 +89,25 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		mOrderOps.add(OP_INSERT);
 	}
 
+	/**
+	 * create {@linkplain VisitService} from the target collection. <br><b>Note:  don't use 
+	 * {@linkplain Arrays#asList(Object...)} in here. </b>
+	 * @param <T> the type
+	 * @param collection the target collection, such as set.
+	 * @return an instance of {@linkplain VisitService}
+	 */
 	public static <T> VisitService<T> from(Collection<T> collection) {
 		return new VisitService<T>(collection) {
 		};
 	}
 
+	/**
+	 * create {@linkplain VisitService} from the target list.<br><b>Note:  don't use 
+	 * {@linkplain Arrays#asList(Object...)} in here. </b>
+	 * @param <T> the type
+	 * @param list the target list.
+	 * @return an instance of {@linkplain VisitService}
+	 */
 	public static <T> VisitService<T> from(List<T> list) {
 		return new ListVisitService<T>(list);
 	}
@@ -132,7 +147,8 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 			out = new ArrayList<T>();
 		}
 		final IterationInfo info = getAndInitIterationInfo();
-		IterateState.<T,T>multipleIterateState().visit(mCollection, hasExtraOperateInIteration(), mGroupInterceptor, info, param,
+		IterateState.<T,T>multipleIterateState().visit(mCollection, hasExtraOperateInIteration(), 
+				mGroupInterceptor, info, param,
 				predicate,  out);
 		handleFinalInsert(param, info);
 		return out;
@@ -142,8 +158,8 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		checkNull(predicate);
 
 		final IterationInfo info = getAndInitIterationInfo();
-		T result = IterateState.<T,T>singleIterateState().visit(mCollection, hasExtraOperateInIteration(), mGroupInterceptor,
-				info, param, predicate, null);
+		T result = IterateState.<T,T>singleIterateState().visit(mCollection, hasExtraOperateInIteration(),
+				mGroupInterceptor, info, param, predicate, null);
 		handleFinalInsert(param, info);
 		return result;
 	}
@@ -207,6 +223,15 @@ public abstract class VisitService<T> extends AbstractVisitService<T> implements
 		initDefault();
 	}
 
+	/**
+	 * handle the all operations of insert.
+	 * @param inserts the insert operations.
+	 * @param it the Iterator
+	 * @param t the element for current visit
+	 * @param param the extra parameter
+	 * @param info the IterationInfo
+	 * @return true if handle success.
+	 */
 	protected boolean onHandleInsert(List<Operation<T>> inserts, Iterator<T> it, T t, Object param,
 			IterationInfo info) {
 

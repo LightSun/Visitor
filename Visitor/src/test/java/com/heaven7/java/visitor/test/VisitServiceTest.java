@@ -8,10 +8,12 @@ import static com.heaven7.java.visitor.test.help.TestUtil.createStudent;
 import static com.heaven7.java.visitor.test.help.TestUtil.createStudent2;
 import static com.heaven7.java.visitor.test.help.TestUtil.syso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
+import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.collection.IterationInfo;
 import com.heaven7.java.visitor.collection.VisitService;
@@ -46,7 +48,77 @@ public class VisitServiceTest extends TestCase {
 		return mStus.size();
 	}
 	
+	public void testForResult(){
+		
+		final int size = getStudentSize();
+		
+		final List<Student2> list = new ArrayList<Student2>();
+		
+		mService.beginOperateManager()
+		//just fiter the student of id = 1
+			.filter(new PredicateVisitor<Student>() {
+				@Override
+				public Boolean visit(Student t, Object param) {
+					assertEquals("testForResult", param);
+					return t.getId() == 1;
+				}
+			}).end()
+		.visitForResult("testForResult", Visitors.truePredicateVisitor(), 
+				new ResultVisitor<Student, Student2>() {
+					@Override
+					public Student2 visit(Student t, Object param) {
+						assertEquals("testForResult", param);
+						if( t.getId() == 2){
+							return null; //null means ignored.
+						}
+						return new Student2(t);
+					}
+				}, list);
+		
+		assertEquals(getStudentSize(), size);
+		assertEquals(list.size(), size - 2 );
+	}
 	
+	public void testQueryWithExtraOperate(){
+		Student student = mService
+				.beginOperateManager()
+				//delete all student
+				.delete(null, new PredicateVisitor<Student>() {
+					@Override
+					public Boolean visit(Student t, Object param) {
+						//because the param of delete operate is null, so use the last visit param
+						// here is from visitForQuery(...).
+						return "testQueryWithExtraOperate".equals(param);
+					}
+				})
+				.end()
+				.visitForQuery("testQueryWithExtraOperate", new PredicateVisitor<Student>() {
+			@Override
+			public Boolean visit(Student t, Object param) {
+				if(t.id == 1 ){
+					return true;
+				}
+				return null;
+			}
+		});
+		//delete all .so is null
+		assertEquals(student, null);
+		assertEquals(0, getStudentSize());
+	}
+	
+	//single query
+	public void testQuery(){
+		Student student = mService.visitForQuery("testQuery", new PredicateVisitor<Student>() {
+			@Override
+			public Boolean visit(Student t, Object param) {
+				if(t.id == 1 && "testQuery".equals(param)){
+					return true;
+				}
+				return null;
+			}
+		});
+		assertEquals(student.getId(), 1);
+	}
 	
 	/**
 	 * the operate order is: 
@@ -100,8 +172,8 @@ OP_INSERT
 	public void testComposeVisitInsertFinally() {
 		int size = getStudentSize();
 		mService.beginOperateManager()
-				.insertFinally(createStudent("new_stu"), "testComposeVisitInsert", Visitors.trueIterateVisitor()).end()
-				.visitAll("testComposeVisitFilter_2");
+				.insertFinally(createStudent("new_stu"), Visitors.trueIterateVisitor()).end()
+				.visitAll();
 		assertEquals(getStudentSize(), size + 1);
 	}
 

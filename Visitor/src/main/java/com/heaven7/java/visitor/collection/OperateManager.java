@@ -9,15 +9,15 @@ import com.heaven7.java.visitor.PredicateVisitor;
 /**
  * the pending operate manager used to support filter/delete/update/insert in iteration. and support insert after iteration (before method return).
  * <ul>
- * <li>filter method: <br>  {@linkplain OperateManager#filter(Object, PredicateVisitor)}} <br> {@linkplain OperateManager#filter(PredicateVisitor)}}
- * <li>delete method: <br> {@linkplain OperateManager#delete(Object, PredicateVisitor)}} <br> {@linkplain OperateManager#delete(PredicateVisitor)}}
- * <li>update method: <br> {@linkplain OperateManager#update(Object, PredicateVisitor) <br> {@linkplain OperateManager#update(Object, Object, PredicateVisitor)}
- * <li>only support for List, insert (in iteration ) method: <br>
+ * <li>filter method (in iteration): <br>  {@linkplain OperateManager#filter(Object, PredicateVisitor)}} <br> {@linkplain OperateManager#filter(PredicateVisitor)}}
+ * <li>delete method (in iteration): <br> {@linkplain OperateManager#delete(Object, PredicateVisitor)}} <br> {@linkplain OperateManager#delete(PredicateVisitor)}}
+ * <li>update method (in iteration): <br> {@linkplain OperateManager#update(Object, PredicateVisitor) <br> {@linkplain OperateManager#update(Object, Object, PredicateVisitor)}
+ * <li> insert method (in iteration, and only support for List): <br>
  *   {@linkplain OperateManager#insert(List, IterateVisitor)}  <br>
  *   {@linkplain OperateManager#insert(List, Object, IterateVisitor)}  <br>
  *   {@linkplain OperateManager#insert(Object, IterateVisitor)}  <br>
  *   {@linkplain OperateManager#insert(Object, Object, IterateVisitor)} <br>
- * <li>insert finally (after iteration )method: <br>
+ * <li>insert finally method (after iteration ): <br>
  *   {@linkplain OperateManager#insertFinally(List, IterateVisitor)}  <br>
  *   {@linkplain OperateManager#insertFinally(List, Object, IterateVisitor)}  <br>
  *   {@linkplain OperateManager#insertFinally(Object, IterateVisitor)}  <br>

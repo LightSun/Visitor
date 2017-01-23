@@ -14,7 +14,7 @@ public interface ResultVisitor<T, Result> extends Visitor1<T, Object, Result> {
 	 *            the object
 	 * @param param
 	 *            the param data to carry when visit
-	 * @return the visit result.
+	 * @return the visit result. or null if it is ignored.
 	 */
 	Result visit(T t, Object param);
 	

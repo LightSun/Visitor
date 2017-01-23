@@ -69,8 +69,8 @@ public interface IVisitService<T> {
 	 * @param param
 	 *            the extra parameter for transport to the all visitors.
 	 * @param predicate
-	 *            the predicate visitor
-	 * @param visitor
+	 *            the predicate visitor ,indicate whether the element is match this predicate or not.
+	 * @param resultVisitor
 	 *            the result visitor
 	 * @param out
 	 *            the out list. can be null.
