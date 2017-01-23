@@ -5,6 +5,7 @@ import java.util.List;
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.anno.Nullable;
 
 /**
  * the super interface of 'Visit-Service'
@@ -46,7 +47,7 @@ public interface IVisitService<T> {
 	 *            the result type of visit.
 	 * @return the result of this visit
 	 */
-	<R> R visitForResult(Object param, PredicateVisitor<? super T> predicate,
+	<R> R visitForResult(@Nullable Object param, PredicateVisitor<? super T> predicate,
 			ResultVisitor<? super T, R> resultVisitor);
 	
 	/**
@@ -78,8 +79,8 @@ public interface IVisitService<T> {
 	 *            the result type of visit.
 	 * @return the collection of visit result
 	 */
-	<R> List<R> visitForResult(Object param, PredicateVisitor<? super T> predicate,
-			ResultVisitor<? super T, R> resultVisitor, List<R> out);
+	<R> List<R> visitForResult(@Nullable Object param, PredicateVisitor<? super T> predicate,
+			ResultVisitor<? super T, R> resultVisitor,@Nullable List<R> out);
 	
 	/**
 	 * visit the all elements for result. which is matched by the target predicate visitor, but carry no extra data.
@@ -95,7 +96,7 @@ public interface IVisitService<T> {
 	 * @return the collection of visit result
 	 */
 	<R> List<R> visitForResult(PredicateVisitor<? super T> predicate,
-			ResultVisitor<? super T, R> resultVisitor, List<R> out);
+			ResultVisitor<? super T, R> resultVisitor,@Nullable List<R> out);
 
 	/**
 	 * visit for query the all element which is match the PredicateVisitor.
@@ -108,7 +109,7 @@ public interface IVisitService<T> {
 	 *            the out list, can be null.
 	 * @return
 	 */
-	List<T> visitForQuery(Object param, PredicateVisitor<? super T> predicate, List<T> out);
+	List<T> visitForQuery(@Nullable Object param, PredicateVisitor<? super T> predicate,@Nullable List<T> out);
 	
 	/**
 	 * visit for query the all element which is match the PredicateVisitor, but carry no extra data.
@@ -119,7 +120,7 @@ public interface IVisitService<T> {
 	 *            the out list, can be null.
 	 * @return
 	 */
-	List<T> visitForQuery(PredicateVisitor<? super T> predicate, List<T> out);
+	List<T> visitForQuery(PredicateVisitor<? super T> predicate,@Nullable List<T> out);
 	
 
 	/**
@@ -132,7 +133,7 @@ public interface IVisitService<T> {
 	 * @return the target element by find in array.
 	 * @since 1.1.0
 	 */
-	T visitForQuery(Object param, PredicateVisitor<? super T> predicate);
+	T visitForQuery(@Nullable Object param, PredicateVisitor<? super T> predicate);
 	
 	/**
 	 * visit for query a element by the target parameter and predicate, but carry no extra data.
@@ -149,7 +150,7 @@ public interface IVisitService<T> {
 	 * @param param the extra parameter.
 	 * @return true if operate success.
 	 */
-	boolean visitAll(Object param);
+	boolean visitAll(@Nullable Object param);
 	
 	/**
 	 * visit the all elements if possible, but carry no extra data.
@@ -163,7 +164,7 @@ public interface IVisitService<T> {
 	 * @param breakVisitor the break visitor
 	 * @return true if operate success.
 	 */
-	boolean visitUntilSuccess(Object param, IterateVisitor<? super T> breakVisitor);
+	boolean visitUntilSuccess(@Nullable Object param, IterateVisitor<? super T> breakVisitor);
 	
 	/**
 	 * visit the all elements until success, but carry no extra data. by default this is same with {@linkplain #visitAll(Object)}.
@@ -178,7 +179,7 @@ public interface IVisitService<T> {
 	 * @param breakVisitor the break visitor
 	 * @return true if operate success.
 	 */
-	boolean visitUntilFailed(Object param, IterateVisitor<? super T> breakVisitor);
+	boolean visitUntilFailed(@Nullable Object param, IterateVisitor<? super T> breakVisitor);
 	/**
 	 * visit the all elements until failed, but carry no extra data. by default this is same with {@linkplain #visitAll(Object)}.
 	 * @param breakVisitor the break visitor

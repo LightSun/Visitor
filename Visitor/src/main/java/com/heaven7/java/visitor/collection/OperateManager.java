@@ -6,6 +6,7 @@ import java.util.ListIterator;
 
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
+import com.heaven7.java.visitor.anno.Nullable;
 /**
  * the pending operate manager used to support filter/delete/update/insert in iteration. and support insert after iteration (before method return).
  * <ul>
@@ -57,7 +58,7 @@ public abstract class OperateManager<R, T> {
 	 * @return this.
 	 * @see {@linkplain #delete(Object, PredicateVisitor)}.
 	 */
-	public OperateManager<R, T> delete(PredicateVisitor<? super T> delete) {
+	public OperateManager<R, T> delete( PredicateVisitor<? super T> delete) {
 		return delete(null, delete);
 	}
 
@@ -79,7 +80,7 @@ public abstract class OperateManager<R, T> {
 	 * @return this.
 	 * @see {@linkplain #insert(List, Object, IterateVisitor)}
 	 */
-	public OperateManager<R, T> insert(List<T> list, IterateVisitor<? super T> insert) {
+	public OperateManager<R, T> insert(List<T> list,  IterateVisitor<? super T> insert) {
 		return insert(list, null, insert);
 	}
 
@@ -101,7 +102,7 @@ public abstract class OperateManager<R, T> {
 	 * @return this.
 	 * @see {@linkplain #insertFinally(Object, Object, IterateVisitor)}
 	 */
-	public OperateManager<R, T> insertFinally(T newT, IterateVisitor<T> insert) {
+	public OperateManager<R, T> insertFinally( T newT, IterateVisitor<T> insert) {
 		return insertFinally(newT, null, insert);
 	}
 
@@ -112,7 +113,7 @@ public abstract class OperateManager<R, T> {
 	 * @return this.
 	 * @see {@linkplain #insertFinally(List, Object, IterateVisitor)}
 	 */
-	public OperateManager<R, T> insertFinally(List<T> list, IterateVisitor<? super T> insert) {
+	public OperateManager<R, T> insertFinally(List<T> list,IterateVisitor<? super T> insert) {
 		return insertFinally(list, null, insert);
 	}
 	
@@ -125,7 +126,7 @@ public abstract class OperateManager<R, T> {
 	 * @param filter the predicate visitor for filter.
 	 * @return this.
 	 */
-	public abstract OperateManager<R, T> filter(Object param, PredicateVisitor<? super T> filter);
+	public abstract OperateManager<R, T> filter(@Nullable Object param, PredicateVisitor<? super T> filter);
 
 	/**
 	 * pending remove/delete element in the iteration({@linkplain Iterator} or {@linkplain ListIterator}) if possible.
@@ -133,7 +134,7 @@ public abstract class OperateManager<R, T> {
 	 * @param delete the predicate visitor for delete/remove.
 	 * @return this.
 	 */
-	public abstract OperateManager<R, T> delete(Object param, PredicateVisitor<? super T> delete);
+	public abstract OperateManager<R, T> delete(@Nullable Object param, PredicateVisitor<? super T> delete);
 
 	/**
 	 * pending update element in the iteration({@linkplain Iterator} or {@linkplain ListIterator}) if possible.
@@ -142,7 +143,7 @@ public abstract class OperateManager<R, T> {
 	 * @param update the predicate visitor for update
 	 * @return this.
 	 */
-	public abstract OperateManager<R, T> update(T newT, Object param, PredicateVisitor<? super T> update);
+	public abstract OperateManager<R, T> update(T newT,@Nullable Object param, PredicateVisitor<? super T> update);
 	
 	/**
 	 * pending insert the list in the iteration({@linkplain Iterator} or {@linkplain ListIterator}) if possible.
@@ -151,7 +152,7 @@ public abstract class OperateManager<R, T> {
 	 * @param insert the insert iterate visitor. see {@linkplain IterateVisitor}.
 	 * @return this.
 	 */
-	public abstract OperateManager<R, T> insert(List<T> list, Object param, IterateVisitor<? super T> insert);
+	public abstract OperateManager<R, T> insert(List<T> list,@Nullable Object param, IterateVisitor<? super T> insert);
 
 	/**
 	 * pending insert the element in the iteration({@linkplain Iterator} or {@linkplain ListIterator}) if possible.
@@ -160,7 +161,7 @@ public abstract class OperateManager<R, T> {
 	 * @param insert the insert iterate visitor. see {@linkplain IterateVisitor}.
 	 * @return this.
 	 */
-	public abstract OperateManager<R, T> insert(T newT, Object param, IterateVisitor<? super T> insert);
+	public abstract OperateManager<R, T> insert(T newT,@Nullable Object param, IterateVisitor<? super T> insert);
 
 	/**
 	 * pending insert the element after the iteration({@linkplain Iterator} or {@linkplain ListIterator}) if possible.
@@ -169,7 +170,7 @@ public abstract class OperateManager<R, T> {
 	 * @param insert the insert iterate visitor. see {@linkplain IterateVisitor}.
 	 * @return this.
 	 */
-	public abstract OperateManager<R, T> insertFinally(T newT, Object param, IterateVisitor<? super T> insert);
+	public abstract OperateManager<R, T> insertFinally(T newT,@Nullable Object param, IterateVisitor<? super T> insert);
 
 	/**
 	 * pending insert the list after the iteration({@linkplain Iterator} or {@linkplain ListIterator}) if possible.
@@ -178,6 +179,6 @@ public abstract class OperateManager<R, T> {
 	 * @param insert the insert iterate visitor. see {@linkplain IterateVisitor}.
 	 * @return this.
 	 */
-	public abstract OperateManager<R, T> insertFinally(List<T> list, Object param, IterateVisitor<? super T> insert);
+	public abstract OperateManager<R, T> insertFinally(List<T> list,@Nullable Object param, IterateVisitor<? super T> insert);
 
 }
