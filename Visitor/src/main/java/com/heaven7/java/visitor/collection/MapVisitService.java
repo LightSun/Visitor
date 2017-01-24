@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
+import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
 
 public interface MapVisitService<K, V> extends VisitService{
 	
@@ -30,6 +31,21 @@ public interface MapVisitService<K, V> extends VisitService{
 	KeyValuePair<K, V> visitForQuery(Object param, MapPredicateVisitor<? super K, ? super V> predicate);
 
 	KeyValuePair<K, V> visitForQuery(MapPredicateVisitor<? super K, ? super V> predicate);
+	
+	/**
+	 * begin the iterate control , And then we can edit the order of operate in iteration.
+	 * Finally you can call {@linkplain IterateControl#end()} to end the iterate control.  
+	 * @return the iterate control.
+	 */
+	IterateControl<MapVisitService<K,V>> beginIterateControl(); 
+	
+	/**
+	 * begin the operate manager , And then we can add some pending operation in or after iteration.
+	 * Finally you can call {@linkplain OperateManager#end()} to end the iterate operate manager.  
+	 * @return the iterate control.
+	 */
+	MapOperateManager<K,V> beginOperateManager();
+	
 	
 	public static abstract class MapOperateInterceptor<K,V>{
 

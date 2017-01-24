@@ -21,8 +21,7 @@ public final class VisitServices {
 	 * @return an instance of {@linkplain CollectionVisitServiceImpl}
 	 */
 	public static <T> CollectionVisitService<T> from(Collection<T> collection) {
-		return new CollectionVisitServiceImpl<T>(collection) {
-		};
+		return new CollectionVisitServiceImpl<T>(collection);
 	}
 
 	/**

@@ -122,7 +122,6 @@ final class ListVisitService<T> extends CollectionVisitServiceImpl<T> implements
 		} catch (UnsupportedOperationException e) {
 			System.err.println("insert failed. caused by the list is fixed. "
 					+ "so can't modified. are your list comes from 'Arrays.asList(...)' ? ");
-            return false;
 		}
 		return false;
 	}

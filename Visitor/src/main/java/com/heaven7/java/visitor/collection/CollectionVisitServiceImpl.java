@@ -26,7 +26,7 @@ import com.heaven7.java.visitor.util.SparseArray;
  *            the type of element
  * @see ListVisitService
  */
-public abstract class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> implements CollectionVisitService<T> {
+public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> implements CollectionVisitService<T> {
 
 	protected static final boolean DEBUG = true;
 
@@ -376,6 +376,7 @@ public abstract class CollectionVisitServiceImpl<T> extends AbstractVisitService
 			});
 		}
 
+		@Override
 		public void begin() {
 			Integer op;
 			for (int size = mInterceptOps.size(), i = size - 1; i >= 0; i--) {
@@ -409,6 +410,7 @@ public abstract class CollectionVisitServiceImpl<T> extends AbstractVisitService
 			}
 		}
 
+		@Override
 		public void end() {
 			mIntercept_Delete = false;
 			mIntercept_Filter = false;

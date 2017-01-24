@@ -262,7 +262,7 @@ public interface CollectionVisitService<T> extends VisitService{
 	 * @param <R> the return type for {@link #end()}}
 	 * @param <T> the parametric type of most method
 	 */
-	public abstract class OperateManager<T> {
+	public static abstract class OperateManager<T> {
 
 		OperateManager() {
 			super();
