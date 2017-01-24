@@ -9,18 +9,18 @@
 
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
-apply plugin: "maven-publish"
 
 buildscript {
 	repositories {
 		jcenter()
 		}
 	dependencies {
-		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3' //1.2
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7' //1.2
 		}
 	
 }
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -65,7 +65,7 @@ def projectSiteUrl = properties.getProperty("project.siteUrl")
 def projectGitUrl = projectSiteUrl + ".git"
 def projectDesc = properties.getProperty("project.desc")
 
-def projectVersion = properties.getProperty("project.version") //optional
+def libVersion = properties.getProperty("project.version") //optional
 
 def licenseName = properties.getProperty("project.liscenseName")
 def licenseUrl = properties.getProperty("project.licenseUrl")
@@ -86,55 +86,38 @@ def projectLicenses = ["Apache-2.0"]
 
 group = projectGroupId      // Maven Group ID for the artifact
 
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
-// custom tasks for creating source/javadoc jars
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-// add javadoc/source jar tasks as artifacts
-artifacts {
-    archives sourcesJar, javadocJar
-}
-
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-			artifact sourcesJar
-            artifact javadocJar
-			groupId projectGroupId
-			artifactId projectArtifactId
-			version projectVersion
-			/* pom.withXml {
-                def root = asNode()
-                root.appendNode('description', projectDesc)
-                root.appendNode('name', projectName)
-                root.appendNode('url', projectSiteUrl)
-                root.children().last() + pomConfig
-            } 
-             pom.withXml {
-		         asNode().dependencies.'*'.findAll() {
-		             it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
-		                 dep.name == it.artifactId.text()
-		             }
-		         }.each() {
-		             it.scope*.value = 'compile'
-		         }
-	        } 
-	        */
-		}
-		
-	}
+// This generates POM.xml with proper parameters
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                name projectName
+                groupId projectGroupId
+                artifactId projectArtifactId
+                version projectVersionName
+                packaging projectPackaging
+                url projectSiteUrl
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id developerId
+                        name developerName
+                        email developerEmail
+                    }
+                }
+                scm {
+                    connection projectGitUrl
+                    developerConnection projectGitUrl
+                    url projectSiteUrl
+                }
+            }
+        }
+    }
 }
 
 bintray {
@@ -172,10 +155,10 @@ bintray {
 
         //Optional version descriptor
         version {
-            name = projectVersion    //Bintray logical version name
+            name = libVersion    //Bintray logical version name
             desc =  projectDesc   //Optional - Version-specific description'
             released  = new Date()  //Optional - Date of the version release. 2 possible values: date in the format of 'yyyy-MM-dd'T'HH:mm:ss.SSSZZ' OR a java.util.Date instance
-            vcsTag = projectVersion
+            vcsTag = libVersion
             //attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin'] //Optional version-level attributes
             //Optional configuration for GPG signing
             gpg {
@@ -193,7 +176,19 @@ bintray {
     }
 }
 
+// javadoc configuration
+javadoc {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version projectVersionName
+        links "http://docs.oracle.com/javase/7/docs/api"
+        title javadocName
+    }
+}
 
+/*
 def pomConfig = {
     licenses {
         license {
@@ -211,19 +206,45 @@ def pomConfig = {
     }
 }
 
-
-
-
-
-// javadoc configuration
-javadoc {
-    options{
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        author true
-        version projectVersion
-        links "http://docs.oracle.com/javase/7/docs/api"
-        title javadocName
-    }
+publishing {
+	publications {
+		MyPublication(MavenPublication) {
+			from components.java
+			artifact sourcesJar
+            artifact javadocJar
+			groupId projectGroupId
+			artifactId projectArtifactId
+			version libVersion
+			pom.withXml {
+                def root = asNode()
+                root.appendNode('description', projectDesc)
+                root.appendNode('name', projectName)
+                root.appendNode('url', projectSiteUrl)
+                root.children().last() + pomConfig
+            }
+		}
+	}
 }
 
+
+bintray {
+	user = bintrayUser
+	key = bintrayApikey
+	pkg {
+		repo = bintrayRepo
+		name = projectName
+		licenses = projectLicenses
+		vcsUrl = projectGitUrl
+		publish = true
+		userOrg = githubRepository
+		
+		version {
+			name = libVersion
+			desc = projectDesc
+			released  = new Date()
+			//vcsTag = '1.0'
+			//attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+		}
+	}
+}
+*/

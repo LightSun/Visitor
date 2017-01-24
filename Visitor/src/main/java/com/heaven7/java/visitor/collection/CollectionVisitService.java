@@ -344,7 +344,7 @@ public interface CollectionVisitService<T> extends VisitService{
 		 * @return this.
 		 * @see {@linkplain #insertFinally(Object, Object, IterateVisitor)}
 		 */
-		public OperateManager<T> insertFinally( T newT, IterateVisitor<T> insert) {
+		public OperateManager<T> insertFinally( T newT, IterateVisitor<? super T> insert) {
 			return insertFinally(newT, null, insert);
 		}
 
