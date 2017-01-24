@@ -12,7 +12,7 @@ import com.heaven7.java.visitor.IterateVisitor;
  *
  * @param <T>
  */
-final class ListVisitService<T> extends VisitService<T> implements IVisitService<T>  {
+final class ListVisitService<T> extends CollectionVisitServiceImpl<T> implements CollectionVisitService<T>  {
 
 	protected ListVisitService(List<T> collection) {
 		super(collection);

@@ -1,19 +1,20 @@
 package com.heaven7.java.visitor.internal;
 
+import static com.heaven7.java.visitor.util.Predicates.isTrue;
+import static com.heaven7.java.visitor.util.Throwables.checkNull;
+
 import java.util.Iterator;
 import java.util.List;
 
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.collection.CollectionVisitService.OperateInterceptor;
 import com.heaven7.java.visitor.collection.IterationInfo;
-import com.heaven7.java.visitor.collection.VisitService;
-import static com.heaven7.java.visitor.util.Throwables.checkNull;
-import static com.heaven7.java.visitor.util.Predicates.isTrue;
 
 /*public*/ class MultipleIterateState<T, R> extends IterateState<T, R> {
 
 	@Override
-	protected T visitImpl(boolean hasExtra, VisitService<T>.GroupOperateInterceptor interceptor, Object param,
+	protected T visitImpl(boolean hasExtra, OperateInterceptor<T> interceptor, Object param,
 			PredicateVisitor< ? super T> predicate, Iterator<T> it, IterationInfo info, List<T> out) {
 		checkNull(out);
 		T t;
@@ -30,7 +31,7 @@ import static com.heaven7.java.visitor.util.Predicates.isTrue;
 	}
 
 	@Override
-	protected R visitForResultImpl(boolean hasExtra, VisitService<T>.GroupOperateInterceptor interceptor, Object param,
+	protected R visitForResultImpl(boolean hasExtra, OperateInterceptor<T> interceptor, Object param,
 			PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVistor, Iterator<T> it,
 			IterationInfo info, List<R> out) {
 		checkNull(out);

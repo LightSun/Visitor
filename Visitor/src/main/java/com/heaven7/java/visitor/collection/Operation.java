@@ -1,9 +1,9 @@
 package com.heaven7.java.visitor.collection;
 
-import static com.heaven7.java.visitor.collection.VisitService.OP_DELETE;
-import static com.heaven7.java.visitor.collection.VisitService.OP_FILTER;
-import static com.heaven7.java.visitor.collection.VisitService.OP_INSERT;
-import static com.heaven7.java.visitor.collection.VisitService.OP_UPDATE;
+import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_DELETE;
+import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_FILTER;
+import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_INSERT;
+import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_UPDATE;
 
 import java.util.Collection;
 import java.util.List;

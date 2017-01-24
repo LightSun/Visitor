@@ -1,9 +1,9 @@
 package com.heaven7.java.visitor.test;
 
-import static com.heaven7.java.visitor.collection.VisitService.OP_DELETE;
-import static com.heaven7.java.visitor.collection.VisitService.OP_FILTER;
-import static com.heaven7.java.visitor.collection.VisitService.OP_INSERT;
-import static com.heaven7.java.visitor.collection.VisitService.OP_UPDATE;
+import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_DELETE;
+import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_FILTER;
+import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_INSERT;
+import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_UPDATE;
 import static com.heaven7.java.visitor.test.help.TestUtil.createStudent;
 import static com.heaven7.java.visitor.test.help.TestUtil.createStudent2;
 import static com.heaven7.java.visitor.test.help.TestUtil.syso;
@@ -15,8 +15,9 @@ import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
+import com.heaven7.java.visitor.collection.CollectionVisitService;
 import com.heaven7.java.visitor.collection.IterationInfo;
-import com.heaven7.java.visitor.collection.VisitService;
+import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.test.help.Student;
 import com.heaven7.java.visitor.test.help.Student2;
 
@@ -30,13 +31,13 @@ import junit.framework.TestCase;
  */
 public class VisitServiceTest extends TestCase {
 
-	VisitService<Student> mService;
+	CollectionVisitService<Student> mService;
 	List<Student> mStus;
 
 	@Override
 	protected void setUp() throws Exception {
 		Student.resetId();
-		mService = VisitService.from(mStus = createStudent(6));
+		mService = VisitServices.from(mStus = createStudent(6));
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class VisitServiceTest extends TestCase {
 					return t.getId() == 1;
 				}
 			}).end()
-		.visitForResult("testForResult", Visitors.truePredicateVisitor(), 
+		.visitForResultList("testForResult", Visitors.truePredicateVisitor(), 
 				new ResultVisitor<Student, Student2>() {
 					@Override
 					public Student2 visit(Student t, Object param) {
@@ -86,7 +87,7 @@ public class VisitServiceTest extends TestCase {
 				.delete(null, new PredicateVisitor<Student>() {
 					@Override
 					public Boolean visit(Student t, Object param) {
-						//because the param of delete operate is null, so use the last visit param
+						//because the parameter of delete operate is null, so use the last visit parameter
 						// here is from visitForQuery(...).
 						return "testQueryWithExtraOperate".equals(param);
 					}
@@ -216,7 +217,7 @@ OP_INSERT
 
 		// class Student2 has implements Updatable
 		List<Student2> list = createStudent2(6);
-		VisitService.from(list).beginOperateManager()
+		VisitServices.from(list).beginOperateManager()
 					.update(new Student2("new_stu"), "testComposeVisit_1", Visitors.truePredicateVisitor())
 					.end()
 				.visitAll("testComposeVisit_2");

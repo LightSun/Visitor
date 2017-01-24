@@ -1,12 +1,8 @@
 package com.heaven7.java.visitor.collection;
 
-import static com.heaven7.java.visitor.collection.VisitService.OP_DELETE;
-import static com.heaven7.java.visitor.collection.VisitService.OP_FILTER;
-import static com.heaven7.java.visitor.collection.VisitService.OP_INSERT;
-import static com.heaven7.java.visitor.collection.VisitService.OP_UPDATE;
-
 /**
  * the iterate control used to control the order of all operate ( {@linkplain VisitService#OP_FILTER}} and etc.).
+ * But {@linkplain VisitService#OP_INSERT} only used for List.
  * <p>
  * the default order of iterate is :<br> 
  * first({@linkplain VisitService#OP_DELETE} ).<br> 
@@ -37,10 +33,10 @@ import static com.heaven7.java.visitor.collection.VisitService.OP_UPDATE;
  * @author heaven7
  *
  * @param <T> the type 
- * @see {@linkplain #OP_DELETE}
- * @see {@linkplain #OP_FILTER}
- * @see {@linkplain #OP_UPDATE}
- * @see {@linkplain #OP_INSERT}
+ * @see {@linkplain VisitService#OP_DELETE}
+ * @see {@linkplain VisitService#OP_FILTER}
+ * @see {@linkplain VisitService#OP_UPDATE}
+ * @see {@linkplain VisitService#OP_INSERT}
  */
 public abstract class IterateControl<T> {
 	
@@ -54,35 +50,35 @@ public abstract class IterateControl<T> {
 
 	/**
 	 * intercept the target operate if visit success.
-	 * @param operate the operate. see {@linkplain VisitService#OP_DELETE}} and etc.
+	 * @param operate the operate. see {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
 	 * @return this.
 	 */
 	public abstract IterateControl<T> interceptIfSuccess(int operate);
 
 	/**
 	 * define the target operate run the first in current iteration, but it may change. such as recall {@linkplain #first(int)}}.the more to see in demo.
-	 * @param operate the operate. see {@linkplain VisitService#OP_DELETE}} and etc.
+	 * @param operate the operate. see {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
 	 * @return this.
 	 */
 	public abstract IterateControl<T> first(int operate);
 
 	/**
 	 * define the target operate run the second in current iteration. but may change, the more to see in demo.
-	 * @param operate the operate. see {@linkplain VisitService#OP_DELETE}} and etc.
+	 * @param operate the operate. see {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
 	 * @return this.
 	 */
 	public abstract IterateControl<T> second(int operate);
 
 	/**
 	 * define the target operate run after the {@linkplain #second(int)} in current iteration, but may change, the more to see in demo.
-	 * @param operate the operate. see {@linkplain VisitService#OP_DELETE}} and etc.
+	 * @param operate the operate. see {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
 	 * @return this.
 	 */
 	public abstract IterateControl<T> then(int operate);
 
 	/**
 	 * define the target operate run the last in current iteration, but may change, the more to see in demo.
-	 * @param operate the operate. see {@linkplain VisitService#OP_DELETE}} and etc.
+	 * @param operate the operate. see {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
 	 * @return this.
 	 */
 	public abstract IterateControl<T> last(int operate);

@@ -7,8 +7,8 @@ import java.util.List;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
+import com.heaven7.java.visitor.collection.CollectionVisitService.OperateInterceptor;
 import com.heaven7.java.visitor.collection.IterationInfo;
-import com.heaven7.java.visitor.collection.VisitService;
 
 /**
  * the iterate state. help we fast do something.
@@ -19,7 +19,7 @@ import com.heaven7.java.visitor.collection.VisitService;
  *            the type of collection
  * @param <R>
  *            the result type of visit for {@link #visitForResult(Collection, boolean, 
- *            com.heaven7.java.visitor.collection.VisitService.GroupOperateInterceptor, 
+ *            com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.GroupOperateInterceptor, 
  *            IterationInfo, Object, PredicateVisitor, ResultVisitor, List)}
  */
 public abstract class IterateState<T, R> {
@@ -30,7 +30,7 @@ public abstract class IterateState<T, R> {
      *            the type of collection
      * @param <R>
      *            the result type of visit for {@link #visitForResult(Collection, boolean, 
-     *            com.heaven7.java.visitor.collection.VisitService.GroupOperateInterceptor, 
+     *            com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.GroupOperateInterceptor, 
      *            IterationInfo, Object, PredicateVisitor, ResultVisitor, List)}
 	 * @return an instance of IterateState
 	 */
@@ -43,7 +43,7 @@ public abstract class IterateState<T, R> {
      *            the type of collection
      * @param <R>
      *            the result type of visit for {@link #visitForResult(Collection, boolean, 
-     *            com.heaven7.java.visitor.collection.VisitService.GroupOperateInterceptor, 
+     *            com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.GroupOperateInterceptor, 
      *            IterationInfo, Object, PredicateVisitor, ResultVisitor, List)}
 	 * @return an instance of IterateState
 	 */
@@ -74,7 +74,7 @@ public abstract class IterateState<T, R> {
 	 * @return the result which is match the predicate visitor, if it's single
 	 *         state. or else return null.
 	 */
-	public T visit(Collection<T> collection, boolean hasExtra, VisitService<T>.GroupOperateInterceptor interceptor,
+	public T visit(Collection<T> collection, boolean hasExtra, OperateInterceptor<T> interceptor,
 			IterationInfo info, Object param, PredicateVisitor<? super T> predicate, @Nullable List<T> out) {
 		if (hasExtra) {
 			interceptor.begin();
@@ -115,7 +115,7 @@ public abstract class IterateState<T, R> {
 	 *         state. or else return null.
 	 */
 	public R visitForResult(Collection<T> collection, boolean hasExtra,
-			VisitService<T>.GroupOperateInterceptor interceptor, IterationInfo info, Object param,
+			OperateInterceptor<T> interceptor, IterationInfo info, Object param,
 			PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVistor, @Nullable List<R> out) {
 		if (hasExtra) {
 			interceptor.begin();
@@ -151,7 +151,7 @@ public abstract class IterateState<T, R> {
 	 *            the out list. may be null if is {@link SingleIterateState}.
 	 * @return the result , may be null if is {@link MultipleIterateState}}.
 	 */
-	protected abstract R visitForResultImpl(boolean hasExtra, VisitService<T>.GroupOperateInterceptor interceptor,
+	protected abstract R visitForResultImpl(boolean hasExtra, OperateInterceptor<T> interceptor,
 			Object param, PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVistor,
 			Iterator<T> it, IterationInfo info, List<R> out);
 
@@ -174,6 +174,6 @@ public abstract class IterateState<T, R> {
 	 *            the out list. may be null if is {@link SingleIterateState}.
 	 * @return the result , may be null if is {@link MultipleIterateState}}.
 	 */
-	protected abstract T visitImpl(boolean hasExtra, VisitService<T>.GroupOperateInterceptor groupInterceptor, Object param,
+	protected abstract T visitImpl(boolean hasExtra, OperateInterceptor<T> groupInterceptor, Object param,
 			PredicateVisitor<? super T> predicate, Iterator<T> it, IterationInfo info, List<T> out);
 }

@@ -10,15 +10,15 @@ import com.heaven7.java.visitor.ResultVisitor;
  * @author heaven7
  *
  * @param <T> the type
- * @see VisitService
+ * @see CollectionVisitServiceImpl
  * @see ListVisitService
  */
-public abstract class AbstractVisitService<T> implements IVisitService<T>{
+public abstract class AbstractVisitService<T> implements CollectionVisitService<T>{
 	
 	@Override
-	public final <R> List<R> visitForResult(PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor,
+	public final <R> List<R> visitForResultList(PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor,
 			List<R> out) {
-		return visitForResult(null, predicate, resultVisitor, out);
+		return visitForResultList(null, predicate, resultVisitor, out);
 	}
 	
 	@Override
@@ -27,8 +27,8 @@ public abstract class AbstractVisitService<T> implements IVisitService<T>{
 	}
 	
 	@Override
-	public final List<T> visitForQuery(PredicateVisitor<? super T> predicate, List<T> out) {
-		return visitForQuery(null, predicate, out);
+	public final List<T> visitForQueryList(PredicateVisitor<? super T> predicate, List<T> out) {
+		return visitForQueryList(null, predicate, out);
 	}
 	
 	@Override

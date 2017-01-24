@@ -5,13 +5,13 @@ import java.util.List;
 
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.collection.CollectionVisitService.OperateInterceptor;
 import com.heaven7.java.visitor.collection.IterationInfo;
-import com.heaven7.java.visitor.collection.VisitService;
 
 /*public*/ class SingleIterateState<T, R> extends IterateState<T, R>{
 
 	@Override
-	protected T visitImpl(boolean hasExtra, VisitService<T>.GroupOperateInterceptor interceptor, Object param,
+	protected T visitImpl(boolean hasExtra, OperateInterceptor<T> interceptor, Object param,
 			PredicateVisitor<? super T> predicate, Iterator<T> it, IterationInfo info, List<T> out) {
 		T result = null;
 		T t ;
@@ -37,7 +37,7 @@ import com.heaven7.java.visitor.collection.VisitService;
 
 
 	@Override
-	protected R visitForResultImpl(boolean hasExtra, VisitService<T>.GroupOperateInterceptor interceptor, Object param,
+	protected R visitForResultImpl(boolean hasExtra, OperateInterceptor<T> interceptor, Object param,
 			PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVistor, Iterator<T> it,
 			IterationInfo info, List<R> out) {
 		R result = null;

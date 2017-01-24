@@ -11,8 +11,9 @@ import java.util.Set;
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.Visitors;
+import com.heaven7.java.visitor.collection.CollectionVisitService;
 import com.heaven7.java.visitor.collection.IterationInfo;
-import com.heaven7.java.visitor.collection.VisitService;
+import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.test.help.Student;
 import com.heaven7.java.visitor.test.help.Student2;
 
@@ -26,13 +27,13 @@ import junit.framework.TestCase;
  */
 public class DefaultServiceTest extends TestCase {
 
-	VisitService<Student> mService;
+	CollectionVisitService<Student> mService;
 	Set<Student> mStus;
 
 	@Override
 	protected void setUp() throws Exception {
 		Student.resetId();
-		mService = VisitService.from(mStus = new HashSet<Student>(createStudent(6)));
+		mService = VisitServices.from(mStus = new HashSet<Student>(createStudent(6)));
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class DefaultServiceTest extends TestCase {
 
 		// class Student2 has implements Updatable
 		List<Student2> list = createStudent2(6);
-		VisitService.from(list).beginOperateManager()
+		VisitServices.from(list).beginOperateManager()
 				.update(new Student2("new_stu"), "testComposeVisit_1", Visitors.truePredicateVisitor()).end()
 				.visitAll("testComposeVisit_2");
 
