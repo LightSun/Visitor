@@ -9,6 +9,7 @@ import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
+import com.heaven7.java.visitor.internal.OperateInterceptor;
 
 /**
  * the super interface of 'Visit-Service'
@@ -20,7 +21,7 @@ import com.heaven7.java.visitor.anno.Nullable;
  * @see ListVisitService
  */
 //TODO need visitFirst/ visitLast / ?
-public interface CollectionVisitService<T> extends VisitService{
+public interface CollectionVisitService<T>{
 	
 	/**
 	 * the visit rule: visit all.
@@ -209,7 +210,7 @@ public interface CollectionVisitService<T> extends VisitService{
 	 *
 	 * @param <T> the type
 	 */
-	public abstract class OperateInterceptor<T> {
+	public abstract class CollectionOperateInterceptor<T> extends OperateInterceptor {
 
 		/**
 		 * intercept the current iteration.
@@ -220,21 +221,6 @@ public interface CollectionVisitService<T> extends VisitService{
 		 * @return true if intercept success, this means the loop of 'for' will be 'continue'. 
 		 */
 		public abstract boolean intercept(Iterator<T> it, T t,@Nullable Object param, IterationInfo info);
-		
-		/**
-		 * begin operate interceptor.
-		 * called before iterate.
-		 */
-		public void begin(){
-			
-		}
-		/**
-		 * end operate interceptor.
-		 * called after iterate.
-		 */
-		public  void end(){
-			
-		}
 
 	}
 	

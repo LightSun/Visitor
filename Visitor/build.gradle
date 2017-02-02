@@ -212,9 +212,6 @@ def pomConfig = {
 }
 
 
-
-
-
 // javadoc configuration
 javadoc {
     options{

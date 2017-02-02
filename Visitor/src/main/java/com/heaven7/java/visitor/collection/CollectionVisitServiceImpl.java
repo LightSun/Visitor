@@ -1,5 +1,9 @@
 package com.heaven7.java.visitor.collection;
 
+import static com.heaven7.java.visitor.collection.Operation.OP_DELETE;
+import static com.heaven7.java.visitor.collection.Operation.OP_FILTER;
+import static com.heaven7.java.visitor.collection.Operation.OP_INSERT;
+import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
 import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
 import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
@@ -13,7 +17,8 @@ import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
-import com.heaven7.java.visitor.internal.IterateState;
+import com.heaven7.java.visitor.collection.IterateControl.Callback;
+import com.heaven7.java.visitor.internal.state.IterateState;
 import com.heaven7.java.visitor.util.SparseArray;
 
 /**
@@ -31,9 +36,11 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 	protected static final boolean DEBUG = true;
 
 	/** the ordered operate */
-	private final ArrayList<Integer> mOrderOps = new ArrayList<Integer>(6);
+	private List<Integer> mOrderOps;
 	/** the intercept operate */
-	private final ArrayList<Integer> mInterceptOps = new ArrayList<Integer>(6);
+	private List<Integer> mInterceptOps;
+	
+	private final IterateControl<CollectionVisitService<T>> mControl;
 	/** the operate interceptor */
 	private final GroupOperateInterceptor mGroupInterceptor = new GroupOperateInterceptor();
 
@@ -41,16 +48,17 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 	// limitSize ,limit filter size. limit null size.
 
 	private final Collection<T> mCollection;
+	
 	/** the all Operation/operate of insert in iteration */
-	private List<Operation<T>> mInserts;
+	private List<CollectionOperation<T>> mInsertOps;
 	/** the all Operation/operate of final insert after iteration */
-	private List<Operation<T>> mFinalInserts;
+	private List<CollectionOperation<T>> mFinalInsertOps;
 	/** the all Operation/operate of update in iteration */
-	private List<Operation<T>> mUpdates;
+	private List<CollectionOperation<T>> mUpdateOps;
 	/** the Operation/operate of filter */
-	private Operation<T> mFilterOp;
+	private CollectionOperation<T> mFilterOp;
 	/** the Operation/operate of delete or remove. */
-	private Operation<T> mDeleteOp;
+	private CollectionOperation<T> mDeleteOp;
 
 	private IterationInfo mIterationInfo;
 
@@ -58,26 +66,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 		super();
 		checkNull(collection);
 		this.mCollection = collection;
-
-		initDefault();
+		mControl = IterateControl.<CollectionVisitService<T>>create(this, 
+				new ControlCallbackImpl());
+		mControl.begin().end();
 	}
-
-	private void initDefault() {
-		// by default only delete and fiter op will intercept iteration.
-		// that means if success the iterator will skip and continue next
-		// iteration.
-		mInterceptOps.add(OP_DELETE);
-		mInterceptOps.add(OP_FILTER);
-
-		/**
-		 * default order is delete -> filter -> update -> insert
-		 */
-		mOrderOps.add(OP_DELETE);
-		mOrderOps.add(OP_FILTER);
-		mOrderOps.add(OP_UPDATE);
-		mOrderOps.add(OP_INSERT);
-	}
-
 
 	// =============================================================================//
 	@Override
@@ -86,7 +78,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 
 		checkNull(predicate);
 		checkNull(resultVisitor);
-		final IterationInfo info = getAndInitIterationInfo();
+		final IterationInfo info = initAndGetIterationInfo();
 		R r = IterateState.<T, R>singleIterateState().visitForResult(mCollection, hasExtraOperateInIteration(),
 				mGroupInterceptor, info, param, predicate, resultVisitor, null);
 		handleFinalInsert(param, info);
@@ -102,7 +94,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 		if (out == null) {
 			out = new ArrayList<R>();
 		}
-		final IterationInfo info = getAndInitIterationInfo();
+		final IterationInfo info = initAndGetIterationInfo();
 		IterateState.<T, R>multipleIterateState().visitForResult(mCollection, hasExtraOperateInIteration(),
 				mGroupInterceptor, info, param, predicate, resultVisitor, out);
 		handleFinalInsert(param, info);
@@ -116,7 +108,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 		if (out == null) {
 			out = new ArrayList<T>();
 		}
-		final IterationInfo info = getAndInitIterationInfo();
+		final IterationInfo info = initAndGetIterationInfo();
 		IterateState.<T, T>multipleIterateState().visit(mCollection, hasExtraOperateInIteration(), mGroupInterceptor,
 				info, param, predicate, out);
 		handleFinalInsert(param, info);
@@ -127,7 +119,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 	public T visitForQuery(@Nullable Object param, PredicateVisitor<? super T> predicate) {
 		checkNull(predicate);
 
-		final IterationInfo info = getAndInitIterationInfo();
+		final IterationInfo info = initAndGetIterationInfo();
 		T result = IterateState.<T, T>singleIterateState().visit(mCollection, hasExtraOperateInIteration(),
 				mGroupInterceptor, info, param, predicate, null);
 		handleFinalInsert(param, info);
@@ -139,7 +131,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 		if (mCollection.size() == 0) {
 			return false;
 		}
-		final IterationInfo info = getAndInitIterationInfo();
+		final IterationInfo info = initAndGetIterationInfo();
 
 		mGroupInterceptor.begin();
 		boolean result = visitImpl(mCollection, rule, param, mGroupInterceptor, breakVisitor, info);
@@ -150,7 +142,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 	}
 
 	protected boolean visitImpl(Collection<T> collection, int rule, @Nullable Object param,
-			OperateInterceptor<T> interceptor, IterateVisitor<? super T> breakVisitor, final IterationInfo info) {
+			CollectionOperateInterceptor<T> interceptor, IterateVisitor<? super T> breakVisitor, final IterationInfo info) {
 
 		final boolean hasExtra = hasExtraOperateInIteration();
 
@@ -174,18 +166,17 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 	public void reset() {
 		mDeleteOp = null;
 		mFilterOp = null;
-		if (mInserts != null) {
-			mInserts.clear();
+		if (mInsertOps != null) {
+			mInsertOps.clear();
 		}
-		if (mUpdates != null) {
-			mUpdates.clear();
+		if (mUpdateOps != null) {
+			mUpdateOps.clear();
 		}
-		if (mFinalInserts != null) {
-			mFinalInserts.clear();
+		if (mFinalInsertOps != null) {
+			mFinalInsertOps.clear();
 		}
 		mOrderOps.clear();
 		mInterceptOps.clear();
-		initDefault();
 	}
 
 	/**
@@ -203,26 +194,25 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 	 *            the IterationInfo
 	 * @return true if handle success.
 	 */
-	protected boolean onHandleInsert(List<Operation<T>> inserts, Iterator<T> it, T t, Object param,
+	protected boolean onHandleInsert(List<CollectionOperation<T>> inserts, Iterator<T> it, T t, Object param,
 			IterationInfo info) {
 
 		return false;
 	}
 
 	private boolean handleInsert(Iterator<T> it, T t, Object param, final IterationInfo info) {
-		return mInserts != null && onHandleInsert(mInserts, it, t, param, info);
+		return mInsertOps != null && onHandleInsert(mInsertOps, it, t, param, info);
 	}
 
 	private void handleFinalInsert(Object param, final IterationInfo info) {
 		info.setCurrentSize(mCollection.size());
-		if (mFinalInserts != null) {
+		if (mFinalInsertOps != null) {
 			// final boolean hasInfo = info != null;
-			final List<Operation<T>> mInserts = this.mFinalInserts;
+			final List<CollectionOperation<T>> mInserts = this.mFinalInsertOps;
 			try {
 				for (int i = 0, len = mInserts.size(); i < len; i++) {
 					if (mInserts.get(i).insertLast(mCollection, param, info)) {
-						info.incrementInsert();
-						info.incrementCurrentSize();
+						//info update :change to internal of CollectionOperation
 					}
 				}
 			} catch (UnsupportedOperationException e) {
@@ -234,13 +224,13 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 	}
 
 	private boolean handleUpdate(Iterator<T> lit, T t, Object param, IterationInfo info) {
-		final List<Operation<T>> mUpdates = this.mUpdates;
+		final List<CollectionOperation<T>> mUpdates = this.mUpdateOps;
 		if (mUpdates == null || mUpdates.size() == 0) {
 			return false;
 		}
 		final boolean isList = lit != null && (lit instanceof ListIterator);
 		boolean modified = false;
-		Operation<T> op;
+		CollectionOperation<T> op;
 		try {
 			for (int i = 0, size = mUpdates.size(); i < size; i++) {
 				op = mUpdates.get(i);
@@ -268,7 +258,6 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 			try {
 				it.remove(); // 之前必须调用next().
 				info.incrementDelete();
-				info.decrementCurrentSize();
 			} catch (UnsupportedOperationException e) {
 				System.err.println("update failed. caused by the list is fixed. "
 						+ "so can't modified. are your list comes from 'Arrays.asList(...)' ? ");
@@ -287,7 +276,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 		return false;
 	}
 
-	private IterationInfo getAndInitIterationInfo() {
+	private IterationInfo initAndGetIterationInfo() {
 		if (mIterationInfo != null) {
 			mIterationInfo.reset();
 		} else {
@@ -301,31 +290,31 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 
 	/** indicate if has extra operate in iteration. */
 	public boolean hasExtraOperateInIteration() {
-		return mDeleteOp != null || mFilterOp != null || (mInserts != null && mInserts.size() > 0)
-				|| (mUpdates != null && mUpdates.size() > 0);
+		return mDeleteOp != null || mFilterOp != null || (mInsertOps != null && mInsertOps.size() > 0)
+				|| (mUpdateOps != null && mUpdateOps.size() > 0);
 	}
 
 	private void ensureInserts() {
-		if (mInserts == null) {
-			mInserts = new ArrayList<>();
+		if (mInsertOps == null) {
+			mInsertOps = new ArrayList<>();
 		}
 	}
 
 	private void ensureFinalInserts() {
-		if (mFinalInserts == null) {
-			mFinalInserts = new ArrayList<>();
+		if (mFinalInsertOps == null) {
+			mFinalInsertOps = new ArrayList<>();
 		}
 	}
 
 	private void ensureUpdates() {
-		if (mUpdates == null) {
-			mUpdates = new ArrayList<>();
+		if (mUpdateOps == null) {
+			mUpdateOps = new ArrayList<>();
 		}
 	}
 
 	@Override
 	public IterateControl<CollectionVisitService<T>> beginIterateControl() {
-		return new ProcessController();
+		return mControl.begin();
 	}
 
 	@Override
@@ -333,10 +322,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 		return new OperateManagerImpl();
 	}
 
-	private class GroupOperateInterceptor extends OperateInterceptor<T> {
+	private class GroupOperateInterceptor extends CollectionOperateInterceptor<T> {
 
-		final SparseArray<OperateInterceptor<T>> mInterceptorMap;
-		final List<OperateInterceptor<T>> mOrderInerceptors;
+		final SparseArray<CollectionOperateInterceptor<T>> mInterceptorMap;
+		final List<CollectionOperateInterceptor<T>> mOrderInerceptors;
 		boolean mIntercept_Delete;
 		boolean mIntercept_Filter;
 		boolean mIntercept_Update;
@@ -344,31 +333,31 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 
 		public GroupOperateInterceptor() {
 			super();
-			mOrderInerceptors = new ArrayList<OperateInterceptor<T>>();
-			mInterceptorMap = new SparseArray<OperateInterceptor<T>>();
+			mOrderInerceptors = new ArrayList<CollectionOperateInterceptor<T>>(6);
+			mInterceptorMap = new SparseArray<CollectionOperateInterceptor<T>>(6);
 			addMemberInterceptors();
 		}
 
 		private void addMemberInterceptors() {
-			mInterceptorMap.put(OP_DELETE, new OperateInterceptor<T>() {
+			mInterceptorMap.put(OP_DELETE, new CollectionOperateInterceptor<T>() {
 				@Override
 				public boolean intercept(Iterator<T> it, T t, Object param, IterationInfo info) {
 					return handleDelete(it, t, param, info) && mIntercept_Delete;
 				}
 			});
-			mInterceptorMap.put(OP_FILTER, new OperateInterceptor<T>() {
+			mInterceptorMap.put(OP_FILTER, new CollectionOperateInterceptor<T>() {
 				@Override
 				public boolean intercept(Iterator<T> it, T t, Object param, IterationInfo info) {
 					return handleFilter(it, t, param, info) && mIntercept_Filter;
 				}
 			});
-			mInterceptorMap.put(OP_UPDATE, new OperateInterceptor<T>() {
+			mInterceptorMap.put(OP_UPDATE, new CollectionOperateInterceptor<T>() {
 				@Override
 				public boolean intercept(Iterator<T> it, T t, Object param, IterationInfo info) {
 					return handleUpdate(it, t, param, info) && mIntercept_Update;
 				}
 			});
-			mInterceptorMap.put(OP_INSERT, new OperateInterceptor<T>() {
+			mInterceptorMap.put(OP_INSERT, new CollectionOperateInterceptor<T>() {
 				@Override
 				public boolean intercept(Iterator<T> it, T t, Object param, IterationInfo info) {
 					return handleInsert(it, t, param, info) && mIntercept_Insert;
@@ -403,7 +392,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 				}
 			}
 
-			final SparseArray<OperateInterceptor<T>> mInterceptorMap = this.mInterceptorMap;
+			final SparseArray<CollectionOperateInterceptor<T>> mInterceptorMap = this.mInterceptorMap;
 			final List<Integer> mOrderOps = CollectionVisitServiceImpl.this.mOrderOps;
 			for (int i = 0, size = mOrderOps.size(); i < size; i++) {
 				mOrderInerceptors.add(mInterceptorMap.get(mOrderOps.get(i)));
@@ -421,7 +410,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 
 		@Override
 		public boolean intercept(Iterator<T> it, T t, Object param, IterationInfo info) {
-			final List<OperateInterceptor<T>> mOrderInerceptors = this.mOrderInerceptors;
+			final List<CollectionOperateInterceptor<T>> mOrderInerceptors = this.mOrderInerceptors;
 			for (int i = 0, size = mOrderInerceptors.size(); i < size; i++) {
 				if (mOrderInerceptors.get(i).intercept(it, t, param, info)) {
 					return true;
@@ -445,7 +434,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 			if (mFilterOp != null) {
 				throw new IllegalArgumentException("filter can only set once");
 			}
-			mFilterOp = Operation.createFilter(param, filter);
+			mFilterOp = CollectionOperation.createFilter(param, filter);
 			return this;
 		}
 
@@ -455,7 +444,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 			if (mDeleteOp != null) {
 				throw new IllegalArgumentException("deleteOn can only set once");
 			}
-			mDeleteOp = Operation.createDelete(param, delete);
+			mDeleteOp = CollectionOperation.createDelete(param, delete);
 			return this;
 		}
 
@@ -465,7 +454,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 			checkNull(newT);
 			checkNull(update);
 			ensureUpdates();
-			mUpdates.add(Operation.createUpdate(newT, param, update));
+			mUpdateOps.add(CollectionOperation.createUpdate(newT, param, update));
 			return this;
 		}
 
@@ -474,7 +463,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 				IterateVisitor<? super T> insert) {
 			checkEmpty(list);
 			ensureInserts();
-			mInserts.add(Operation.createInsert(list, param, insert));
+			mInsertOps.add(CollectionOperation.createInsert(list, param, insert));
 			return this;
 		}
 
@@ -483,7 +472,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 				IterateVisitor<? super T> insert) {
 			checkNull(newT);
 			ensureInserts();
-			mInserts.add(Operation.createInsert(newT, param, insert));
+			mInsertOps.add(CollectionOperation.createInsert(newT, param, insert));
 			return this;
 		}
 
@@ -492,7 +481,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 				IterateVisitor<? super T> insert) {
 			checkNull(newT);
 			ensureFinalInserts();
-			mFinalInserts.add(Operation.createInsert(newT, param, insert));
+			mFinalInsertOps.add(CollectionOperation.createInsert(newT, param, insert));
 			return this;
 		}
 
@@ -501,108 +490,27 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 				IterateVisitor<? super T> insert) {
 			checkEmpty(list);
 			ensureFinalInserts();
-			mFinalInserts.add(Operation.createInsert(list, param, insert));
+			mFinalInsertOps.add(CollectionOperation.createInsert(list, param, insert));
 			return this;
 		}
 
 	}
 
-	private final class ProcessController extends IterateControl<CollectionVisitService<T>> {
+	private class ControlCallbackImpl extends Callback{
 
 		@Override
-		public ProcessController interceptIfSuccess(int operate) {
-			int index = mInterceptOps.indexOf(operate);
-			if (index == -1) {
-				mInterceptOps.add(operate);
-			}
-			return this;
+		public void saveState(List<Integer> orderOps, List<Integer> interceptOps) {
+			mInterceptOps = interceptOps;
+			mOrderOps = orderOps;
 		}
-
 		@Override
-		public ProcessController first(int operate) {
-			int index = mOrderOps.indexOf(operate);
-			if (index != -1) {
-				mOrderOps.remove(index);
-			} else {
-				throw new IllegalArgumentException("unsupport operate.");
+		public void checkOperation(int op) {
+			if(op < OP_DELETE || op > OP_INSERT){
+				throw new IllegalArgumentException("unsupport opertion");
 			}
-			mOrderOps.add(0, operate);
-			return this;
 		}
-
-		@Override
-		public ProcessController second(int operate) {
-			int index = mOrderOps.indexOf(operate);
-			if (index != -1) {
-				mOrderOps.remove(index);
-			} else {
-				throw new IllegalArgumentException("unsupport operate.");
-			}
-			/*
-			 * if(DEBUG){ System.err.println(); }
-			 */
-			mOrderOps.add(mOrderOps.size() > 0 ? 1 : 0, operate);
-			return this;
-		}
-
-		@Override
-		public ProcessController then(int operate) {
-			int index = mOrderOps.indexOf(operate);
-			if (index != -1) {
-				mOrderOps.remove(index);
-			} else {
-				throw new IllegalArgumentException("unsupport operate.");
-			}
-			final int size = mOrderOps.size();
-			if (size >= 3) {
-				mOrderOps.add(2, operate);
-			} else {
-				mOrderOps.add(operate);
-			}
-			return this;
-		}
-
-		@Override
-		public ProcessController last(int operate) {
-			int index = mOrderOps.indexOf(operate);
-			if (index != -1) {
-				mOrderOps.remove(index);
-			} else {
-				throw new IllegalArgumentException("unsupport operate.");
-			}
-			mOrderOps.add(mOrderOps.size(), operate);
-			return this;
-		}
-
-		@Override
-		public CollectionVisitServiceImpl<T> end() {
-			if (DEBUG) {
-				System.out.println("the operate order is: ");
-				for (int op : mOrderOps) {
-					System.out.println(op2String(op));
-				}
-				System.out.println();
-			}
-			return CollectionVisitServiceImpl.this;
-		}
+		
 	}
 
-	private static String op2String(int op) {
-		switch (op) {
-		case OP_DELETE:
-			return "OP_DELETE";
-
-		case OP_FILTER:
-			return "OP_FILTER";
-
-		case OP_UPDATE:
-			return "OP_UPDATE";
-
-		case OP_INSERT:
-			return "OP_INSERT";
-		default:
-			return null;
-		}
-	}
 
 }

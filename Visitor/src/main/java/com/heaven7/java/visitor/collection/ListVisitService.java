@@ -19,7 +19,7 @@ final class ListVisitService<T> extends CollectionVisitServiceImpl<T> implements
 	}
 	
 	@Override
-	protected boolean visitImpl(Collection<T> collection, int rule, Object param, OperateInterceptor<T> interceptor,
+	protected boolean visitImpl(Collection<T> collection, int rule, Object param, CollectionOperateInterceptor<T> interceptor,
 			IterateVisitor<? super T> breakVisitor, final IterationInfo info) {
 
 		final boolean hasExtra = hasExtraOperateInIteration();
@@ -103,19 +103,18 @@ final class ListVisitService<T> extends CollectionVisitServiceImpl<T> implements
 	}
 
 	@Override
-	protected boolean onHandleInsert(List<Operation<T>> inserts, Iterator<T> it, T t, Object param,
+	protected boolean onHandleInsert(List<CollectionOperation<T>> inserts, Iterator<T> it, T t, Object param,
 			IterationInfo info) {
 		final ListIterator<T> lit = (ListIterator<T>) it;
 		info.setCurrentIndex(lit.previousIndex());
 
 		//final boolean hasInfo = info != null;
 		try {
-			Operation<T> op;
-			for (ListIterator<Operation<T>> olit = inserts.listIterator(); olit.hasNext();) {
+			CollectionOperation<T> op;
+			for (ListIterator<CollectionOperation<T>> olit = inserts.listIterator(); olit.hasNext();) {
 				op = olit.next();
 				if (op.insert(lit, t, param, info)) {
-					info.incrementInsert();
-					info.incrementCurrentSize();
+					//info update: impl move to internal
 					return true;
 				}
 			}

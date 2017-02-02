@@ -1,4 +1,4 @@
-package com.heaven7.java.visitor.internal;
+package com.heaven7.java.visitor.internal.state;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -7,7 +7,7 @@ import java.util.List;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
-import com.heaven7.java.visitor.collection.CollectionVisitService.OperateInterceptor;
+import com.heaven7.java.visitor.collection.CollectionVisitService.CollectionOperateInterceptor;
 import com.heaven7.java.visitor.collection.IterationInfo;
 
 /**
@@ -21,6 +21,8 @@ import com.heaven7.java.visitor.collection.IterationInfo;
  *            the result type of visit for {@link #visitForResult(Collection, boolean, 
  *            com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.GroupOperateInterceptor, 
  *            IterationInfo, Object, PredicateVisitor, ResultVisitor, List)}
+ * @see {@linkplain SingleIterateState}          
+ * @see {@linkplain MultipleIterateState}            
  */
 public abstract class IterateState<T, R> {
 
@@ -61,7 +63,7 @@ public abstract class IterateState<T, R> {
 	 * @param hasExtra
 	 *            whether has extra operate or not
 	 * @param interceptor
-	 *            the GroupOperateInterceptor
+	 *            the OperateInterceptor
 	 * @param info
 	 *            the iteration info of count. which will used from some
 	 *            operate. such as insert,final insert.
@@ -74,7 +76,7 @@ public abstract class IterateState<T, R> {
 	 * @return the result which is match the predicate visitor, if it's single
 	 *         state. or else return null.
 	 */
-	public T visit(Collection<T> collection, boolean hasExtra, OperateInterceptor<T> interceptor,
+	public T visit(Collection<T> collection, boolean hasExtra, CollectionOperateInterceptor<T> interceptor,
 			IterationInfo info, Object param, PredicateVisitor<? super T> predicate, @Nullable List<T> out) {
 		if (hasExtra) {
 			interceptor.begin();
@@ -115,7 +117,7 @@ public abstract class IterateState<T, R> {
 	 *         state. or else return null.
 	 */
 	public R visitForResult(Collection<T> collection, boolean hasExtra,
-			OperateInterceptor<T> interceptor, IterationInfo info, Object param,
+			CollectionOperateInterceptor<T> interceptor, IterationInfo info, Object param,
 			PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVistor, @Nullable List<R> out) {
 		if (hasExtra) {
 			interceptor.begin();
@@ -151,7 +153,7 @@ public abstract class IterateState<T, R> {
 	 *            the out list. may be null if is {@link SingleIterateState}.
 	 * @return the result , may be null if is {@link MultipleIterateState}}.
 	 */
-	protected abstract R visitForResultImpl(boolean hasExtra, OperateInterceptor<T> interceptor,
+	protected abstract R visitForResultImpl(boolean hasExtra, CollectionOperateInterceptor<T> interceptor,
 			Object param, PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVistor,
 			Iterator<T> it, IterationInfo info, List<R> out);
 
@@ -174,6 +176,6 @@ public abstract class IterateState<T, R> {
 	 *            the out list. may be null if is {@link SingleIterateState}.
 	 * @return the result , may be null if is {@link MultipleIterateState}}.
 	 */
-	protected abstract T visitImpl(boolean hasExtra, OperateInterceptor<T> groupInterceptor, Object param,
+	protected abstract T visitImpl(boolean hasExtra, CollectionOperateInterceptor<T> groupInterceptor, Object param,
 			PredicateVisitor<? super T> predicate, Iterator<T> it, IterationInfo info, List<T> out);
 }

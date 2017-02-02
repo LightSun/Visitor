@@ -1,9 +1,6 @@
 package com.heaven7.java.visitor.test;
 
-import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_DELETE;
-import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_FILTER;
-import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_INSERT;
-import static com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.OP_UPDATE;
+import static com.heaven7.java.visitor.collection.Operation.*;
 import static com.heaven7.java.visitor.test.help.TestUtil.createStudent;
 import static com.heaven7.java.visitor.test.help.TestUtil.createStudent2;
 import static com.heaven7.java.visitor.test.help.TestUtil.syso;

@@ -3,15 +3,21 @@ package com.heaven7.java.visitor.collection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+
+import com.heaven7.java.visitor.util.Map2Map;
+
 /**
  * like executors. we use all api start in here.
+ * 
  * @author heaven7
  *
  */
 public final class VisitServices {
 
 	/**
-	 * create {@linkplain CollectionVisitServiceImpl} from the target collection. <br>
+	 * create {@linkplain CollectionVisitServiceImpl} from the target
+	 * collection. <br>
 	 * <b>Note: don't use {@linkplain Arrays#asList(Object...)} in here. </b>
 	 * 
 	 * @param <T>
@@ -36,6 +42,10 @@ public final class VisitServices {
 	 */
 	public static <T> CollectionVisitService<T> from(List<T> list) {
 		return new ListVisitService<T>(list);
+	}
+
+	public static <K, V> MapVisitService<K, V> from(Map<K, V> map) {
+		return new MapVisitServiceImpl<K, V>(new Map2Map<K, V>(map));
 	}
 
 }

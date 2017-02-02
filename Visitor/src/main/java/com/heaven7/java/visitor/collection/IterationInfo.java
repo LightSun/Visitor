@@ -1,35 +1,42 @@
 package com.heaven7.java.visitor.collection;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * the iteration info
+ * 
  * @author heaven7
  *
  */
-public class IterationInfo implements Serializable{
+public class IterationInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/** the count of delete */
 	private int deleteCount = 0;
 	/** the count of update */
 	private int updateCount = 0;
 	/** the count of filter */
 	private int filterCount = 0;
-	/** the count of insert */
+	/** the count of insert (may be the sum of insert with insertFinally) */
 	private int insertCount = 0;
-	
-	/** the origin size ,  before iteration */
-	private int originSize ;
-	/** the current size , in iteration, often is the same as originSize while in set. */
-	private int currentSize ;
-	/** the current index in iteration. this is only used for List */
+
+	/** the origin size , before iteration */
+	private int originSize;
+	/**
+	 * the current size , in iteration, often is the same as originSize while in
+	 * set/map.
+	 */
+	private int currentSize;
+	/**
+	 * the current index in iteration. this is only used for {{@linkplain List}}
+	 */
 	private int currentIndex = -1;
-	
 
 	/**
 	 * get the current index
+	 * 
 	 * @return the current index
 	 */
 	public int getCurrentIndex() {
@@ -38,14 +45,17 @@ public class IterationInfo implements Serializable{
 
 	/**
 	 * set the current index
-	 * @param currentIndex the index
+	 * 
+	 * @param currentIndex
+	 *            the index
 	 */
-	/*public*/ void setCurrentIndex(int currentIndex) {
+	/* public */ void setCurrentIndex(int currentIndex) {
 		this.currentIndex = currentIndex;
 	}
 
 	/**
 	 * get the origin size
+	 * 
 	 * @return the origin size
 	 */
 	public int getOriginSize() {
@@ -54,29 +64,36 @@ public class IterationInfo implements Serializable{
 
 	/**
 	 * set the origin size
-	 * @param originSize the origin size
+	 * 
+	 * @param originSize
+	 *            the origin size
 	 */
-	/*public*/ void setOriginSize(int originSize) {
+	/* public */ void setOriginSize(int originSize) {
 		this.originSize = originSize;
 	}
-    /**
-     * get the current size
-     * @return the current size
-     */
+
+	/**
+	 * get the current size
+	 * 
+	 * @return the current size
+	 */
 	public int getCurrentSize() {
 		return currentSize;
 	}
 
 	/**
 	 * set the current size
-	 * @param currentSize the current size
+	 * 
+	 * @param currentSize
+	 *            the current size
 	 */
-	/*public*/ void setCurrentSize(int currentSize) {
+	/* public */ void setCurrentSize(int currentSize) {
 		this.currentSize = currentSize;
 	}
 
 	/**
 	 * get delete count
+	 * 
 	 * @return the delete count
 	 */
 	public int getDeleteCount() {
@@ -85,13 +102,16 @@ public class IterationInfo implements Serializable{
 
 	/**
 	 * get update count
+	 * 
 	 * @return the update count
 	 */
 	public int getUpdateCount() {
 		return updateCount;
 	}
+
 	/**
 	 * get filter count
+	 * 
 	 * @return the filter count
 	 */
 	public int getFilterCount() {
@@ -100,6 +120,7 @@ public class IterationInfo implements Serializable{
 
 	/**
 	 * get insert count
+	 * 
 	 * @return the insert count
 	 */
 	public int getInsertCount() {
@@ -107,49 +128,45 @@ public class IterationInfo implements Serializable{
 	}
 
 	/**
-	 *  increase the count of delete
+	 * increase the count of delete
 	 */
-	/*public*/ void incrementDelete() {
-		 ++deleteCount;
-	}
-
-	/**
-	 *  increase the count of update
-	 */
-	/*public*/ void incrementUpdate() {
-		 ++updateCount;
-	}
-
-	/**
-	 *  increase the count of filter
-	 */
-	/*public*/ void incrementFilter() {
-		 ++filterCount;
-	}
-
-	/**
-	 *  increase the insert of filter
-	 */
-	/*public*/ void incrementInsert() {
-		 ++insertCount;
-	}
-	/**
-	 *  increase the current size
-	 */
-	/*public*/ void incrementCurrentSize() {
-		++currentSize;
-	}
-	/**
-	 *  decrease the current size
-	 */
-	/*public*/ void decrementCurrentSize() {
+	/* public */ void incrementDelete() {
+		++deleteCount;
 		--currentSize;
 	}
-	
+
+	/**
+	 * increase the count of update
+	 */
+	/* public */ void incrementUpdate() {
+		++updateCount;
+	}
+
+	/**
+	 * increase the count of filter
+	 */
+	/* public */ void incrementFilter() {
+		++filterCount;
+	}
+
+	/**
+	 * increase the insert of filter
+	 */
+	/* public */ void incrementInsert() {
+		++insertCount;
+		++currentSize;
+	}
+
+
+	/* public */ void addInsert(int size) {
+		insertCount += size;
+		currentSize += size;
+	}
+
 	/**
 	 * reset this to default.
 	 */
-	/*public*/ void reset() {
+	/* public */ void reset() {
 		deleteCount = 0;
 		updateCount = 0;
 		filterCount = 0;
@@ -165,7 +182,5 @@ public class IterationInfo implements Serializable{
 				+ filterCount + ", insertCount=" + insertCount + ", originSize=" + originSize + ", currentSize="
 				+ currentSize + ", currentIndex=" + currentIndex + "]";
 	}
-
-	
 
 }
