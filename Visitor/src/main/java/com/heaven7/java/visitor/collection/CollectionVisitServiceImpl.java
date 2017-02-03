@@ -79,7 +79,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 		checkNull(predicate);
 		checkNull(resultVisitor);
 		final IterationInfo info = initAndGetIterationInfo();
-		R r = IterateState.<T, R>singleIterateState().visitForResult(mCollection, hasExtraOperateInIteration(),
+		R r = IterateState.<T>singleIterateState().visitForResult(mCollection, hasExtraOperateInIteration(),
 				mGroupInterceptor, info, param, predicate, resultVisitor, null);
 		handleFinalInsert(param, info);
 		return r;
@@ -95,7 +95,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 			out = new ArrayList<R>();
 		}
 		final IterationInfo info = initAndGetIterationInfo();
-		IterateState.<T, R>multipleIterateState().visitForResult(mCollection, hasExtraOperateInIteration(),
+		IterateState.<T>multipleIterateState().visitForResult(mCollection, hasExtraOperateInIteration(),
 				mGroupInterceptor, info, param, predicate, resultVisitor, out);
 		handleFinalInsert(param, info);
 		return out;
@@ -109,7 +109,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 			out = new ArrayList<T>();
 		}
 		final IterationInfo info = initAndGetIterationInfo();
-		IterateState.<T, T>multipleIterateState().visit(mCollection, hasExtraOperateInIteration(), mGroupInterceptor,
+		IterateState.<T>multipleIterateState().visit(mCollection, hasExtraOperateInIteration(), mGroupInterceptor,
 				info, param, predicate, out);
 		handleFinalInsert(param, info);
 		return out;
@@ -120,7 +120,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 		checkNull(predicate);
 
 		final IterationInfo info = initAndGetIterationInfo();
-		T result = IterateState.<T, T>singleIterateState().visit(mCollection, hasExtraOperateInIteration(),
+		T result = IterateState.<T>singleIterateState().visit(mCollection, hasExtraOperateInIteration(),
 				mGroupInterceptor, info, param, predicate, null);
 		handleFinalInsert(param, info);
 		return result;

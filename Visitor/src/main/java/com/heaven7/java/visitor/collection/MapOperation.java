@@ -160,10 +160,6 @@ public class MapOperation<K, V> extends Operation {
 				info.incrementUpdate();
 				return true;
 			}
-			if (pair.updateValue(mValue)) {
-				info.incrementUpdate();
-				return true;
-			}
 			if(map.replace(pair.getKey(), value, mValue)){
 			   info.incrementUpdate();
 			   return true;

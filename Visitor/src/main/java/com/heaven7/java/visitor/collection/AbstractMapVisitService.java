@@ -72,7 +72,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		return mTrimOp;
 	}
 
-	public boolean hasExtraOperations() {
+	public boolean hasExtraOperationInIteration() {
 		return mFilterOp != null || mDeleteOp != null || !Predicates.isEmpty(mUpdateOps);
 	}
 

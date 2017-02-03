@@ -11,6 +11,7 @@ import com.heaven7.java.visitor.collection.KeyValuePair;
  */
 public final class Visitors {
 
+	private Visitors(){}
 	/**
 	 * @param <T>
 	 *            the element type
@@ -64,13 +65,43 @@ public final class Visitors {
 		return (PredicateVisitor<T>) PREDICARE_FALSE;
 	}
 	
+	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @return a MapPredicateVisitor that always return true.
+	 */
 	@SuppressWarnings("unchecked")
 	public static <K,V> MapPredicateVisitor<K,V> trueMapPredicateVisitor() {
 		return (MapPredicateVisitor<K,V>) MAP_PREDICARE_TRUE;
 	}
+
+	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @return a MapPredicateVisitor that always return false.
+	 */
 	@SuppressWarnings("unchecked")
 	public static <K,V> MapPredicateVisitor<K,V> falseMapPredicateVisitor() {
 		return (MapPredicateVisitor<K,V>) MAP_PREDICARE_FALSE;
+	}
+	
+	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @return a MapIterateVisitor that always return true.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K,V> MapIterateVisitor<K, V> trueMapIterateVisitor(){
+		return (MapIterateVisitor<K, V>) MAP_ITERATE_TRUE;
+	}
+	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @return a MapIterateVisitor that always return false.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K,V> MapIterateVisitor<K, V> falseMapIterateVisitor(){
+		return (MapIterateVisitor<K, V>) MAP_ITERATE_FALSE;
 	}
 
 	private static final ResultVisitor<Object, Object> RESULT_UNCHANGE = new ResultVisitor<Object, Object>() {
@@ -82,32 +113,47 @@ public final class Visitors {
 	private static final PredicateVisitor<Object> PREDICARE_TRUE = new PredicateVisitor<Object>() {
 		@Override
 		public Boolean visit(Object t, Object param) {
-			return true;
+			return Boolean.TRUE;
 		}
 	};
 	private static final MapPredicateVisitor<Object, Object> MAP_PREDICARE_TRUE = new MapPredicateVisitor<Object, Object>() {
 		@Override
 		public Boolean visit(KeyValuePair<Object, Object> pair, Object param) {
-			return true;
+			return Boolean.TRUE;
 		}
 	};
 	private static final MapPredicateVisitor<Object, Object> MAP_PREDICARE_FALSE = new MapPredicateVisitor<Object, Object>() {
 		@Override
 		public Boolean visit(KeyValuePair<Object, Object> pair, Object param) {
-			return false;
+			return Boolean.FALSE;
 		}
 	};
 	private static final PredicateVisitor<Object> PREDICARE_FALSE = new PredicateVisitor<Object>() {
 		@Override
 		public Boolean visit(Object t, Object param) {
-			return false;
+			return Boolean.FALSE;
+		}
+	};
+	
+	private static final MapIterateVisitor<Object, Object> MAP_ITERATE_TRUE = 
+			new MapIterateVisitor<Object, Object>() {
+		@Override
+		public Boolean visit(KeyValuePair<Object, Object> pair, Object param, IterationInfo info) {
+			return Boolean.TRUE;
+		}
+	};
+	private static final MapIterateVisitor<Object, Object> MAP_ITERATE_FALSE = 
+			new MapIterateVisitor<Object, Object>() {
+		@Override
+		public Boolean visit(KeyValuePair<Object, Object> pair, Object param, IterationInfo info) {
+			return Boolean.FALSE;
 		}
 	};
 
 	private static final IterateVisitor<Object> ITERATE_TRUE = new IterateVisitor<Object>() {
 		@Override
 		public Boolean visit(Object t, Object param, IterationInfo info) {
-			return true;
+			return Boolean.TRUE;
 		}
 	};
 
@@ -115,7 +161,7 @@ public final class Visitors {
 
 		@Override
 		public Boolean visit(Object t, Object param, IterationInfo info) {
-			return false;
+			return Boolean.FALSE;
 		}
 	};
 

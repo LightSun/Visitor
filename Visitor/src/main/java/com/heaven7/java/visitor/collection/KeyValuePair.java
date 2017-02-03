@@ -1,9 +1,7 @@
 package com.heaven7.java.visitor.collection;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
-import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.util.Throwables;
 
 /**
@@ -21,12 +19,6 @@ public final class KeyValuePair<K, V> {
 
 	private K key;
 	private V value;
-	private Entry<K, V> entry;
-
-	/* public */ KeyValuePair(Entry<K, V> entry) {
-		super();
-		setEntry(entry);
-	}
 
 	KeyValuePair(K key, V value) {
 		super();
@@ -39,27 +31,9 @@ public final class KeyValuePair<K, V> {
 		return new KeyValuePair<K, V>(key, value);
 	}
 
-	void setEntry(@Nullable Entry<K, V> entry) {
-		if (entry != null) {
-			this.key = entry.getKey();
-			this.value = entry.getValue();
-		}
-		this.entry = entry;
-	}
-
 	void setKeyValue(K key, V value) {
 		this.key = key;
 		this.value = value;
-		this.entry = null;
-	}
-
-	boolean updateValue(V newValue) {
-		if (entry != null) {
-			this.value = newValue;
-			entry.setValue(newValue);
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -79,7 +53,6 @@ public final class KeyValuePair<K, V> {
 	 * get the key
 	 * 
 	 * @return the key
-	 * @see {@linkplain Map.Entry#getKey()}
 	 */
 	public K getKey() {
 		return key;
@@ -89,7 +62,6 @@ public final class KeyValuePair<K, V> {
 	 * get the value
 	 * 
 	 * @return the value
-	 * @see {@linkplain Map.Entry#getValue()}
 	 */
 	public V getValue() {
 		return value;

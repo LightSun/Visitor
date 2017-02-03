@@ -24,7 +24,7 @@ import com.heaven7.java.visitor.collection.IterationInfo;
  * @see {@linkplain SingleIterateState}          
  * @see {@linkplain MultipleIterateState}            
  */
-public abstract class IterateState<T, R> {
+public abstract class IterateState<T> {
 
 	/**
 	 * create and return a single iterate state
@@ -36,8 +36,8 @@ public abstract class IterateState<T, R> {
      *            IterationInfo, Object, PredicateVisitor, ResultVisitor, List)}
 	 * @return an instance of IterateState
 	 */
-	public static <T, R> IterateState<T, R> singleIterateState() {
-		return new SingleIterateState<T, R>();
+	public static <T> IterateState<T> singleIterateState() {
+		return new SingleIterateState<T>();
 	}
 	/**
 	 * create and return a multiple iterate state
@@ -49,8 +49,8 @@ public abstract class IterateState<T, R> {
      *            IterationInfo, Object, PredicateVisitor, ResultVisitor, List)}
 	 * @return an instance of IterateState
 	 */
-	public static <T, R> IterateState<T, R> multipleIterateState() {
-		return new MultipleIterateState<T, R>();
+	public static <T> IterateState<T> multipleIterateState() {
+		return new MultipleIterateState<T>();
 	}
 
 	/**
@@ -95,6 +95,8 @@ public abstract class IterateState<T, R> {
 	 * 
 	 * execute the iteration of collection. contains the all operate in
 	 * iteration.
+	 * @param <R>
+     *            the result type of visit 
 	 * 
 	 * @param collection
 	 *            the collection to iterate
@@ -116,7 +118,7 @@ public abstract class IterateState<T, R> {
 	 * @return the result which is match the predicate visitor, if it's single
 	 *         state. or else return null.
 	 */
-	public R visitForResult(Collection<T> collection, boolean hasExtra,
+	public <R> R visitForResult(Collection<T> collection, boolean hasExtra,
 			CollectionOperateInterceptor<T> interceptor, IterationInfo info, Object param,
 			PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVistor, @Nullable List<R> out) {
 		if (hasExtra) {
@@ -153,7 +155,7 @@ public abstract class IterateState<T, R> {
 	 *            the out list. may be null if is {@link SingleIterateState}.
 	 * @return the result , may be null if is {@link MultipleIterateState}}.
 	 */
-	protected abstract R visitForResultImpl(boolean hasExtra, CollectionOperateInterceptor<T> interceptor,
+	protected abstract <R> R visitForResultImpl(boolean hasExtra, CollectionOperateInterceptor<T> interceptor,
 			Object param, PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVistor,
 			Iterator<T> it, IterationInfo info, List<R> out);
 

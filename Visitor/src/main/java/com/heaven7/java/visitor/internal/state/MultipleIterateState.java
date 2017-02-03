@@ -11,7 +11,7 @@ import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.collection.CollectionVisitService.CollectionOperateInterceptor;
 import com.heaven7.java.visitor.collection.IterationInfo;
 
-/*public*/ class MultipleIterateState<T, R> extends IterateState<T, R> {
+/*public*/ class MultipleIterateState<T> extends IterateState<T> {
 
 	@Override
 	protected T visitImpl(boolean hasExtra, CollectionOperateInterceptor<T> interceptor, Object param,
@@ -41,7 +41,7 @@ import com.heaven7.java.visitor.collection.IterationInfo;
 	}
 
 	@Override
-	protected R visitForResultImpl(boolean hasExtra, CollectionOperateInterceptor<T> interceptor, Object param,
+	protected <R> R visitForResultImpl(boolean hasExtra, CollectionOperateInterceptor<T> interceptor, Object param,
 			PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVistor, Iterator<T> it,
 			IterationInfo info, List<R> out) {
 		checkNull(out);

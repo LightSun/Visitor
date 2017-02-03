@@ -9,7 +9,7 @@ import com.heaven7.java.visitor.collection.CollectionVisitService.CollectionOper
 import com.heaven7.java.visitor.collection.IterationInfo;
 import com.heaven7.java.visitor.util.Predicates;
 
-/*public*/ class SingleIterateState<T, R> extends IterateState<T, R>{
+/*public*/ class SingleIterateState<T> extends IterateState<T>{
 
 	@Override
 	protected T visitImpl(boolean hasExtra, CollectionOperateInterceptor<T> interceptor, Object param,
@@ -50,7 +50,7 @@ import com.heaven7.java.visitor.util.Predicates;
 
 
 	@Override
-	protected R visitForResultImpl(boolean hasExtra, CollectionOperateInterceptor<T> interceptor, Object param,
+	protected <R> R visitForResultImpl(boolean hasExtra, CollectionOperateInterceptor<T> interceptor, Object param,
 			PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVistor, Iterator<T> it,
 			IterationInfo info, List<R> out) {
 		R result = null;
