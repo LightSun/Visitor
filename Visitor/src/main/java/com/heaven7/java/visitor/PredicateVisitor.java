@@ -8,7 +8,7 @@ package com.heaven7.java.visitor;
 public interface PredicateVisitor<T> extends ResultVisitor<T, Boolean> {
 
     /**
-     * called when we want to predicate the item with the param.
+     * called when we want to predicate the item/pair with the param.
      *
      * @param t     the item
      * @param param the other param
