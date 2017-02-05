@@ -9,18 +9,16 @@
 
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
-apply plugin: "maven-publish"
+apply plugin: 'com.novoda.bintray-release'
 
 buildscript {
 	repositories {
 		jcenter()
 		}
 	dependencies {
-		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3' //1.2
+		classpath 'com.novoda:bintray-release:0.4.0'
 		}
-	
 }
-apply plugin: 'com.jfrog.bintray'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -42,185 +40,13 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-// Place it at the end of the file
-//apply from: 'bintrayUpload.gradle'
-
-// load properties
-Properties properties = new Properties()
-File localPropertiesFile = project.file("local.properties");
-if(localPropertiesFile.exists()){
-	properties.load(localPropertiesFile.newDataInputStream())
-}
-File projectPropertiesFile = project.file("project.properties");
-if(projectPropertiesFile.exists()){
-	properties.load(projectPropertiesFile.newDataInputStream())
+publish {
+    userOrg = 'LightSun'
+    groupId = 'com.heaven7.java.visitor'
+    artifactId = 'Visitor'
+    publishVersion = '1.0.04'
+    desc = 'this is a lib of visit mode such as, vist list , set ,map and etc.'
+    website = 'https://github.com/LightSun/Visitor'
 }
 
-// read properties
-def projectName = properties.getProperty("project.name")
-def projectGroupId = properties.getProperty("project.groupId")
-def projectArtifactId = properties.getProperty("project.artifactId")
-def projectPackaging = properties.getProperty("project.packaging")
-def projectSiteUrl = properties.getProperty("project.siteUrl")
-def projectGitUrl = projectSiteUrl + ".git"
-def projectDesc = properties.getProperty("project.desc")
-
-def projectVersion = properties.getProperty("project.version") //optional
-
-def licenseName = properties.getProperty("project.liscenseName")
-def licenseUrl = properties.getProperty("project.licenseUrl")
-
-
-def githubRepository = properties.getProperty("project.githubRepo")
-
-def developerId = properties.getProperty("developer.id")
-def developerName = properties.getProperty("developer.name")
-def developerEmail = properties.getProperty("developer.email")
-
-def bintrayUser = properties.getProperty("bintray.user")
-def bintrayApikey = properties.getProperty("bintray.apikey")
-
-def javadocName = properties.getProperty("javadoc.name")
-def bintrayRepo = "maven"
-def projectLicenses = ["Apache-2.0"]
-
-group = projectGroupId      // Maven Group ID for the artifact
-
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
-// custom tasks for creating source/javadoc jars
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-// add javadoc/source jar tasks as artifacts
-artifacts {
-    archives sourcesJar, javadocJar
-}
-
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-			artifact sourcesJar
-            artifact javadocJar
-			groupId projectGroupId
-			artifactId projectArtifactId
-			version projectVersion
-			/* pom.withXml {
-                def root = asNode()
-                root.appendNode('description', projectDesc)
-                root.appendNode('name', projectName)
-                root.appendNode('url', projectSiteUrl)
-                root.children().last() + pomConfig
-            } 
-             pom.withXml {
-		         asNode().dependencies.'*'.findAll() {
-		             it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
-		                 dep.name == it.artifactId.text()
-		             }
-		         }.each() {
-		             it.scope*.value = 'compile'
-		         }
-	        } 
-	        */
-		}
-		
-	}
-}
-
-bintray {
-    user = bintrayUser
-    key = bintrayApikey
-
-    configurations = ['archives']  //['deployables'] //When uploading configuration files
-    // - OR -
-    //publications = ['mavenStuff'] //When uploading Maven-based publication files
-    // - AND/OR -
-   /* filesSpec { //When uploading any arbitrary files ('filesSpec' is a standard Gradle CopySpec)
-        from 'arbitrary-files'
-        into 'standalone_files/level1'
-        rename '(.+)\\.(.+)', '$1-suffix.$2'
-    } */
-    dryRun = false //[Default: false] Whether to run this as dry-run, without deploying
-    publish = true //[Default: false] Whether version should be auto published after an upload    
-    override = false //[Default: false] Whether to override version artifacts already published    
-    //Package configuration. The plugin will use the repo and name properties to check if the package already exists. In that case, there's no need to configure the other package properties (like userOrg, desc, etc).
-    pkg {
-        repo = bintrayRepo
-        name = projectName
-        userOrg = githubRepository //An optional organization name when the repo belongs to one of the user's orgs
-        desc = projectDesc
-        websiteUrl = projectSiteUrl
-        issueTrackerUrl = projectSiteUrl + '/issues'
-        vcsUrl = projectGitUrl
-        licenses = projectLicenses
-        labels = ['visitor', 'visit', 'java']
-        publicDownloadNumbers = true
-        //attributes= ['a': ['ay1', 'ay2'], 'b': ['bee'], c: 'cee'] //Optional package-level attributes
-
-        githubRepo = githubRepository        //Optional Github repository
-        githubReleaseNotesFile = 'README.md' //Optional Github readme file
-
-        //Optional version descriptor
-        version {
-            name = projectVersion    //Bintray logical version name
-            desc =  projectDesc   //Optional - Version-specific description'
-            released  = new Date()  //Optional - Date of the version release. 2 possible values: date in the format of 'yyyy-MM-dd'T'HH:mm:ss.SSSZZ' OR a java.util.Date instance
-            vcsTag = projectVersion
-            //attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin'] //Optional version-level attributes
-            //Optional configuration for GPG signing
-            gpg {
-                sign = true //Determines whether to GPG sign the files. The default is false
-                passphrase = 'passphrase' //Optional. The passphrase for GPG signing'
-            }
-            //Optional configuration for Maven Central sync of the version
-           /* mavenCentralSync {
-                sync = true //[Default: true] Determines whether to sync the version to Maven Central.
-                user = 'userToken' //OSS user token: mandatory
-                password = 'paasword' //OSS user password: mandatory
-                close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
-            }  */          
-        }
-    }
-}
-
-
-def pomConfig = {
-    licenses {
-        license {
-            name "The Apache Software License, Version 2.0"
-            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-            distribution "repo"
-        }
-    }
-    developers {
-        developer {
-            id developerId
-            name developerName
-            email developerEmail
-        }
-    }
-}
-
-
-// javadoc configuration
-javadoc {
-    options{
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        author true
-        version projectVersion
-        links "http://docs.oracle.com/javase/7/docs/api"
-        title javadocName
-    }
-}
 

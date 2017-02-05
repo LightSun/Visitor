@@ -9,7 +9,6 @@ import com.heaven7.java.visitor.TrimMapVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
 import com.heaven7.java.visitor.internal.OperateInterceptor;
-import com.heaven7.java.visitor.test.MapVisitServiceTest;
 import com.heaven7.java.visitor.util.Map;
 /**
  * visit service of common map . <br>here is a demo used to query a key-value .
@@ -33,7 +32,7 @@ import com.heaven7.java.visitor.util.Map;
 		  assertEquals(pair.getValue().intValue(), 5);
 		  assertEquals(map.size(), size - 1);
 	}
-  </pre> <br>the more to see {@linkplain MapVisitServiceTest}}<br>
+  </pre> <br>the more to see MapVisitServiceTest <br>
  * @author heaven7
  *
  * @param <K> the key type
