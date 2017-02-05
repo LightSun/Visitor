@@ -31,7 +31,7 @@ import com.heaven7.java.visitor.util.SparseArray;
  *            the type of element
  * @see ListVisitService
  */
-public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> implements CollectionVisitService<T> {
+public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitService<T> implements CollectionVisitService<T> {
 
 	protected static final boolean DEBUG = true;
 
@@ -229,17 +229,14 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 			return false;
 		}
 		final boolean isList = lit != null && (lit instanceof ListIterator);
-		boolean modified = false;
 		CollectionOperation<T> op;
 		try {
 			for (int i = 0, size = mUpdates.size(); i < size; i++) {
 				op = mUpdates.get(i);
-				if (isList && op.update((ListIterator<T>) lit, t, param)) {
-					modified = true;
-					break;
-				} else if (op.update(t, param)) {
-					modified = true;
-					break;
+				if (isList && op.update((ListIterator<T>) lit, t, param, info)) {
+					return true;
+				} else if (op.update(t, param,info)) {
+					return true;
 				}
 			}
 		} catch (UnsupportedOperationException e) {
@@ -247,30 +244,26 @@ public class CollectionVisitServiceImpl<T> extends AbstractVisitService<T> imple
 					+ "so can't modified. are your list comes from 'Arrays.asList(...)'? ");
 			return false;
 		}
-		if (modified) {
-			info.incrementUpdate();
-		}
-		return modified;
+		return false;
 	}
 
 	private boolean handleDelete(Iterator<T> it, T t, Object param, IterationInfo info) {
-		if (mDeleteOp != null && mDeleteOp.shouldDelete(t, param)) {
+		if (mDeleteOp != null) {
 			try {
-				it.remove(); // 之前必须调用next().
-				info.incrementDelete();
+				return mDeleteOp.delete(it, t, param, info);
+				//it.remove(); // 之前必须调用next().
+				//info.incrementDelete();
 			} catch (UnsupportedOperationException e) {
 				System.err.println("update failed. caused by the list is fixed. "
 						+ "so can't modified. are your list comes from 'Arrays.asList(...)' ? ");
 				return false;
 			}
-			return true;
 		}
 		return false;
 	}
 
 	private boolean handleFilter(Iterator<T> it, T t, Object param, IterationInfo info) {
-		if (mFilterOp != null && mFilterOp.shouldFilter(t, param)) {
-			info.incrementFilter();
+		if (mFilterOp != null && mFilterOp.filter(t, param, info)) {
 			return true;
 		}
 		return false;

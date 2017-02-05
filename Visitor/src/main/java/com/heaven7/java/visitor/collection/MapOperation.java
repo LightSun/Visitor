@@ -7,6 +7,7 @@ import com.heaven7.java.visitor.MapIterateVisitor;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
 import com.heaven7.java.visitor.util.Map;
+import com.heaven7.java.visitor.util.Updatable;
 
 public class MapOperation<K, V> extends Operation {
 
@@ -80,7 +81,7 @@ public class MapOperation<K, V> extends Operation {
 		this.mPair = null;
 	}
 
-	public boolean shouldFilter(KeyValuePair<K, V> pair, Object param) {
+	private boolean shouldFilter(KeyValuePair<K, V> pair, Object param) {
 		if (mOp == OP_FILTER && mPredicateVisitor != null) {
 			Boolean result = mPredicateVisitor.visit(pair, mParam != null ? mParam : param);
 			return result != null && result;
@@ -88,7 +89,7 @@ public class MapOperation<K, V> extends Operation {
 		return false;
 	}
 
-	public boolean shouldDelete(KeyValuePair<K, V> pair, Object param) {
+	private boolean shouldDelete(KeyValuePair<K, V> pair, Object param) {
 		if (mOp == OP_DELETE && mPredicateVisitor != null) {
 			Boolean result = mPredicateVisitor.visit(pair, mParam != null ? mParam : param);
 			return result != null && result;
@@ -96,7 +97,7 @@ public class MapOperation<K, V> extends Operation {
 		return false;
 	}
 
-	public boolean shouldUpdate(KeyValuePair<K, V> pair, Object param) {
+	private boolean shouldUpdate(KeyValuePair<K, V> pair, Object param) {
 		if (mOp == OP_UPDATE && mPredicateVisitor != null) {
 			Boolean result = mPredicateVisitor.visit(pair, mParam != null ? mParam : param);
 			return result != null && result;
@@ -104,7 +105,7 @@ public class MapOperation<K, V> extends Operation {
 		return false;
 	}
 
-	public boolean shouldInsert(KeyValuePair<K, V> pair, Object param, IterationInfo info) {
+	private boolean shouldInsert(KeyValuePair<K, V> pair, Object param, IterationInfo info) {
 		if (mOp == OP_INSERT && mIterateVisitor != null) {
 			Boolean result = mIterateVisitor.visit(pair, mParam != null ? mParam : param, info);
 			return result != null && result;

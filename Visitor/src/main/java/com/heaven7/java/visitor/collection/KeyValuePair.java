@@ -1,7 +1,5 @@
 package com.heaven7.java.visitor.collection;
 
-import java.util.Map;
-
 import com.heaven7.java.visitor.util.Throwables;
 
 /**

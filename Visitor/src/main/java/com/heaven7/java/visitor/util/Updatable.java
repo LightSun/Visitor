@@ -1,4 +1,4 @@
-package com.heaven7.java.visitor.collection;
+package com.heaven7.java.visitor.util;
 
 /**
  * indicate the object can be update.

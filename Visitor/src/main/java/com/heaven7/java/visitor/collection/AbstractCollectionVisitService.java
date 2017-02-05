@@ -13,7 +13,7 @@ import com.heaven7.java.visitor.ResultVisitor;
  * @see CollectionVisitServiceImpl
  * @see ListVisitService
  */
-public abstract class AbstractVisitService<T> implements CollectionVisitService<T>{
+public abstract class AbstractCollectionVisitService<T> implements CollectionVisitService<T>{
 	
 	@Override
 	public final <R> List<R> visitForResultList(PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor,
@@ -69,7 +69,7 @@ public abstract class AbstractVisitService<T> implements CollectionVisitService<
 	/**
 	 * do visit service.
 	 * @param rule the rule . VISIT_RULE_ALL, VISIT_RULE_UNTIL_SUCCESS or VISIT_RULE_UNTIL_FAILED.
-	 * @param param the extra param 
+	 * @param param the extra parameter 
 	 * @param breakVisitor the break visitor
 	 * @return true if operate success.
 	 */

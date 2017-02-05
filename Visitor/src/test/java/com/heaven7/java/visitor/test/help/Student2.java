@@ -1,6 +1,6 @@
 package com.heaven7.java.visitor.test.help;
 
-import com.heaven7.java.visitor.collection.Updatable;
+import com.heaven7.java.visitor.util.Updatable;
 
 public class Student2 extends Student implements Updatable<Student2>{
 

@@ -16,7 +16,7 @@ import com.heaven7.java.visitor.internal.OperateInterceptor;
  * @author heaven7
  *
  * @param <T> the type of element
- * @see AbstractVisitService
+ * @see AbstractCollectionVisitService
  * @see CollectionVisitServiceImpl
  * @see ListVisitService
  */

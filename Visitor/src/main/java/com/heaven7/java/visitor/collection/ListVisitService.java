@@ -10,7 +10,7 @@ import com.heaven7.java.visitor.IterateVisitor;
  * list visit service
  * @author heaven7
  *
- * @param <T>
+ * @param <T> the element type
  */
 final class ListVisitService<T> extends CollectionVisitServiceImpl<T> implements CollectionVisitService<T>  {
 

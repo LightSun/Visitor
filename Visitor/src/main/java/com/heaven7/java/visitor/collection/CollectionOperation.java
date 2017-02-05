@@ -2,12 +2,14 @@ package com.heaven7.java.visitor.collection;
 
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.util.Predicates;
+import com.heaven7.java.visitor.util.Updatable;
 
 public class CollectionOperation<T> extends Operation{
 
@@ -79,33 +81,52 @@ public class CollectionOperation<T> extends Operation{
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	public boolean update(T t, Object defaultParam) {
+	public boolean update(T t, Object defaultParam,IterationInfo info) {
 		if (shouldUpdate(t, defaultParam)) {
 			if (t instanceof Updatable) {
 				((Updatable<T>) t).updateFrom(mNewElement);
+				info.incrementUpdate();
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public boolean update(ListIterator<T> lit, T t, Object defaultParam) {
+	public boolean update(ListIterator<T> lit, T t, Object defaultParam, IterationInfo info) {
 		if (shouldUpdate(t, defaultParam)) {
 			lit.set(mNewElement);
+			info.incrementUpdate();
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean filter(T t, Object defaultParam, IterationInfo info){
+		if(shouldFilter(t, defaultParam)){
+			info.incrementFilter();
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean delete(Iterator<T> it, T t, Object param, IterationInfo info){
+		if(shouldDelete(t, param)){
+			it.remove(); // 之前必须调用next().
+			info.incrementDelete();
 			return true;
 		}
 		return false;
 	}
 
-	public boolean shouldFilter(T t, Object defaultParam) {
+	private boolean shouldFilter(T t, Object defaultParam) {
 		if (mOp == OP_FILTER && mVisitor != null) {
 			Boolean result = mVisitor.visit(t, mParam != null ? mParam : defaultParam);
 			return Predicates.isTrue(result);
 		}
 		return false;
 	}
-
-	public boolean shouldUpdate(T t, Object defaultParam) {
+	
+	private boolean shouldUpdate(T t, Object defaultParam) {
 		if (mOp == OP_UPDATE && mVisitor != null) {
 			Boolean result = mVisitor.visit(t, mParam != null ? mParam : defaultParam);
 			return Predicates.isTrue(result);
@@ -113,7 +134,7 @@ public class CollectionOperation<T> extends Operation{
 		return false;
 	}
 
-	public boolean shouldDelete(T t, Object defaultParam) {
+	private boolean shouldDelete(T t, Object defaultParam) {
 		if (mOp == OP_DELETE && mVisitor != null) {
 			Boolean result = mVisitor.visit(t, mParam != null ? mParam : defaultParam);
 			return Predicates.isTrue(result);
@@ -128,7 +149,7 @@ public class CollectionOperation<T> extends Operation{
 	 * @param info the IterationInfo
 	 * @return true if should insert.
 	 */
-	public boolean shouldInsert(T t, Object defaultParam, IterationInfo info) {
+	private boolean shouldInsert(T t, Object defaultParam, IterationInfo info) {
 		if (mOp == OP_INSERT && mIteratorVisitor != null) {
 			Boolean result = mIteratorVisitor.visit(t, mParam != null ? mParam : defaultParam, info);
 			return Predicates.isTrue(result);

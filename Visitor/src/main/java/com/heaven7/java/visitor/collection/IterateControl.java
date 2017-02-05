@@ -211,8 +211,8 @@ public final class IterateControl<T> {
 		
 		/**
 		 * called on start iterate control.
-		 * @param orderOps the order ops(opertion)
-		 * @param interceptOps  the intercept ops(opertion)
+		 * @param orderOps the order ops(operation),never null
+		 * @param interceptOps  the intercept ops(operation),never null
 		 */
 		public void onStart(List<Integer> orderOps, List<Integer> interceptOps){
 			// by default only delete and fiter op will intercept iteration.
