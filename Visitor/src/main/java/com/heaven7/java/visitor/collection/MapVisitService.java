@@ -14,30 +14,32 @@ import com.heaven7.java.visitor.util.Map;
 /**
  * visit service of common map . <br>here is a demo used to query a key-value .
  * <pre>
- * public void testQuery() {
-	  KeyValuePair<String, Integer> pair = service.beginOperateManager()
-		.delete(new MapPredicateVisitor<String, Integer>() {
-			@Override
-			public Boolean visit(KeyValuePair<String, Integer> pair, Object param) {
-				assertEquals(param, "123");
-				return pair.getValue() == 2;
-			}
-		}).end().visitForQuery("123", new MapPredicateVisitor<String, Integer>() {
-			@Override
-			public Boolean visit(KeyValuePair<String, Integer> pair, Object param) {
-				assertEquals(param, "123");
-				return pair.getValue() == 5;
-			}
-		});
-
-	  assertEquals(pair.getValue().intValue(), 5);
-	  assertEquals(map.size(), size - 1);
+    public void testQuery() {
+		  KeyValuePair<String, Integer> pair = service.beginOperateManager()
+			.delete(new MapPredicateVisitor<String, Integer>() {
+				@Override
+				public Boolean visit(KeyValuePair<String, Integer> pair, Object param) {
+					assertEquals(param, "123");
+					return pair.getValue() == 2;
+				}
+			}).end().visitForQuery("123", new MapPredicateVisitor<String, Integer>() {
+				@Override
+				public Boolean visit(KeyValuePair<String, Integer> pair, Object param) {
+					assertEquals(param, "123");
+					return pair.getValue() == 5;
+				}
+			});
+	
+		  assertEquals(pair.getValue().intValue(), 5);
+		  assertEquals(map.size(), size - 1);
 	}
- * </pre> the more to see {@linkplain MapVisitServiceTest}}<br>
+  </pre> <br>the more to see {@linkplain MapVisitServiceTest}}<br>
  * @author heaven7
  *
  * @param <K> the key type
  * @param <V> the value type.
+ * @see {@linkplain AbstractMapVisitService}
+ * @see {@linkplain MapVisitServiceImpl}
  */
 public interface MapVisitService<K, V>{
 

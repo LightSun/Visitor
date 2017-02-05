@@ -5,8 +5,7 @@ import java.util.Map;
 import com.heaven7.java.visitor.util.Throwables;
 
 /**
- * an entry wrapper of Map.Entry , this class just avoid access
- * method({@linkplain Map.Entry#setValue(Object)}) directly for user.
+ * an entry like Map.Entry .
  * 
  * @author heaven7
  *

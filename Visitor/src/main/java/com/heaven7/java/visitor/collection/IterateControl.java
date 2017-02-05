@@ -52,7 +52,7 @@ import java.util.List;
  * @see {@linkplain VisitService#OP_UPDATE}
  * @see {@linkplain VisitService#OP_INSERT}
  */
-public class IterateControl<T> {
+public final class IterateControl<T> {
 	
 	private static final boolean DEBUG = false;
 	
