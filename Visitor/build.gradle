@@ -8,6 +8,7 @@
  */
 
 // Apply the java plugin to add support for Java
+// https://github.com/LightSun/Visitor.git
 apply plugin: 'java'
 apply plugin: 'com.novoda.bintray-release'
 
@@ -26,6 +27,8 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
+
+
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
@@ -48,5 +51,4 @@ publish {
     desc = 'this is a lib of visit mode such as, vist list , set ,map and etc.'
     website = 'https://github.com/LightSun/Visitor'
 }
-
 

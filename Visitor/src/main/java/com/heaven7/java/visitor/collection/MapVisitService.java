@@ -304,7 +304,6 @@ public interface MapVisitService<K, V>{
 		public final MapOperateManager<K, V> delete(MapPredicateVisitor<K, V> visitor) {
 			return delete(null, visitor);
 		}
-
-	}
+      }
 
 }
