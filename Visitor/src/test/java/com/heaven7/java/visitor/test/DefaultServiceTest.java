@@ -97,13 +97,13 @@ public class DefaultServiceTest extends TestCase {
 	}
 
 	public void testComposeVisitInsert() {
-		// here 每迭代一次，加入一个元素
+		// here just insert
 		int size = getStudentSize();
 		mService.beginOperateManager()
 				.insert(createStudent("new_stu"), "testComposeVisit_1", Visitors.trueIterateVisitor()).end()
 				.visitAll("testComposeVisit_2");
 
-		assertEquals(getStudentSize(), size * 2);
+		assertEquals(getStudentSize(), size);
 	}
 
 	public void testVisitAll() {

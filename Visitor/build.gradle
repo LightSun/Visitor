@@ -44,7 +44,7 @@ dependencies {
 }
 
 publish {
-    userOrg = 'LightSun'
+    userOrg = 'lightsun' //bintray user name
     groupId = 'com.heaven7.java.visitor'
     artifactId = 'Visitor'
     publishVersion = '1.0.04'

@@ -28,8 +28,8 @@ import junit.framework.TestCase;
  */
 public class VisitServiceTest extends TestCase {
 
-	CollectionVisitService<Student> mService;
-	List<Student> mStus;
+	protected CollectionVisitService<Student> mService;
+	protected List<Student> mStus;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -225,7 +225,7 @@ OP_INSERT
 	}
 
 	public void testComposeVisitInsert() {
-		// here 每迭代一次，加入一个元素
+		// here just insert
 		int size = getStudentSize();
 		mService.beginOperateManager()
 		.insert(createStudent("new_stu"), "testComposeVisit_1", Visitors.trueIterateVisitor())

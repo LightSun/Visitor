@@ -114,7 +114,7 @@ public class MapVisitServiceTest extends TestCase {
 		}
 		for (Entry<String, Integer> en : map.entrySet()) {
 			// update, filter , delete, trim.
-			// map.remove(en.getKey()); // 通常情况下， entry后不能remove.
+			// map.remove(en.getKey()); // in common， after entry can't remove.
 		}
 
 		List<Entry<String, Integer>> list = new ArrayList<>(map.entrySet());
