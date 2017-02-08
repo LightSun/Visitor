@@ -68,6 +68,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		this.mCollection = collection;
 		mControl = IterateControl.<CollectionVisitService<T>>create(this, 
 				new ControlCallbackImpl());
+		//init default
 		mControl.begin().end();
 	}
 

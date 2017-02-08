@@ -53,6 +53,29 @@ public interface MapVisitService<K, V>{
 	 */
 	<R> List<R> visitForResultList(Object param, MapPredicateVisitor<K, V> predicate,
 			MapResultVisitor<K, V, R> resultVisitor, @Nullable List<R> out);
+	
+	/**
+	 * visit for result list and carry extra parameter .With default predicate visitor which always return true.
+	 * @param <R> the result type
+	 * @param param the extra parameter to carry to visitor.
+	 * @param resultVisitor the result visitor.
+	 * @param out the out list of all result, can be null.
+	 * @return result list
+	 * @see {@linkplain #visitForResultList(Object, MapPredicateVisitor, MapResultVisitor, List)}
+	 * @since 1.0.1
+	 */
+	<R> List<R> visitForResultList(Object param, MapResultVisitor<K, V, R> resultVisitor, @Nullable List<R> out);
+	
+	/**
+	 * visit for result list With default predicate visitor which always return true.
+	 * @param <R> the result type
+	 * @param resultVisitor the result visitor.
+	 * @param out the out list of all result, can be null.
+	 * @return result list
+	 * @see {@linkplain #visitForResultList(Object, MapPredicateVisitor, MapResultVisitor, List)}
+	 * @since 1.0.1
+	 */
+	<R> List<R> visitForResultList(MapResultVisitor<K, V, R> resultVisitor, @Nullable List<R> out);
 
 	/**
 	 * visit for result list but carry no extra parameter.

@@ -13,6 +13,7 @@ import com.heaven7.java.visitor.MapIterateVisitor;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
+import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.IterateControl.Callback;
 import com.heaven7.java.visitor.util.Map;
@@ -121,6 +122,16 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 
 	// ==================================================================//
+	
+	@Override
+	public <R> List<R> visitForResultList(Object param, MapResultVisitor<K, V, R> resultVisitor, List<R> out) {
+		return visitForResultList(param, Visitors.trueMapPredicateVisitor(), resultVisitor, out);
+	}
+	
+	@Override
+	public <R> List<R> visitForResultList(MapResultVisitor<K, V, R> resultVisitor, List<R> out) {
+		return visitForResultList(null, Visitors.trueMapPredicateVisitor(), resultVisitor, out);
+	}
 
 	@Override
 	public final <R> List<R> visitForResultList(MapPredicateVisitor<K, V> predicate,

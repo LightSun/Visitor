@@ -1,6 +1,9 @@
 package com.heaven7.java.visitor.test;
 
-import static com.heaven7.java.visitor.collection.Operation.*;
+import static com.heaven7.java.visitor.collection.Operation.OP_DELETE;
+import static com.heaven7.java.visitor.collection.Operation.OP_FILTER;
+import static com.heaven7.java.visitor.collection.Operation.OP_INSERT;
+import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
 import static com.heaven7.java.visitor.test.help.TestUtil.createStudent;
 import static com.heaven7.java.visitor.test.help.TestUtil.createStudent2;
 import static com.heaven7.java.visitor.test.help.TestUtil.syso;
@@ -49,7 +52,6 @@ public class VisitServiceTest extends TestCase {
 	public void testForResult(){
 		
 		final int size = getStudentSize();
-		
 		final List<Student2> list = new ArrayList<Student2>();
 		
 		mService.beginOperateManager()

@@ -23,6 +23,7 @@ public abstract class Operation {
 	 */
 	public static final int OP_TRIM   = 5;
 	
+	
 	protected int mOp;
 	/** the extra param for current operation. */
 	protected Object mParam;

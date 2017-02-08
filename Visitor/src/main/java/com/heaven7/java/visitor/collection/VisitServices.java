@@ -66,5 +66,18 @@ public final class VisitServices {
 	public static <V> MapVisitService<Integer, V> from(SparseArray<V> array) {
 		return new MapVisitServiceImpl<Integer,V>(new SparseArray2Map<V>(array));
 	}
+	
+	/**
+	 * create an instance of {@linkplain MapVisitService} from target {@linkplain com.heaven7.java.visitor.util.Map}.
+	 * @param <K> the key type 
+	 * @param <V> the value type 
+	 * @param array the map (key is Integer, value is V)
+	 * @param map the map
+	 * @return an instance of {@linkplain MapVisitService}
+	 * @since 1.0.1
+	 */
+	public static <K, V> MapVisitService<K, V> from(com.heaven7.java.visitor.util.Map<K, V> map) {
+		return new MapVisitServiceImpl<K,V>(map);
+	}
 
 }

@@ -37,9 +37,10 @@ public interface CollectionVisitService<T>{
 	 * 'Collection'
 	 */
 	public static final int VISIT_RULE_UNTIL_FAILED = 13;
+	
 
 	/**
-	 * visit the collection for result .
+	 * visit the collection for result . if predicate visit true, the iterate will be breaked.
 	 *
 	 * @param param
 	 *            the extra parameter, which is used for the callback of visitors.
@@ -50,9 +51,9 @@ public interface CollectionVisitService<T>{
 	 * @param <R>
 	 *            the result type of visit.
 	 * @return the result of this visit
+	 * @see {@linkplain #visitForResultList(Object, PredicateVisitor, ResultVisitor, List)}
 	 */
-	<R> R visitForResult(@Nullable Object param, PredicateVisitor<? super T> predicate,
-			ResultVisitor<? super T, R> resultVisitor);
+	<R> R visitForResult(@Nullable Object param, PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor);
 	
 	/**
 	 * visit the collection for result , but carry no extra data.
@@ -64,9 +65,9 @@ public interface CollectionVisitService<T>{
 	 * @param <R>
 	 *            the result type of visit.
 	 * @return the result of this visit
+	 * @see {@linkplain #visitForResultList(Object, PredicateVisitor, ResultVisitor, List)}
 	 */
-	<R> R visitForResult(PredicateVisitor<? super T> predicate,
-			ResultVisitor<? super T, R> resultVisitor);
+	<R> R visitForResult(PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor);
 
 	/**
 	 * visit the all elements for result. which is matched by the target predicate visitor.
@@ -74,9 +75,9 @@ public interface CollectionVisitService<T>{
 	 * @param param
 	 *            the extra parameter for transport to the all visitors.
 	 * @param predicate
-	 *            the predicate visitor ,indicate whether the element is match this predicate or not.
+	 *            the predicate visitor ,indicate whether the element is match this predicate or not. if predicate visit true, it will be ignored.
 	 * @param resultVisitor
-	 *            the result visitor
+	 *            the result visitor, if visit result is null , it will be ignored.
 	 * @param out
 	 *            the out list. can be null.
 	 * @param <R>
@@ -84,7 +85,24 @@ public interface CollectionVisitService<T>{
 	 * @return the list of visit result
 	 */
 	<R> List<R> visitForResultList(@Nullable Object param, PredicateVisitor<? super T> predicate,
-			ResultVisitor<? super T, R> resultVisitor,@Nullable List<R> out);
+			ResultVisitor<? super T, R> resultVisitor, @Nullable List<R> out);
+	
+	/**
+	 * visit the all elements for result, which is matched by the target predicate visitor.With the default predicate visitor which  always return true.
+	 *
+	 * @param param
+	 *            the extra parameter for transport to the all visitors.
+	 * @param resultVisitor
+	 *            the result visitor, if visit result is null , it will be ignored.
+	 * @param out
+	 *            the out list. can be null.
+	 * @param <R>
+	 *            the result type of visit.
+	 * @return the list of visit result
+	 * @see {@linkplain #visitForResultList(Object, PredicateVisitor, ResultVisitor, List)}
+	 * @since 1.0.1
+	 */
+	<R> List<R> visitForResultList(@Nullable Object param, ResultVisitor<? super T, R> resultVisitor, @Nullable List<R> out);
 	
 	/**
 	 * visit the all elements for result. which is matched by the target predicate visitor, but carry no extra data.
@@ -99,8 +117,22 @@ public interface CollectionVisitService<T>{
 	 *            the result type of visit.
 	 * @return the collection of visit result
 	 */
-	<R> List<R> visitForResultList(PredicateVisitor<? super T> predicate,
-			ResultVisitor<? super T, R> resultVisitor,@Nullable List<R> out);
+	<R> List<R> visitForResultList(PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor, @Nullable List<R> out);
+	
+	/**
+	 * visit the all elements for result. which is matched by the target predicate visitor, but carry no extra data.
+	 * With the default predicate visitor which  always return true.
+	 *
+	 * @param resultVisitor
+	 *            the result visitor
+	 * @param out
+	 *            the out list. can be null.
+	 * @param <R>
+	 *            the result type of visit.
+	 * @return the collection of visit result
+	 * @since 1.0.1
+	 */
+	<R> List<R> visitForResultList(ResultVisitor<? super T, R> resultVisitor, @Nullable List<R> out);
 
 	/**
 	 * visit for query the all element which is match the PredicateVisitor.
@@ -111,7 +143,7 @@ public interface CollectionVisitService<T>{
 	 *            the predicate visitor
 	 * @param out
 	 *            the out list, can be null.
-	 * @return
+	 * @return the list 
 	 */
 	List<T> visitForQueryList(@Nullable Object param, PredicateVisitor<? super T> predicate,@Nullable List<T> out);
 	
