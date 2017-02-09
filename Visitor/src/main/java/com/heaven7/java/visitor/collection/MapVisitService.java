@@ -16,13 +16,13 @@ import com.heaven7.java.visitor.util.Map;
     public void testQuery() {
 		  KeyValuePair<String, Integer> pair = service.beginOperateManager()
 			.delete(new MapPredicateVisitor<String, Integer>() {
-				@Override
+				//@Override
 				public Boolean visit(KeyValuePair<String, Integer> pair, Object param) {
 					assertEquals(param, "123");
 					return pair.getValue() == 2;
 				}
 			}).end().visitForQuery("123", new MapPredicateVisitor<String, Integer>() {
-				@Override
+				//@Override
 				public Boolean visit(KeyValuePair<String, Integer> pair, Object param) {
 					assertEquals(param, "123");
 					return pair.getValue() == 5;
@@ -32,7 +32,8 @@ import com.heaven7.java.visitor.util.Map;
 		  assertEquals(pair.getValue().intValue(), 5);
 		  assertEquals(map.size(), size - 1);
 	}
-  </pre> <br>the more to see MapVisitServiceTest <br>
+ * </pre> <br>the more to see MapVisitServiceTest <br>
+ * 
  * @author heaven7
  *
  * @param <K> the key type
