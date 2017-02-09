@@ -1,5 +1,6 @@
 # Visitor
 this is a java lib for fast vist list , set ,map and etc. specially with 'CRUD' operations.
+Also we can tranform between  Collection and map ,Which use chain structure.
 
 
 ## Gradle config
