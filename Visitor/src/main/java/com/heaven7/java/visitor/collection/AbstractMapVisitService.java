@@ -7,6 +7,7 @@ import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
 import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.heaven7.java.visitor.MapIterateVisitor;
@@ -19,6 +20,7 @@ import com.heaven7.java.visitor.collection.IterateControl.Callback;
 import com.heaven7.java.visitor.util.Map;
 import com.heaven7.java.visitor.util.Predicates;
 import com.heaven7.java.visitor.util.SparseArray;
+import com.heaven7.java.visitor.util.Throwables;
 
 public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K, V> {
 
@@ -120,8 +122,104 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 			mTrimOp.trim(map, param, info);
 		}
 	}
-
+	
 	// ==================================================================//
+	
+	@Override
+	public CollectionVisitService<K> transformToCollectionByKeys() {
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final List<K> results = new ArrayList<K>();
+		for(KeyValuePair<K, V> pair : list){
+			results.add(pair.getKey());
+		}
+		return VisitServices.from(results);
+	}
+	@Override
+	public CollectionVisitService<V> transformToCollectionByValues() {
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final List<V> results = new ArrayList<V>();
+		for(KeyValuePair<K, V> pair : list){
+			results.add(pair.getValue());
+		}
+		return VisitServices.from(results);
+	}
+	
+	@Override
+	public <R> CollectionVisitService<R> transformToCollection(MapResultVisitor<K, V, R> resultVisitor) {
+		return transformToCollection(null, resultVisitor);
+	}
+	
+	@Override
+	public <R> CollectionVisitService<R> transformToCollection(Object param, MapResultVisitor<K, V, R> resultVisitor) {
+		Throwables.checkNull(resultVisitor);
+		final List<KeyValuePair<K,V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final List<R> results = new ArrayList<R>();
+		for(KeyValuePair<K, V> pair : list){
+			results.add(resultVisitor.visit(pair, param));
+		}
+		return VisitServices.from(results);
+	}
+	
+	@Override
+	public <K2> MapVisitService<K2, V> transformToMapAsValues(MapResultVisitor<K, V, K2> keyVisitor) {
+		return transformToMapAsValues(null, keyVisitor);
+	}
+	
+	@Override
+	public <K2> MapVisitService<K2, V> transformToMapAsValues(Object param, MapResultVisitor<K, V, K2> keyVisitor) {
+		Throwables.checkNull(keyVisitor);
+		final List<KeyValuePair<K,V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final HashMap<K2, V> map = new HashMap<K2, V>();
+		for(KeyValuePair<K, V> pair : list){
+			map.put(keyVisitor.visit(pair, param), pair.getValue());
+		}
+		return VisitServices.from(map);
+	}
+	
+	@Override
+	public <V2> MapVisitService<K, V2> transformToMapAsKeys(MapResultVisitor<K, V, V2> valueVisitor) {
+		return transformToMapAsKeys(null, valueVisitor);
+	}
+	@Override
+	public <V2> MapVisitService<K, V2> transformToMapAsKeys(Object param, MapResultVisitor<K, V, V2> valueVisitor) {
+		Throwables.checkNull(valueVisitor);
+		final List<KeyValuePair<K,V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final HashMap<K, V2> map = new HashMap<K, V2>();
+		for(KeyValuePair<K, V> pair : list){
+			map.put(pair.getKey(), valueVisitor.visit(pair, param));
+		}
+		return VisitServices.from(map);
+	}
+	
+	@Override
+	public MapVisitService<V, K> transformToMapBySwap() {
+		final List<KeyValuePair<K,V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final HashMap<V, K> map = new HashMap<V, K>();
+		for(KeyValuePair<K, V> pair : list){
+			map.put(pair.getValue(), pair.getKey());
+		}
+		return VisitServices.from(map);
+	}
+	
+	@Override
+	public <K2, V2> MapVisitService<K2, V2> transformToMap(MapResultVisitor<K, V, K2> keyVisitor,
+			MapResultVisitor<K, V, V2> valueVisitor) {
+		return transformToMap(null, keyVisitor, valueVisitor);
+	}
+	
+	@Override
+	public <K2, V2> MapVisitService<K2, V2> transformToMap(Object param, MapResultVisitor<K, V, K2> keyVisitor,
+			MapResultVisitor<K, V, V2> valueVisitor) {
+		Throwables.checkNull(keyVisitor);
+		Throwables.checkNull(valueVisitor);
+		
+		final List<KeyValuePair<K,V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final HashMap<K2,V2> map = new HashMap<K2, V2>();
+		for(KeyValuePair<K,V> pair : list){
+			map.put(keyVisitor.visit(pair, param), valueVisitor.visit(pair, param));
+		}
+		return VisitServices.from(map);
+	}
 	
 	@Override
 	public <R> List<R> visitForResultList(Object param, MapResultVisitor<K, V, R> resultVisitor, List<R> out) {

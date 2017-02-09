@@ -54,4 +54,18 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 		return list;
 	}
 
+	@Override
+	public List<K> keys() {
+		List<K> list = new ArrayList<K>();
+		list.addAll(mMap.keySet());
+		return list;
+	}
+
+	@Override
+	public List<V> values() {
+		List<V> list = new ArrayList<V>();
+		list.addAll(mMap.values());
+		return list;
+	}
+
 }

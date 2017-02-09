@@ -103,6 +103,37 @@ public final class Visitors {
 	public static <K,V> MapIterateVisitor<K, V> falseMapIterateVisitor(){
 		return (MapIterateVisitor<K, V>) MAP_ITERATE_FALSE;
 	}
+	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @return a MapResultVisitor that always return the key which comes from map.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> MapResultVisitor<K, V, K> keyMapResultVisitor(){
+		return (MapResultVisitor<K, V, K>) MAP_RESULT_KEY;
+	}
+	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @return a MapResultVisitor that always return the value which comes from map.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> MapResultVisitor<K, V, V> valueMapResultVisitor(){
+		return (MapResultVisitor<K, V, V>) MAP_RESULT_VALUE;
+	}
+	
+	private static final MapResultVisitor<Object, Object, Object> MAP_RESULT_KEY = new MapResultVisitor<Object, Object, Object>() {
+		@Override
+		public Object visit(KeyValuePair<Object, Object> t, Object param) {
+			return t.getKey();
+		}
+	};
+	private static final MapResultVisitor<Object, Object, Object> MAP_RESULT_VALUE = new MapResultVisitor<Object, Object, Object>() {
+		@Override
+		public Object visit(KeyValuePair<Object, Object> t, Object param) {
+			return t.getValue();
+		}
+	};
 
 	private static final ResultVisitor<Object, Object> RESULT_UNCHANGE = new ResultVisitor<Object, Object>() {
 		@Override

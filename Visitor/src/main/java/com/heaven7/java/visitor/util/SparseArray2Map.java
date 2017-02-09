@@ -48,10 +48,26 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E>{
 		final List<KeyValuePair<Integer, E>> list = this.mList;
 		final SparseArray<E> mMap = this.mMap;
 		final int size = mMap.size();
-		for(int i = size - 1  ; i >=0 ; i--){
+		for(int i = 0  ; i < size ; i++){
 			list.add(KeyValuePair.create(mMap.keyAt(i), mMap.valueAt(i)));
 		}
 		return list;
+	}
+
+	@Override
+	public List<Integer> keys() {
+		final List<Integer> list = new ArrayList<Integer>();
+		final SparseArray<E> mMap = this.mMap;
+		final int size = mMap.size();
+		for(int i = size - 1  ; i >=0 ; i--){
+			list.add(mMap.keyAt(i));
+		}
+		return list;
+	}
+
+	@Override
+	public List<E> values() {
+		return mMap.getValues();
 	}
 
 }

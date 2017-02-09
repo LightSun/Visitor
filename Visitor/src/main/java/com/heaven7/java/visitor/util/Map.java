@@ -31,4 +31,8 @@ public interface Map<K, V> {
 
 	List<KeyValuePair<K, V>> getKeyValues();
 	
+	List<K> keys();
+	
+	List<V> values();
+	
 }

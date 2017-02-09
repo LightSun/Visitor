@@ -41,6 +41,112 @@ import com.heaven7.java.visitor.util.Map;
  * @see {@linkplain MapVisitServiceImpl}
  */
 public interface MapVisitService<K, V>{
+	
+	
+	/**
+	 * transform to {@linkplain CollectionVisitService} by keys .
+	 * @return a {@linkplain CollectionVisitService}.
+	 * @since 1.0.2
+	 */
+	CollectionVisitService<K> transformToCollectionByKeys();
+	
+	/**
+	 * transform to {@linkplain CollectionVisitService} by values .
+	 * @return a {@linkplain CollectionVisitService}.
+	 * @since 1.0.2
+	 */
+	CollectionVisitService<V> transformToCollectionByValues();
+	
+	/**
+	 * transform to {@linkplain CollectionVisitService} by target result visitor.
+	 * @param <R> the result type
+	 * @param resultVisitor  the result visitor
+	 * @return a {@linkplain CollectionVisitService}.
+	 * @since 1.0.2
+	 * @see {@linkplain #transformToCollection(Object, MapResultVisitor)}
+	 */
+	<R> CollectionVisitService<R> transformToCollection(MapResultVisitor<K, V, R> resultVisitor);
+	
+	/**
+	 * transform to {@linkplain CollectionVisitService} by target result visitor.
+	 * @param <R> the result type
+	 * @param param  the parameter,can be null.
+	 * @param resultVisitor  the result visitor
+	 * @return a {@linkplain CollectionVisitService}.
+	 * @since 1.0.2
+	 */
+	<R> CollectionVisitService<R> transformToCollection(@Nullable Object param , MapResultVisitor<K, V, R> resultVisitor);
+	
+	/**
+	 * transform to new {@linkplain MapVisitService} as values.
+	 * @param <K2> the new key type
+	 * @param param  the parameter,can be null.
+	 * @param keyVisitor  the key visitor
+	 * @return a {@linkplain MapVisitService}.
+	 * @since 1.0.2
+	 */
+	<K2> MapVisitService<K2, V> transformToMapAsValues(@Nullable Object param, MapResultVisitor<K, V, K2> keyVisitor);
+	
+	/**
+	 * transform to new {@linkplain MapVisitService} as values.
+	 * @param <K2> the new key type
+	 * @param keyVisitor  the key visitor
+	 * @return a {@linkplain MapVisitService}.
+	 * @since 1.0.2
+	 * @see {@linkplain #transformToMapAsValues(Object, MapResultVisitor)}
+	 */
+	<K2> MapVisitService<K2, V> transformToMapAsValues(MapResultVisitor<K, V, K2> keyVisitor);
+	
+	/**
+	 * transform to new {@linkplain MapVisitService} as keys.
+	 * @param <V2> the new value type
+	 * @param param  the parameter,can be null.
+	 * @param valueVisitor  the value visitor
+	 * @return a {@linkplain MapVisitService}.
+	 * @since 1.0.2
+	 */
+	<V2> MapVisitService<K, V2> transformToMapAsKeys(@Nullable Object param, MapResultVisitor<K, V, V2> valueVisitor);
+	
+	/**
+	 * transform to new {@linkplain MapVisitService} as keys.
+	 * @param <V2> the new value type
+	 * @param valueVisitor  the value visitor
+	 * @return a {@linkplain MapVisitService}.
+	 * @since 1.0.2
+	 * @see {@linkplain #transformToMapAsKeys(Object, MapResultVisitor)}
+	 */
+	<V2> MapVisitService<K, V2> transformToMapAsKeys(MapResultVisitor<K, V, V2> valueVisitor);
+	
+	/**
+	 * transform to new {@linkplain MapVisitService} by swap the key with value.
+	 * @return a new {@linkplain MapVisitService}.
+	 * @since 1.0.2
+	 */
+	MapVisitService<V, K> transformToMapBySwap();
+	
+	/**
+	 * transform to new {@linkplain MapVisitService}.
+	 * @param <K2> the new key type
+	 * @param <V2> the new value type
+	 * @param keyVisitor  the key visitor
+	 * @param valueVisitor  the value visitor
+	 * @return a {@linkplain MapVisitService}.
+	 * @see {@linkplain #transformToMap(Object, MapResultVisitor, MapResultVisitor)}
+	 * @since 1.0.2
+	 */
+	<K2,V2> MapVisitService<K2, V2> transformToMap(MapResultVisitor<K, V, K2> keyVisitor, MapResultVisitor<K, V, V2> valueVisitor);
+	
+	/**
+	 * transform to new {@linkplain MapVisitService}.
+	 * @param <K2> the new key type
+	 * @param <V2> the new value type
+	 * @param param  the parameter
+	 * @param keyVisitor  the key visitor
+	 * @param valueVisitor  the value visitor
+	 * @return a {@linkplain MapVisitService}.
+	 * @since 1.0.2
+	 */
+	<K2,V2> MapVisitService<K2, V2> transformToMap(@Nullable Object param, MapResultVisitor<K, V, K2> keyVisitor, MapResultVisitor<K, V, V2> valueVisitor);
 
 	/**
 	 * visit for result list and carry extra parameter
@@ -51,7 +157,7 @@ public interface MapVisitService<K, V>{
 	 * @param out the out list of all result, can be null.
 	 * @return result list
 	 */
-	<R> List<R> visitForResultList(Object param, MapPredicateVisitor<K, V> predicate,
+	<R> List<R> visitForResultList(@Nullable Object param, MapPredicateVisitor<K, V> predicate,
 			MapResultVisitor<K, V, R> resultVisitor, @Nullable List<R> out);
 	
 	/**
@@ -64,7 +170,7 @@ public interface MapVisitService<K, V>{
 	 * @see {@linkplain #visitForResultList(Object, MapPredicateVisitor, MapResultVisitor, List)}
 	 * @since 1.0.1
 	 */
-	<R> List<R> visitForResultList(Object param, MapResultVisitor<K, V, R> resultVisitor, @Nullable List<R> out);
+	<R> List<R> visitForResultList(@Nullable Object param, MapResultVisitor<K, V, R> resultVisitor, @Nullable List<R> out);
 	
 	/**
 	 * visit for result list With default predicate visitor which always return true.
@@ -97,7 +203,7 @@ public interface MapVisitService<K, V>{
 	 * @param resultVisitor the result visitor.
 	 * @return the result 
 	 */
-	<R> R visitForResult(Object param, MapPredicateVisitor<K, V> predicate,
+	<R> R visitForResult(@Nullable Object param, MapPredicateVisitor<K, V> predicate,
 			MapResultVisitor<K, V, R> resultVisitor);
 
 	/**
@@ -118,7 +224,7 @@ public interface MapVisitService<K, V>{
 	 * @param out the out list. can be null.
 	 * @return the query result list
 	 */
-	List<KeyValuePair<K, V>> visitForQueryList(Object param, MapPredicateVisitor<K, V> predicate, @Nullable List<KeyValuePair<K, V>> out);
+	List<KeyValuePair<K, V>> visitForQueryList(@Nullable Object param, MapPredicateVisitor<K, V> predicate, @Nullable List<KeyValuePair<K, V>> out);
 
 	/**
 	 * visit for query list key-value but don't carry extra parameter.
@@ -135,7 +241,7 @@ public interface MapVisitService<K, V>{
 	 * @param predicate the predicate visitor
 	 * @return the query result 
 	 */
-	KeyValuePair<K, V> visitForQuery(Object param, MapPredicateVisitor<K, V> predicate);
+	KeyValuePair<K, V> visitForQuery(@Nullable Object param, MapPredicateVisitor<K, V> predicate);
 
 	/**
 	 * visit for query a key-value ,but carry no extra parameter.

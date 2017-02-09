@@ -38,7 +38,96 @@ public interface CollectionVisitService<T>{
 	 */
 	public static final int VISIT_RULE_UNTIL_FAILED = 13;
 	
+	
+	/**
+	 * transform this service to map service. And the value type is T .
+	 * @param <K> the key type
+	 * @param param the extra parameter
+	 * @param keyVisitor the key visitor.
+	 * @return the {@linkplain MapVisitService}
+	 * @since 1.0.2
+	 */
+	<K> MapVisitService<K,T> transformToMapAsValues(@Nullable Object param, ResultVisitor<? super T, K> keyVisitor);
+	
+	/**
+	 * transform this service to map service. And the value type is T .
+	 * @param <K> the key type
+	 * @param keyVisitor the key visitor.
+	 * @return the {@linkplain MapVisitService}
+	 * @see {@linkplain #transformToMapAsValues(Object, ResultVisitor)}
+	 * @since 1.0.2
+	 */
+	<K> MapVisitService<K,T> transformToMapAsValues(ResultVisitor<? super T, K> keyVisitor);
+	
+	/**
+	 * transform this service to map service. And the key type is T 
+	 * @param <V> the value type
+	 * @param param the extra parameter
+	 * @param valueVisitor the value visitor.
+	 * @return the {@linkplain MapVisitService}
+	 * @since 1.0.2
+	 */
+	<V> MapVisitService<T,V> transformToMapAsKeys(@Nullable Object param, ResultVisitor<? super T, V> valueVisitor);
+	
+	/**
+	 * transform this service to map service. And the key type is T 
+	 * @param <V> the value type
+	 * @param valueVisitor the value visitor.
+	 * @return the {@linkplain MapVisitService}
+	 * @see {@linkplain #transformToMapAsKeys(Object, ResultVisitor)}
+	 * @since 1.0.2
+	 */
+	<V> MapVisitService<T,V> transformToMapAsKeys(ResultVisitor<? super T, V> valueVisitor);
+	
+	/**
+	 * transform this service to map service.
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param param the extra parameter
+	 * @param keyVisitor the key visitor.
+	 * @param valueVisitor the value visitor.
+	 * @return the {@linkplain MapVisitService}
+	 * @since 1.0.2
+	 */
+	<K,V> MapVisitService<K, V> transformToMap(@Nullable Object param, ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
+	
+	/**
+	 * transform this service to map service.
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param keyVisitor the key visitor.
+	 * @param valueVisitor the value visitor.
+	 * @return the {@linkplain MapVisitService}
+	 * @see {@linkplain #transformToMap(Object, ResultVisitor, ResultVisitor)}
+	 * @since 1.0.2
+	 */
+	<K,V> MapVisitService<K, V> transformToMap(ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
 
+	/**
+	 * transform current CollectionVisitService to another.
+	 * @param <R> the result type.
+	 * @param param 
+	 *           the extra parameter, which is used for the callback of visitors.
+	 * @param resultVisitor
+	 *           the  result visitor       
+	 * @return the new {@linkplain CollectionVisitService}.
+	 * @since 1.0.2
+	 */
+	<R> CollectionVisitService<R> transformToCollection(@Nullable Object param, ResultVisitor<? super T, R> resultVisitor);
+	
+	/**
+	 * transform current CollectionVisitService to another.
+	 * @param <R> the result type.
+	 * @param resultVisitor
+	 *           the  result visitor       
+	 * @return the new {@linkplain CollectionVisitService}.
+	 * @see {@linkplain CollectionVisitService#transformToCollection(Object, ResultVisitor)}
+	 * @since 1.0.2
+	 */
+	<R> CollectionVisitService<R> transformToCollection(ResultVisitor<? super T, R> resultVisitor);
+	
+	//============================================================================================================
+	
 	/**
 	 * visit the collection for result . if predicate visit true, the iterate will be breaked.
 	 *
