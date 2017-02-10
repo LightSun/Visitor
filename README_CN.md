@@ -1,29 +1,1 @@
-# Visitor
-this is a java lib for fast vist list , set ,map and etc. specially with 'CRUD' operations.
-
-
-## Gradle config
-
-```java
-   dependencies {
-       compile 'com.heaven7.java.visitor:Visitor:1.0.2'
-   }
-```
-
-
-## License
-
-    Copyright 2017  
-                    heaven7(donshine723@gmail.com)
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+# Visitorthis is a java lib for fast vist list , set ,map and etc. specially with 'CRUD' operations.## 此框架的目的.* 需求：      - 将一个Int类型的数组 转化成一个map. 条件是迭代过程中需要将某些元素过滤或者删除。(ps: 过滤意思是该元素不放入map中，删除意思是从集合本上上删除该元素)* 实现     - 大致的实现代码是这样的。``` javapublic void testTransform0_traditional() {		final int size = 10;		List<Integer> list = new ArrayList<Integer>();		//add ten element		for (int i = 0; i < size; i++) {			list.add(i);		}		//collection -> map		java.util.Map<Integer, String> map = new HashMap<Integer, String>();		for(Integer val : list){			if(val == 2){				continue; //filter 2			}			map.put(val, "" + val * 100);		}				//why here use new ArrayList? that is if not, here will thrown concurrent exception.		for(Integer val : new ArrayList<>(map.keySet())){			if(val == 5){				map.remove(val);			}		}		//map -> collection		Collection<String> values = map.values();		assertEquals(values.size(), size - 2);	}```## Gradle config```java   dependencies {       compile 'com.heaven7.java.visitor:Visitor:1.0.2'   }```## License    Copyright 2017                      heaven7(donshine723@gmail.com)    Licensed under the Apache License, Version 2.0 (the "License");    you may not use this file except in compliance with the License.    You may obtain a copy of the License at       http://www.apache.org/licenses/LICENSE-2.0    Unless required by applicable law or agreed to in writing, software    distributed under the License is distributed on an "AS IS" BASIS,    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    See the License for the specific language governing permissions and    limitations under the License.
