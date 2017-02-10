@@ -23,6 +23,12 @@ public interface Map<K, V> {
 	
 	boolean containsKey(K key);
 	
+	void clear();
+	
+	void putAll(Map<? extends K, ? extends V> map);
+	
+	void putAll(java.util.Map<? extends K, ? extends V> map);
+	
 	//=================================================//
 	
 	V replace(K key, V value);
@@ -34,5 +40,8 @@ public interface Map<K, V> {
 	List<K> keys();
 	
 	List<V> values();
+	
+	//=================================================//
+	java.util.Map<K, V> toNormalMap();
 	
 }

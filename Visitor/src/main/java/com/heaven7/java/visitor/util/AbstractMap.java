@@ -22,5 +22,10 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
 		return true;
 	}
 	
+	@Override
+	public void putAll(Map<? extends K, ? extends V> map) {
+		putAll(map.toNormalMap());
+	}
+	
 
 }

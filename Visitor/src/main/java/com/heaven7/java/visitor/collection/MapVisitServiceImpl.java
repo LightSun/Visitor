@@ -12,11 +12,9 @@ import com.heaven7.java.visitor.util.Map;
 /*public*/ class MapVisitServiceImpl<K, V> extends AbstractMapVisitService<K, V> {
 
 	private final IterationInfo mIterationInfo = new IterationInfo();
-	private final Map<K, V> mMap;
 
 	public MapVisitServiceImpl(Map<K, V> mMap) {
-		super();
-		this.mMap = mMap;
+		super(mMap);
 	}
 
 	@Override

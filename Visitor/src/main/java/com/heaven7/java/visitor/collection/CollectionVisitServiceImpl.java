@@ -16,10 +16,12 @@ import java.util.ListIterator;
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.SaveVisitor.CollectionSaveVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.IterateControl.Callback;
 import com.heaven7.java.visitor.internal.state.IterateState;
 import com.heaven7.java.visitor.util.SparseArray;
+import com.heaven7.java.visitor.util.Throwables;
 
 /**
  * 
@@ -504,6 +506,27 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			}
 		}
 		
+	}
+
+	@Override
+	public CollectionVisitService<T> save(CollectionSaveVisitor<T> visitor) {
+		Throwables.checkNull(visitor);
+		visitor.onSave(mCollection);
+		return this;
+	}
+
+	@Override
+	public CollectionVisitService<T> save(Collection<T> out) {
+		return save(out, false);
+	}
+	@Override
+	public CollectionVisitService<T> save(Collection<T> out, boolean clearBeforeSave) {
+		Throwables.checkEmpty(out);
+		if(clearBeforeSave){
+			out.clear();
+		}
+		out.addAll(mCollection);
+		return this;
 	}
 
 

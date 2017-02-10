@@ -1,11 +1,14 @@
 package com.heaven7.java.visitor.collection;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.heaven7.java.visitor.MapIterateVisitor;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
+import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
+import com.heaven7.java.visitor.SaveVisitor.MapSaveVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
 import com.heaven7.java.visitor.internal.OperateInterceptor;
@@ -42,6 +45,31 @@ import com.heaven7.java.visitor.util.Map;
  * @see {@linkplain MapVisitServiceImpl}
  */
 public interface MapVisitService<K, V>{
+	
+	
+	/**
+	 * save the current elements by target {@linkplain SaveVisitor}.
+	 * @param visitor the save visitor.
+	 * @return this.
+	 * @since 1.0.3
+	 */
+	MapVisitService<K, V> save(MapSaveVisitor<K, V> visitor);
+	/**
+	 * save the current elements to the target out collection.
+	 * @param outMap the out map .
+	 * @param clearBeforeSave if you want to clear the out collection before save.
+	 * @return this.
+	 * @since 1.0.3
+	 */
+	MapVisitService<K, V> save(Map<K, V> outMap, boolean clearBeforeSave);
+	
+	/**
+	 * save the current elements to the target out collection.
+	 * @param outMap the out map.
+	 * @return this.
+	 * @since 1.0.3
+	 */
+	MapVisitService<K, V> save(Map<K, V> outMap);
 	
 	
 	/**

@@ -18,4 +18,20 @@ public class Throwables {
 			throw new IllegalArgumentException();
 		}
 	}
+	public static <K,V> void checkEmpty(Map<K,V> map) {
+		if (map == null) {
+			throw new NullPointerException();
+		}
+		if (map.size() == 0) {
+			throw new IllegalArgumentException();
+		}
+	}
+	public static <K,V> void checkEmpty(java.util.Map<K,V> map) {
+		if (map == null) {
+			throw new NullPointerException();
+		}
+		if (map.size() == 0) {
+			throw new IllegalArgumentException();
+		}
+	}
 }

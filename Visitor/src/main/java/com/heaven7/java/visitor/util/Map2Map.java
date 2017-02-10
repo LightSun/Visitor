@@ -68,4 +68,19 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 		return list;
 	}
 
+	@Override
+	public Map<K, V> toNormalMap() {
+		return mMap;
+	}
+
+	@Override
+	public void clear() {
+		mMap.clear();
+	}
+
+	@Override
+	public void putAll(Map<? extends K, ? extends V> map) {
+		mMap.putAll(map);
+	}
+
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import com.heaven7.java.visitor.MapIterateVisitor;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
+import com.heaven7.java.visitor.SaveVisitor.MapSaveVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.anno.Nullable;
@@ -43,8 +44,11 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	private List<Integer> mOrderOps;
 	/** the intercept operate */
 	private List<Integer> mInterceptOps;
+	
+	protected final Map<K, V> mMap;
 
-	protected AbstractMapVisitService() {
+	protected AbstractMapVisitService(Map<K, V> mMap) {
+		this.mMap = mMap;
 		mOperateInterceptor = new GroupMapOperateInterceptor();
 		mIterateControl = IterateControl.<MapVisitService<K, V>>create(this, new IterateCallbackImpl());
 		mIterateControl.begin().end();
@@ -124,6 +128,26 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 	
 	// ==================================================================//
+	
+	@Override
+	public MapVisitService<K, V> save(Map<K, V> outMap) {
+		return save(outMap, false);
+	}
+	@Override
+	public MapVisitService<K, V> save(Map<K, V> outMap, boolean clearBeforeSave) {
+		Throwables.checkEmpty(outMap);
+		if(clearBeforeSave){
+			outMap.clear();
+		}
+		outMap.putAll(mMap);
+		return this;
+	}
+	@Override
+	public MapVisitService<K, V> save(MapSaveVisitor<K, V> visitor) {
+		Throwables.checkNull(visitor);
+		visitor.onSave(mMap);
+		return this;
+	}
 	
 	@Override
 	public CollectionVisitService<K> transformToCollectionByKeys() {
