@@ -13,7 +13,7 @@ import java.util.List;
 import com.heaven7.java.visitor.MapIterateVisitor;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
-import com.heaven7.java.visitor.SaveVisitor.MapSaveVisitor;
+import com.heaven7.java.visitor.SaveCallback.MapSaveCallback;
 import com.heaven7.java.visitor.TrimMapVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.anno.Nullable;
@@ -143,7 +143,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		return this;
 	}
 	@Override
-	public MapVisitService<K, V> save(MapSaveVisitor<K, V> visitor) {
+	public MapVisitService<K, V> save(MapSaveCallback<K, V> visitor) {
 		Throwables.checkNull(visitor);
 		visitor.onSave(mMap);
 		return this;

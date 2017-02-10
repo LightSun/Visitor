@@ -11,7 +11,7 @@ import com.heaven7.java.visitor.util.Map;
  * @param <Out> the out type
  * @since 1.0.3
  */
-public interface SaveVisitor<Out> {
+public interface SaveCallback<Out> {
 	
 	/**
 	 * called on save current collection/map.
@@ -25,7 +25,12 @@ public interface SaveVisitor<Out> {
 	 *
 	 * @param <T> the element type
 	 */
-	public static interface CollectionSaveVisitor<T> extends SaveVisitor<Collection<T>>{
+	interface CollectionSaveCallback<T> extends SaveCallback<Collection<T>>{
+		/**
+		 * called on save collection
+		 * @param o the collection to save.
+		 */
+		void onSave(Collection<T> o);
 	}
 	/**
 	 * the map save visitor
@@ -34,7 +39,11 @@ public interface SaveVisitor<Out> {
 	 * @param <K> the key type
 	 * @param <K> the value type
 	 */
-	public static interface MapSaveVisitor<K,V> extends SaveVisitor<Map<K,V>>{
-		
+     interface MapSaveCallback<K,V> extends SaveCallback<Map<K,V>>{
+    	 /**
+    	  * called on save map.
+    	  * @param o the map to save
+    	  */
+		 void onSave(Map<K, V> o);
 	}
 }

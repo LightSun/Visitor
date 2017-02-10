@@ -8,8 +8,8 @@ import java.util.ListIterator;
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
-import com.heaven7.java.visitor.SaveVisitor;
-import com.heaven7.java.visitor.SaveVisitor.CollectionSaveVisitor;
+import com.heaven7.java.visitor.SaveCallback;
+import com.heaven7.java.visitor.SaveCallback.CollectionSaveCallback;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.OperateInterceptor;
 
@@ -42,12 +42,12 @@ public interface CollectionVisitService<T>{
 	
 	
 	/**
-	 * save the current elements by target {@linkplain SaveVisitor}.
+	 * save the current elements by target {@linkplain SaveCallback}.
 	 * @param visitor the save visitor.
 	 * @return this.
 	 * @since 1.0.3
 	 */
-	CollectionVisitService<T> save(CollectionSaveVisitor<T> visitor);
+	CollectionVisitService<T> save(CollectionSaveCallback<T> visitor);
 	/**
 	 * save the current elements to the target out collection.
 	 * @param out the out collection.
