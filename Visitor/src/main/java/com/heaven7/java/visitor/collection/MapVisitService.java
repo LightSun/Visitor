@@ -1,5 +1,6 @@
 package com.heaven7.java.visitor.collection;
 
+import java.util.Comparator;
 import java.util.List;
 
 import com.heaven7.java.visitor.MapIterateVisitor;
@@ -80,11 +81,39 @@ public interface MapVisitService<K, V>{
 	CollectionVisitService<K> transformToCollectionByKeys();
 	
 	/**
+	 * transform to {@linkplain CollectionVisitService} by keys .
+	 * @param comparator the key comparator, can be null.
+	 * @return a {@linkplain CollectionVisitService}.
+	 * @since 1.1.0
+	 */
+	CollectionVisitService<K> transformToCollectionByKeys(Comparator<? super K> comparator);
+	
+	/**
 	 * transform to {@linkplain CollectionVisitService} by values .
 	 * @return a {@linkplain CollectionVisitService}.
 	 * @since 1.0.2
 	 */
 	CollectionVisitService<V> transformToCollectionByValues();
+	
+	/**
+	 * transform to {@linkplain CollectionVisitService} by values .
+	 * @param comparator the key comparator, can be null.
+	 * @return a {@linkplain CollectionVisitService}.
+	 * @since 1.1.0
+	 */
+	CollectionVisitService<V> transformToCollectionByValues(Comparator<? super V> comparator);
+	
+	/**
+	 * transform to {@linkplain CollectionVisitService} by target result visitor.
+	 * @param <R> the result type
+	 * @param param  the parameter,can be null.
+	 * @param comparator  the key comparator,can be null.
+	 * @param resultVisitor  the result visitor
+	 * @return a {@linkplain CollectionVisitService}.
+	 * @since 1.1.0
+	 */
+	<R> CollectionVisitService<R> transformToCollection(@Nullable Object param ,
+			@Nullable Comparator<? super R> comparator, MapResultVisitor<K, V, R> resultVisitor);
 	
 	/**
 	 * transform to {@linkplain CollectionVisitService} by target result visitor.
@@ -110,6 +139,18 @@ public interface MapVisitService<K, V>{
 	 * transform to new {@linkplain MapVisitService} as values.
 	 * @param <K2> the new key type
 	 * @param param  the parameter,can be null.
+	 * @param comparator  the key comparator,can be null.
+	 * @param keyVisitor  the key visitor
+	 * @return a {@linkplain MapVisitService}.
+	 * @since 1.1.0
+	 */
+	<K2> MapVisitService<K2, V> transformToMapAsValues(@Nullable Object param,
+			Comparator<? super K2> comparator, MapResultVisitor<K, V, K2> keyVisitor);
+	
+	/**
+	 * transform to new {@linkplain MapVisitService} as values.
+	 * @param <K2> the new key type
+	 * @param param  the parameter,can be null.
 	 * @param keyVisitor  the key visitor
 	 * @return a {@linkplain MapVisitService}.
 	 * @since 1.0.2
@@ -125,6 +166,18 @@ public interface MapVisitService<K, V>{
 	 * @see {@linkplain #transformToMapAsValues(Object, MapResultVisitor)}
 	 */
 	<K2> MapVisitService<K2, V> transformToMapAsValues(MapResultVisitor<K, V, K2> keyVisitor);
+	
+	/**
+	 * transform to new {@linkplain MapVisitService} as keys.
+	 * @param <V2> the new value type
+	 * @param param  the parameter,can be null.
+	 * @param comparator  the key comparator,can be null.
+	 * @param valueVisitor  the value visitor
+	 * @return a {@linkplain MapVisitService}.
+	 * @since 1.1.0
+	 */
+	<V2> MapVisitService<K, V2> transformToMapAsKeys(@Nullable Object param,
+			Comparator<? super K> comparator, MapResultVisitor<K, V, V2> valueVisitor);
 	
 	/**
 	 * transform to new {@linkplain MapVisitService} as keys.
@@ -154,6 +207,14 @@ public interface MapVisitService<K, V>{
 	MapVisitService<V, K> transformToMapBySwap();
 	
 	/**
+	 * transform to new {@linkplain MapVisitService} by swap the key with value.
+	 * @param comparator the key comparator, can be null.
+	 * @return a new {@linkplain MapVisitService}.
+	 * @since 1.1.0
+	 */
+	MapVisitService<V, K> transformToMapBySwap(Comparator<? super V> comparator);
+	
+	/**
 	 * transform to new {@linkplain MapVisitService}.
 	 * @param <K2> the new key type
 	 * @param <V2> the new value type
@@ -170,6 +231,21 @@ public interface MapVisitService<K, V>{
 	 * @param <K2> the new key type
 	 * @param <V2> the new value type
 	 * @param param  the parameter
+	 * @param comparator  the key comparator, can be null.
+	 * @param keyVisitor  the key visitor
+	 * @param valueVisitor  the value visitor
+	 * @return a {@linkplain MapVisitService}.
+	 * @since 1.1.0
+	 */
+	<K2,V2> MapVisitService<K2, V2> transformToMap(@Nullable Object param, 
+			@Nullable Comparator<? super K2> comparator ,
+			MapResultVisitor<K, V, K2> keyVisitor, MapResultVisitor<K, V, V2> valueVisitor);
+
+	/**
+	 * transform to new {@linkplain MapVisitService}.
+	 * @param <K2> the new key type
+	 * @param <V2> the new value type
+	 * @param param  the parameter
 	 * @param keyVisitor  the key visitor
 	 * @param valueVisitor  the value visitor
 	 * @return a {@linkplain MapVisitService}.
@@ -177,6 +253,8 @@ public interface MapVisitService<K, V>{
 	 */
 	<K2,V2> MapVisitService<K2, V2> transformToMap(@Nullable Object param, MapResultVisitor<K, V, K2> keyVisitor, MapResultVisitor<K, V, V2> valueVisitor);
 
+	//==============================================================================
+	
 	/**
 	 * visit for result list and carry extra parameter
 	 * @param <R> the result type

@@ -1,6 +1,7 @@
 package com.heaven7.java.visitor.collection;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -66,6 +67,18 @@ public interface CollectionVisitService<T>{
 	CollectionVisitService<T> save(Collection<T> out);
 	
 	/**
+	 * transform this service to map service. And the value type is T.
+	 * @param <K> the key type
+	 * @param param the extra parameter
+	 * @param comparator the key comparator of map, can be null.
+	 * @param keyVisitor the key visitor.
+	 * @return the {@linkplain MapVisitService}
+	 * @since 1.1.0
+	 */
+	<K> MapVisitService<K,T> transformToMapAsValues(@Nullable Object param, 
+			@Nullable Comparator<? super K> comparator, ResultVisitor<? super T, K> keyVisitor);
+	
+	/**
 	 * transform this service to map service. And the value type is T .
 	 * @param <K> the key type
 	 * @param param the extra parameter
@@ -84,6 +97,18 @@ public interface CollectionVisitService<T>{
 	 * @since 1.0.2
 	 */
 	<K> MapVisitService<K,T> transformToMapAsValues(ResultVisitor<? super T, K> keyVisitor);
+	
+	/**
+	 * transform this service to map service. And the key type is T .
+	 * @param <V> the value type
+	 * @param param the extra parameter
+	 * @param comparator the key comparator, can be null.
+	 * @param valueVisitor the value visitor.
+	 * @return the {@linkplain MapVisitService}
+	 * @since 1.1.0
+	 */
+	<V> MapVisitService<T,V> transformToMapAsKeys(@Nullable Object param, 
+			@Nullable Comparator<? super T> comparator, ResultVisitor<? super T, V> valueVisitor);
 	
 	/**
 	 * transform this service to map service. And the key type is T 
@@ -110,12 +135,27 @@ public interface CollectionVisitService<T>{
 	 * @param <K> the key type
 	 * @param <V> the value type
 	 * @param param the extra parameter
+	 * @param comparator the key comparator
+	 * @param keyVisitor the key visitor.
+	 * @param valueVisitor the value visitor.
+	 * @return the {@linkplain MapVisitService}
+	 * @since 1.1.0
+	 */
+	<K,V> MapVisitService<K, V> transformToMap(@Nullable Object param,@Nullable Comparator<? super K> comparator,
+			ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
+	
+	/**
+	 * transform this service to map service.
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param param the extra parameter
 	 * @param keyVisitor the key visitor.
 	 * @param valueVisitor the value visitor.
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.0.2
 	 */
-	<K,V> MapVisitService<K, V> transformToMap(@Nullable Object param, ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
+	<K,V> MapVisitService<K, V> transformToMap(@Nullable Object param, ResultVisitor<? super T, K> keyVisitor, 
+			ResultVisitor<? super T, V> valueVisitor);
 	
 	/**
 	 * transform this service to map service.
@@ -134,20 +174,37 @@ public interface CollectionVisitService<T>{
 	 * @param <R> the result type.
 	 * @param param 
 	 *           the extra parameter, which is used for the callback of visitors.
+	 * @param sort 
+	 *           the result sort Comparator.
 	 * @param resultVisitor
 	 *           the  result visitor       
 	 * @return the new {@linkplain CollectionVisitService}.
+	 * @since 1.1.0
+	 */
+	<R> CollectionVisitService<R> transformToCollection(@Nullable Object param,
+			@Nullable Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor);
+	
+	/**
+	 * transform current CollectionVisitService to another, but don't sort.
+	 * @param <R> the result type.
+	 * @param param 
+	 *           the extra parameter, which is used for the callback of visitors.
+	 * @param resultVisitor
+	 *           the  result visitor       
+	 * @return the new {@linkplain CollectionVisitService}.
+	 * @see {@linkplain #transformToCollection(Object, Comparator, ResultVisitor)}
 	 * @since 1.0.2
 	 */
 	<R> CollectionVisitService<R> transformToCollection(@Nullable Object param, ResultVisitor<? super T, R> resultVisitor);
 	
 	/**
-	 * transform current CollectionVisitService to another.
+	 * transform current CollectionVisitService to another. but don't sort
 	 * @param <R> the result type.
 	 * @param resultVisitor
 	 *           the  result visitor       
 	 * @return the new {@linkplain CollectionVisitService}.
-	 * @see {@linkplain CollectionVisitService#transformToCollection(Object, ResultVisitor)}
+	 * @see {@linkplain #transformToCollection(Object, ResultVisitor)}
+	 * @see {@linkplain #transformToCollection(Object, Comparator, ResultVisitor)}
 	 * @since 1.0.2
 	 */
 	<R> CollectionVisitService<R> transformToCollection(ResultVisitor<? super T, R> resultVisitor);
@@ -357,7 +414,7 @@ public interface CollectionVisitService<T>{
 	 *
 	 * @param <T> the type
 	 */
-	public abstract class CollectionOperateInterceptor<T> extends OperateInterceptor {
+	public static abstract class CollectionOperateInterceptor<T> extends OperateInterceptor {
 
 		/**
 		 * intercept the current iteration.

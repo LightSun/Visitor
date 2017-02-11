@@ -19,11 +19,6 @@ final class ListVisitService<T> extends CollectionVisitServiceImpl<T> implements
 	}
 	
 	@Override
-	protected boolean isSorted() {
-		return true;
-	}
-	
-	@Override
 	protected boolean visitImpl(Collection<T> collection, int rule, Object param, CollectionOperateInterceptor<T> interceptor,
 			IterateVisitor<? super T> breakVisitor, final IterationInfo info) {
 

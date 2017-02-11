@@ -8,6 +8,7 @@ import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +56,8 @@ public final class InternalUtil {
 				: VisitServices.from(map) ;
 	}
 
-	public static <K, V> Map<K, V> newMap(boolean sorted) {
-		return sorted ? new TreeMap<K, V>() : new HashMap<K, V>();
+	public static <K, V> Map<K, V> newMap(Comparator<? super K> comparator) {
+		return comparator != null ? new TreeMap<K, V>(comparator) : new HashMap<K, V>();
 	}
 
 	/**

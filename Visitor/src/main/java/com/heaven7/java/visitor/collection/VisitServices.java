@@ -55,28 +55,12 @@ public final class VisitServices {
 	 * @return an instance of {@linkplain MapVisitService}
 	 * 	 * @see {@linkplain SortedMap}
 	 * @see {@linkplain #from(com.heaven7.java.visitor.util.Map)}
-	 * @see {@linkplain #from(SortedMap)}
 	 * @see {@linkplain #from(SparseArray)}
 	 */
 	public static <K, V> MapVisitService<K, V> from(Map<K, V> map) {
 		return new MapVisitServiceImpl<K, V>(new Map2Map<K, V>(map));
 	}
 	
-	/**
-	 * create an instance of {@linkplain MapVisitService} from target sorted map.
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 * @param map the map
-	 * @return an instance of {@linkplain MapVisitService}
-	 * @since 1.0.3
-	 * @see {@linkplain SortedMap}
-	 * @see {@linkplain #from(com.heaven7.java.visitor.util.Map)}
-	 * @see {@linkplain #from(Map)}
-	 * @see {@linkplain #from(SparseArray)}
-	 */
-	public static <K, V> MapVisitService<K, V> from(SortedMap<K, V> map) {
-		return new SortedMapVisitService<K, V>(new Map2Map<K, V>(map));
-	}
 	
 	/**
 	 * create an instance of {@linkplain MapVisitService} from target {@linkplain SparseArray}.
@@ -85,7 +69,7 @@ public final class VisitServices {
 	 * @return an instance of {@linkplain MapVisitService}
 	 */
 	public static <V> MapVisitService<Integer, V> from(SparseArray<V> array) {
-		return new SortedMapVisitService<Integer,V>(new SparseArray2Map<V>(array));
+		return new MapVisitServiceImpl<Integer,V>(new SparseArray2Map<V>(array));
 	}
 	
 	/**

@@ -1,20 +1,18 @@
 package com.heaven7.java.visitor.collection;
 
-import static com.heaven7.java.visitor.internal.InternalUtil.*;
+import static com.heaven7.java.visitor.internal.InternalUtil.newMap;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
-import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Throwables;
 
 /**
@@ -27,14 +25,14 @@ import com.heaven7.java.visitor.util.Throwables;
  * @see CollectionVisitServiceImpl
  * @see ListVisitService
  */
-public abstract class AbstractCollectionVisitService<T> implements CollectionVisitService<T> {
+public abstract class AbstractCollectionVisitService<T> implements CollectionVisitService<T>{
 	
 	private final List<T> mCacheList = new ArrayList<T>();
 	
 	protected AbstractCollectionVisitService() {
 		super();
 	}
-
+	
 	@Override
 	public CollectionVisitService<T> save(Collection<T> out) {
 		return save(out, false);
@@ -47,16 +45,19 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	
 	@Override
 	public <K> MapVisitService<K, T> transformToMapAsValues(Object param, ResultVisitor<? super T, K> keyVisitor) {
+		return transformToMapAsValues(param, null, keyVisitor);
+	}
+	@Override
+	public <K> MapVisitService<K, T> transformToMapAsValues(Object param,  
+			Comparator<? super K> comparator, ResultVisitor<? super T, K> keyVisitor) {
 		Throwables.checkNull(keyVisitor);
-		//often map sort by keys. so the isSorted() method can't effect here. 
-		final boolean sorted = false;
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
-		final Map<K, T> map = InternalUtil.newMap(sorted);
+		final Map<K, T> map = newMap(comparator);
 		for(T t: list){
 			map.put(keyVisitor.visit(t, param), t);
 		}
 		list.clear();
-		return getMapVisitService(sorted, map);
+		return VisitServices.from(map);
 	}
 	
 	@Override
@@ -66,17 +67,23 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	
 	@Override
 	public <V> MapVisitService<T, V> transformToMapAsKeys(Object param, ResultVisitor<? super T, V> valueVisitor) {
+		return transformToMapAsKeys(param, null, valueVisitor);
+	}
+	
+	@Override
+	public <V> MapVisitService<T, V> transformToMapAsKeys(Object param,
+			Comparator<? super T> comparator, ResultVisitor<? super T, V> valueVisitor) {
 		Throwables.checkNull(valueVisitor);
 		
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
-		final boolean sorted = isSorted();
-		final Map<T, V> map = InternalUtil.newMap(sorted);
+		final Map<T, V> map = newMap(comparator);
 		for(T t: list){
 			map.put(t, valueVisitor.visit(t, param));
 		}
 		list.clear();
-		return getMapVisitService(sorted, map);
+		return VisitServices.from(map);
 	}
+	
 	
 	@Override
 	public <K, V> MapVisitService<K, V> transformToMap(ResultVisitor<? super T, K> keyVisitor,
@@ -87,17 +94,33 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	@Override
 	public <K, V> MapVisitService<K, V> transformToMap(Object param, ResultVisitor<? super T, K> keyVisitor,
 			ResultVisitor<? super T, V> valueVisitor) {
+		return transformToMap(param, null, keyVisitor, valueVisitor);
+	}
+	
+	@Override
+	public <K, V> MapVisitService<K, V> transformToMap(Object param, Comparator<? super K> comparator,
+			ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor) {
 		Throwables.checkNull(keyVisitor);
 		Throwables.checkNull(valueVisitor);
 		
 		final List<T> list = visitForQueryList(param, Visitors.truePredicateVisitor(), mCacheList);
-		final boolean sorted = isSorted();
-		final Map<K,V> map = InternalUtil.newMap(sorted);
+		final Map<K,V> map = newMap(comparator);
 		for(T t: list){
 			map.put(keyVisitor.visit(t, param), valueVisitor.visit(t, param));
 		}
 		list.clear();
-		return getMapVisitService(sorted, map);
+		return VisitServices.from(map);
+	}
+	
+	@Override
+	public <R> CollectionVisitService<R> transformToCollection(Object param, 
+			Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor) {
+		Throwables.checkNull(resultVisitor);
+		final List<R> resultList = visitForResultList(param, resultVisitor, null);
+		if(sort != null){
+			Collections.sort(resultList, sort);
+		}
+		return VisitServices.from(resultList);
 	}
 	
 	@Override
@@ -107,10 +130,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	
 	@Override
 	public <R> CollectionVisitService<R> transformToCollection(Object param, ResultVisitor<? super T, R> resultVisitor) {
-		Throwables.checkNull(resultVisitor);
-		final List<R> resultList = visitForResultList(param, resultVisitor, null);
-		
-		return getVisitService(isSorted(), resultList);
+		return transformToCollection(param, null, resultVisitor);
 	}
 	
 	//=======================================================================
@@ -178,14 +198,6 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	/**
-	 * indicate the collection is ordered or not. default is false.
-	 * @return true if is ordered.
-	 */
-	protected boolean isSorted(){
-		return false;
-	}
-	
-	/**
 	 * do visit service.
 	 * 
 	 * @param rule
@@ -197,6 +209,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	 *            the break visitor
 	 * @return true if operate success.
 	 */
-	protected abstract boolean visit(int rule, Object param, IterateVisitor<? super T> breakVisitor);
+	protected abstract boolean visit(int rule, Object param, 
+			IterateVisitor<? super T> breakVisitor);
 
 }

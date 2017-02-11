@@ -1,10 +1,8 @@
 package com.heaven7.java.visitor.test;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Comparator;
+import java.util.TreeMap;
 
 import com.heaven7.java.visitor.MapSaveVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
