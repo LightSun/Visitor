@@ -5,12 +5,13 @@ import com.heaven7.java.visitor.collection.IterationInfo;
 import com.heaven7.java.visitor.util.Map;
 
 /**
- * trim map visitor
+ * trim map visitor . use {@linkplain MapTrimVisitor}} instead.
  * @author heaven7
  *
  * @param <K> the key type
  * @param <V> the value type
  */
+@Deprecated
 public interface TrimMapVisitor<K, V> extends IterateVisitor<Map<K, V>> {
 	
 	/**

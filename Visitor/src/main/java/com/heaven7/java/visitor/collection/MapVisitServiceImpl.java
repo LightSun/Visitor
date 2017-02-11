@@ -26,7 +26,7 @@ import com.heaven7.java.visitor.util.Map;
 		final IterationInfo info = initAndGetIterationInfo();
 		MapIterateState.<K, V>multipleState().visitForResult(mMap, hasExtraOperationInIteration(), 
 				getOperateInterceptor(), info, param, predicate, resultVisitor, out);
-		handleAtLast(mMap, param, info);
+		handleAtLast(param, info);
 		return out;
 	}
 
@@ -37,7 +37,7 @@ import com.heaven7.java.visitor.util.Map;
 		final IterationInfo info = initAndGetIterationInfo();
 		R result = MapIterateState.<K, V>singleState().visitForResult(mMap, hasExtraOperationInIteration(),
 				getOperateInterceptor(), info, param, predicate, resultVisitor, null);
-		handleAtLast(mMap, param, info);
+		handleAtLast(param, info);
 		return result;
 	}
 
@@ -50,7 +50,7 @@ import com.heaven7.java.visitor.util.Map;
 		final IterationInfo info = initAndGetIterationInfo();
 		MapIterateState.<K, V>multipleState().visit(mMap, hasExtraOperationInIteration(), getOperateInterceptor(), info, param,
 				predicate, out);
-		handleAtLast(mMap, param, info);
+		handleAtLast(param, info);
 		return out;
 	}
 
@@ -59,7 +59,7 @@ import com.heaven7.java.visitor.util.Map;
 		final IterationInfo info = initAndGetIterationInfo();
 		KeyValuePair<K, V> result = MapIterateState.<K, V>singleState().visit(mMap, hasExtraOperationInIteration(),
 				getOperateInterceptor(), info, param, predicate, null);
-		handleAtLast(mMap, param, info);
+		handleAtLast(param, info);
 		return result;
 	}
 

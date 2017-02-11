@@ -1,13 +1,20 @@
 package com.heaven7.java.visitor.collection;
 
+import static com.heaven7.java.visitor.internal.InternalUtil.*;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
+import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Throwables;
 
 /**
@@ -22,6 +29,17 @@ import com.heaven7.java.visitor.util.Throwables;
  */
 public abstract class AbstractCollectionVisitService<T> implements CollectionVisitService<T> {
 	
+	private final List<T> mCacheList = new ArrayList<T>();
+	
+	protected AbstractCollectionVisitService() {
+		super();
+	}
+
+	@Override
+	public CollectionVisitService<T> save(Collection<T> out) {
+		return save(out, false);
+	}
+	
 	@Override
 	public <K> MapVisitService<K, T> transformToMapAsValues(ResultVisitor<? super T, K> keyVisitor) {
 		return transformToMapAsValues(null, keyVisitor);
@@ -30,12 +48,15 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	@Override
 	public <K> MapVisitService<K, T> transformToMapAsValues(Object param, ResultVisitor<? super T, K> keyVisitor) {
 		Throwables.checkNull(keyVisitor);
-		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), null);
-		final Map<K, T> map = new HashMap<K, T>();
+		//often map sort by keys. so the isSorted() method can't effect here. 
+		final boolean sorted = false;
+		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
+		final Map<K, T> map = InternalUtil.newMap(sorted);
 		for(T t: list){
 			map.put(keyVisitor.visit(t, param), t);
 		}
-		return VisitServices.from(map);
+		list.clear();
+		return getMapVisitService(sorted, map);
 	}
 	
 	@Override
@@ -46,12 +67,15 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	@Override
 	public <V> MapVisitService<T, V> transformToMapAsKeys(Object param, ResultVisitor<? super T, V> valueVisitor) {
 		Throwables.checkNull(valueVisitor);
-		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), null);
-		final Map<T, V> map = new HashMap<T, V>();
+		
+		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
+		final boolean sorted = isSorted();
+		final Map<T, V> map = InternalUtil.newMap(sorted);
 		for(T t: list){
 			map.put(t, valueVisitor.visit(t, param));
 		}
-		return VisitServices.from(map);
+		list.clear();
+		return getMapVisitService(sorted, map);
 	}
 	
 	@Override
@@ -65,12 +89,15 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 			ResultVisitor<? super T, V> valueVisitor) {
 		Throwables.checkNull(keyVisitor);
 		Throwables.checkNull(valueVisitor);
-		final List<T> list = visitForQueryList(param, Visitors.truePredicateVisitor(), null);
-		final Map<K,V> map = new HashMap<K,V>();
+		
+		final List<T> list = visitForQueryList(param, Visitors.truePredicateVisitor(), mCacheList);
+		final boolean sorted = isSorted();
+		final Map<K,V> map = InternalUtil.newMap(sorted);
 		for(T t: list){
 			map.put(keyVisitor.visit(t, param), valueVisitor.visit(t, param));
 		}
-		return VisitServices.from(map);
+		list.clear();
+		return getMapVisitService(sorted, map);
 	}
 	
 	@Override
@@ -81,8 +108,12 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	@Override
 	public <R> CollectionVisitService<R> transformToCollection(Object param, ResultVisitor<? super T, R> resultVisitor) {
 		Throwables.checkNull(resultVisitor);
-		return VisitServices.from(this.visitForResultList(param, resultVisitor, null));
+		final List<R> resultList = visitForResultList(param, resultVisitor, null);
+		
+		return getVisitService(isSorted(), resultList);
 	}
+	
+	//=======================================================================
 	
 	@Override
 	public final <R> List<R> visitForResultList(PredicateVisitor<? super T> predicate,
@@ -146,6 +177,14 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 		return visit(VISIT_RULE_UNTIL_FAILED, param, breakVisitor);
 	}
 
+	/**
+	 * indicate the collection is ordered or not. default is false.
+	 * @return true if is ordered.
+	 */
+	protected boolean isSorted(){
+		return false;
+	}
+	
 	/**
 	 * do visit service.
 	 * 

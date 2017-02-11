@@ -9,8 +9,10 @@ import static com.heaven7.java.visitor.test.help.TestUtil.createStudent2;
 import static com.heaven7.java.visitor.test.help.TestUtil.syso;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
@@ -47,6 +49,68 @@ public class VisitServiceTest extends TestCase {
 
 	protected int getStudentSize() {
 		return mStus.size();
+	}
+	
+	public void testSave3(){
+		final int size = getStudentSize();
+		List<Student> list = new ArrayList<Student>();
+		
+		mService.beginOperateManager()
+		//just delete the student of id = 1
+			.delete(new PredicateVisitor<Student>() {
+				@Override
+				public Boolean visit(Student t, Object param) {
+					return t.getId() == 1;
+				}
+			}).end().save(list, true);
+		assertEquals(list.size(), size - 1);
+		
+		mService.save(list,true);
+		assertEquals(list.size(), size - 1);
+	}
+	
+	public void testSave2(){
+		final int size = getStudentSize();
+		mService.beginOperateManager()
+		//just delete the student of id = 1
+			.delete(new PredicateVisitor<Student>() {
+				@Override
+				public Boolean visit(Student t, Object param) {
+					return t.getId() == 1;
+				}
+			}).end().save(new SaveVisitor<Student>() {
+				@Override
+				public void visit(Collection<Student> o) {
+					assertEquals(o.size(), size - 1);
+					/**
+					 * must cause exception. because this collection is read-only.
+					 */
+					try {
+						o.clear();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		
+	}
+	
+	public void testSave(){
+		final int size = getStudentSize();
+		mService.beginOperateManager()
+		//just fiter the student of id = 1
+			.filter(new PredicateVisitor<Student>() {
+				@Override
+				public Boolean visit(Student t, Object param) {
+					return t.getId() == 1;
+				}
+			}).end().save(new SaveVisitor<Student>() {
+				@Override
+				public void visit(Collection<Student> o) {
+					//filter not delete. so size unchanged.
+					assertEquals(o.size(), size);
+				}
+			});
 	}
 	
 	public void testForResult(){

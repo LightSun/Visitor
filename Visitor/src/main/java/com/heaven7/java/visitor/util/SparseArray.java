@@ -74,7 +74,8 @@ public class SparseArray<E> {
      * Gets the Object mapped from the specified key, or the specified Object
      * if no such mapping has been made.
      */
-    public E get(int key, E valueIfKeyNotFound) {
+    @SuppressWarnings("unchecked")
+	public E get(int key, E valueIfKeyNotFound) {
         int i = binarySearch(mKeys, 0, mSize, key);
 
         if (i < 0 || mValues[i] == DELETED) {
@@ -214,7 +215,8 @@ public class SparseArray<E> {
      * the value from the <code>index</code>th key-value mapping that this
      * SparseArray stores.
      */
-    public E valueAt(int index) {
+    @SuppressWarnings("unchecked")
+	public E valueAt(int index) {
         if (mGarbage) {
             gc();
         }

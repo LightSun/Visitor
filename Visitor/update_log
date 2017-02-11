@@ -1,0 +1,6 @@
+
+#1.0.3
+    1, 为visitService添加各种save方法.
+    2, 存储优化。优化部分api.
+    3, --- pre 对 collection 和 map service的转换建立对应关系。 
+                                              即 : list -> list, sortSet ->sortSet. map同理.

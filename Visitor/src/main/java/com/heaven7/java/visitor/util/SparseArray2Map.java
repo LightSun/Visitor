@@ -11,7 +11,9 @@ import com.heaven7.java.visitor.collection.KeyValuePair;
 public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 
 	private final SparseArray<E> mMap;
-	private List<KeyValuePair<Integer, E>> mList;
+	private List<KeyValuePair<Integer, E>> mTempPairs;
+	private List<Integer> mKeys;
+	private Map<Integer, E> mNormalMap;
 
 	public SparseArray2Map(SparseArray<E> mMap) {
 		super();
@@ -45,10 +47,12 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 
 	@Override
 	public List<KeyValuePair<Integer, E>> getKeyValues() {
-		if (mList == null) {
-			mList = new ArrayList<>();
+		if (mTempPairs == null) {
+			mTempPairs = new ArrayList<>();
+		}else{
+			mTempPairs.clear();
 		}
-		final List<KeyValuePair<Integer, E>> list = this.mList;
+		final List<KeyValuePair<Integer, E>> list = this.mTempPairs;
 		final SparseArray<E> mMap = this.mMap;
 		final int size = mMap.size();
 		for (int i = 0; i < size; i++) {
@@ -59,7 +63,12 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 
 	@Override
 	public List<Integer> keys() {
-		final List<Integer> list = new ArrayList<Integer>();
+		if(mKeys == null){
+			mKeys = new ArrayList<>();
+		}else{
+			mKeys.clear();
+		}
+		final List<Integer> list = mKeys;
 		final SparseArray<E> mMap = this.mMap;
 		final int size = mMap.size();
 		for (int i = 0; i < size; i++) {
@@ -75,7 +84,12 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 
 	@Override
 	public Map<Integer, E> toNormalMap() {
-		final Map<Integer, E> map = new HashMap<Integer, E>();
+		if(mNormalMap == null){
+			mNormalMap = new HashMap<Integer, E>();
+		}else{
+			mNormalMap.clear();
+		}
+		final Map<Integer, E> map = mNormalMap;
 		final SparseArray<E> mMap = this.mMap;
 		final int size = mMap.size();
 		for (int i = size - 1; i >= 0; i--) {

@@ -4,6 +4,7 @@ import static com.heaven7.java.visitor.collection.Operation.OP_DELETE;
 import static com.heaven7.java.visitor.collection.Operation.OP_FILTER;
 import static com.heaven7.java.visitor.collection.Operation.OP_INSERT;
 import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
+import static com.heaven7.java.visitor.internal.InternalUtil.unmodifiable;
 import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
 import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
@@ -16,7 +17,7 @@ import java.util.ListIterator;
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
-import com.heaven7.java.visitor.SaveCallback.CollectionSaveCallback;
+import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.IterateControl.Callback;
 import com.heaven7.java.visitor.internal.state.IterateState;
@@ -180,6 +181,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		}
 		mOrderOps.clear();
 		mInterceptOps.clear();
+		mControl.begin().end();
 	}
 
 	/**
@@ -509,19 +511,17 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	}
 
 	@Override
-	public CollectionVisitService<T> save(CollectionSaveCallback<T> visitor) {
+	public CollectionVisitService<T> save(SaveVisitor<T> visitor) {
 		Throwables.checkNull(visitor);
-		visitor.onSave(mCollection);
+		visitAll();
+		visitor.visit(unmodifiable(mCollection));
 		return this;
 	}
-
-	@Override
-	public CollectionVisitService<T> save(Collection<T> out) {
-		return save(out, false);
-	}
+	
 	@Override
 	public CollectionVisitService<T> save(Collection<T> out, boolean clearBeforeSave) {
-		Throwables.checkEmpty(out);
+		Throwables.checkNull(out);
+		visitAll();
 		if(clearBeforeSave){
 			out.clear();
 		}

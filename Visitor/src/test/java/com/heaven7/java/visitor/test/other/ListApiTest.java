@@ -1,12 +1,26 @@
 package com.heaven7.java.visitor.test.other;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
 public class ListApiTest {
+	
+	public static void main(String[] args) {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("123");
+		Type type = list.getClass().getGenericSuperclass(); 
+		if(type instanceof ParameterizedType){
+			Type[] types = ((ParameterizedType) type).getActualTypeArguments();
+			System.out.println(types.length);
+			System.out.println(types[0] instanceof Class); //false
+		}
+
+	}
 
 	/*public static void main2(String[] args) {
 		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5); //

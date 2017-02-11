@@ -10,7 +10,12 @@ import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.util.Predicates;
 import com.heaven7.java.visitor.util.Updatable;
-
+/**
+ * the collection operation
+ * @author heaven7
+ *
+ * @param <T> the element type
+ */
 public class CollectionOperation<T> extends Operation{
 
 	/** used to update or insert */

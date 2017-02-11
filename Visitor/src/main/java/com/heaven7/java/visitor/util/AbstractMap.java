@@ -27,5 +27,10 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
 		putAll(map.toNormalMap());
 	}
 	
+	@Override
+	public boolean isEmpty() {
+		return size() == 0;
+	}
+	
 
 }

@@ -5,15 +5,15 @@ import static com.heaven7.java.visitor.collection.Operation.OP_FILTER;
 import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
 import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
 import static com.heaven7.java.visitor.util.Throwables.checkNull;
+import static com.heaven7.java.visitor.internal.InternalUtil.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.heaven7.java.visitor.MapIterateVisitor;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
-import com.heaven7.java.visitor.SaveCallback.MapSaveCallback;
+import com.heaven7.java.visitor.MapSaveVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.anno.Nullable;
@@ -22,9 +22,18 @@ import com.heaven7.java.visitor.util.Map;
 import com.heaven7.java.visitor.util.Predicates;
 import com.heaven7.java.visitor.util.SparseArray;
 import com.heaven7.java.visitor.util.Throwables;
-
+import com.heaven7.java.visitor.util.UnmodifiableMap;
+/**
+ * 
+ * @author heaven7
+ *
+ * @param <K> the key type
+ * @param <V> the value type
+ */
 public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K, V> {
 
+	private final List<KeyValuePair<K, V>> mCachePairs = new ArrayList<KeyValuePair<K, V>>();
+	
 	private final IterateControl<MapVisitService<K, V>> mIterateControl;
 	private final MapOperateInterceptor<K, V> mOperateInterceptor;
 
@@ -112,8 +121,26 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		}
 		mOrderOps.clear();
 		mInterceptOps.clear();
+		mIterateControl.begin().end();
+	}
+	
+	/**
+	 * handle the finally operations of function.
+	 * @param param the parameter
+	 * @param info the Iteration Info
+	 * @since 1.0.3
+	 */
+	protected void handleAtLast(Object param, IterationInfo info){
+		handleAtLast(mMap, param, info);
 	}
 
+	/**
+	 * use {@linkplain #handleAtLast(Object, IterationInfo)} instead.
+	 * @param map the map
+	 * @param param the parameter
+	 * @param info the IterationInfo
+	 */
+	@Deprecated
 	protected void handleAtLast(Map<K, V> map, Object param, IterationInfo info) {
 		info.setCurrentSize(map.size());
 		final List<MapOperation<K, V>> ops = getFinalInsertOperations();
@@ -135,37 +162,44 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 	@Override
 	public MapVisitService<K, V> save(Map<K, V> outMap, boolean clearBeforeSave) {
-		Throwables.checkEmpty(outMap);
+		Throwables.checkNull(outMap);
 		if(clearBeforeSave){
 			outMap.clear();
 		}
+		visitAll();
 		outMap.putAll(mMap);
 		return this;
 	}
+
 	@Override
-	public MapVisitService<K, V> save(MapSaveCallback<K, V> visitor) {
+	public MapVisitService<K, V> save(MapSaveVisitor<K, V> visitor) {
 		Throwables.checkNull(visitor);
-		visitor.onSave(mMap);
+		visitAll();
+		visitor.visit(new UnmodifiableMap<K, V>(mMap));
 		return this;
 	}
 	
 	@Override
 	public CollectionVisitService<K> transformToCollectionByKeys() {
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
 		final List<K> results = new ArrayList<K>();
 		for(KeyValuePair<K, V> pair : list){
 			results.add(pair.getKey());
 		}
-		return VisitServices.from(results);
+		//clear cache
+		list.clear();
+		return getVisitService(isSorted(), results);
 	}
 	@Override
 	public CollectionVisitService<V> transformToCollectionByValues() {
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
 		final List<V> results = new ArrayList<V>();
 		for(KeyValuePair<K, V> pair : list){
 			results.add(pair.getValue());
 		}
-		return VisitServices.from(results);
+		//clear cache
+		list.clear();
+		return getVisitService(isSorted(), results);
 	}
 	
 	@Override
@@ -176,12 +210,15 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	@Override
 	public <R> CollectionVisitService<R> transformToCollection(Object param, MapResultVisitor<K, V, R> resultVisitor) {
 		Throwables.checkNull(resultVisitor);
-		final List<KeyValuePair<K,V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		
+		final List<KeyValuePair<K,V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
 		final List<R> results = new ArrayList<R>();
 		for(KeyValuePair<K, V> pair : list){
 			results.add(resultVisitor.visit(pair, param));
 		}
-		return VisitServices.from(results);
+		//clear cache
+		list.clear();
+		return getVisitService(isSorted(), results);
 	}
 	
 	@Override
@@ -192,12 +229,16 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	@Override
 	public <K2> MapVisitService<K2, V> transformToMapAsValues(Object param, MapResultVisitor<K, V, K2> keyVisitor) {
 		Throwables.checkNull(keyVisitor);
+		
+		final boolean sorted = false;
 		final List<KeyValuePair<K,V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
-		final HashMap<K2, V> map = new HashMap<K2, V>();
+		final java.util.Map<K2, V> map = newMap(sorted);
 		for(KeyValuePair<K, V> pair : list){
 			map.put(keyVisitor.visit(pair, param), pair.getValue());
 		}
-		return VisitServices.from(map);
+		//clear cache
+		list.clear();
+		return getMapVisitService(sorted, map);
 	}
 	
 	@Override
@@ -207,22 +248,29 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	@Override
 	public <V2> MapVisitService<K, V2> transformToMapAsKeys(Object param, MapResultVisitor<K, V, V2> valueVisitor) {
 		Throwables.checkNull(valueVisitor);
+		
+		final boolean sorted = isSorted();
 		final List<KeyValuePair<K,V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
-		final HashMap<K, V2> map = new HashMap<K, V2>();
+		final java.util.Map<K, V2> map = newMap(sorted);
 		for(KeyValuePair<K, V> pair : list){
 			map.put(pair.getKey(), valueVisitor.visit(pair, param));
 		}
-		return VisitServices.from(map);
+		//clear cache
+		list.clear();
+		return getMapVisitService(sorted, map);
 	}
 	
 	@Override
 	public MapVisitService<V, K> transformToMapBySwap() {
+		final boolean sorted = false;
 		final List<KeyValuePair<K,V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
-		final HashMap<V, K> map = new HashMap<V, K>();
+		final java.util.Map<V, K> map = newMap(sorted);
 		for(KeyValuePair<K, V> pair : list){
 			map.put(pair.getValue(), pair.getKey());
 		}
-		return VisitServices.from(map);
+		//clear cache
+		list.clear();
+		return getMapVisitService(sorted, map);
 	}
 	
 	@Override
@@ -237,13 +285,18 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		Throwables.checkNull(keyVisitor);
 		Throwables.checkNull(valueVisitor);
 		
+		final boolean sorted = isSorted();
 		final List<KeyValuePair<K,V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
-		final HashMap<K2,V2> map = new HashMap<K2, V2>();
+		final java.util.Map<K2,V2> map = newMap(sorted);
 		for(KeyValuePair<K,V> pair : list){
 			map.put(keyVisitor.visit(pair, param), valueVisitor.visit(pair, param));
 		}
-		return VisitServices.from(map);
+		//clear cache
+		list.clear();
+		return getMapVisitService(sorted, map);
 	}
+	
+	//========================================================================================================
 	
 	@Override
 	public <R> List<R> visitForResultList(Object param, MapResultVisitor<K, V, R> resultVisitor, List<R> out) {
@@ -313,6 +366,21 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 				}
 			}
 		}
+		return false;
+	}
+	
+	/**
+	 * visit the all key-values by deal with the all operations.
+	 */
+	protected void visitAll() {
+		visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
+		mCachePairs.clear();
+	}
+	/**
+	 * indicate the map is sorted or not.
+	 * @return
+	 */
+	protected boolean isSorted(){
 		return false;
 	}
 
@@ -493,6 +561,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 			return this;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public MapOperateManager<K, V> trim(Object param, TrimMapVisitor<K, V> visitor) {
 			checkNull(visitor);

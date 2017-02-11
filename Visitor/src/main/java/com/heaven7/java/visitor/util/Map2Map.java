@@ -11,6 +11,8 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 
 	private final Map<K, V> mMap;
 	private List<KeyValuePair<K, V>> mList;
+	private List<K> mKeys;
+	private List<V> mValues;
 
 	public Map2Map(Map<K, V> mMap) {
 		super();
@@ -46,6 +48,8 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 	public List<KeyValuePair<K, V>> getKeyValues() {
 		if (mList == null) {
 			mList = new ArrayList<>();
+		}else{
+			mList.clear();
 		}
 		final List<KeyValuePair<K, V>> list = this.mList;
 		for (Entry<K, V> en : mMap.entrySet()) {
@@ -56,14 +60,24 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 
 	@Override
 	public List<K> keys() {
-		List<K> list = new ArrayList<K>();
+		if(mKeys == null){
+			mKeys = new ArrayList<>();
+		}else{
+			mKeys.clear();
+		}
+		final List<K> list = mKeys;
 		list.addAll(mMap.keySet());
 		return list;
 	}
 
 	@Override
 	public List<V> values() {
-		List<V> list = new ArrayList<V>();
+		if(mValues == null){
+			mValues = new ArrayList<V>();
+		}else{
+			mValues.clear();
+		}
+		final List<V> list = mValues;
 		list.addAll(mMap.values());
 		return list;
 	}

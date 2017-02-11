@@ -5,7 +5,7 @@ import java.util.List;
 import com.heaven7.java.visitor.collection.KeyValuePair;
 
 /**
- * like traditional map({@linkplain java.util.Map}).
+ * like traditional map({@linkplain java.util.Map}). but add some useful methods.
  * @author heaven7
  *
  * @param <K> the key type
@@ -43,5 +43,7 @@ public interface Map<K, V> {
 	
 	//=================================================//
 	java.util.Map<K, V> toNormalMap();
+	
+	boolean isEmpty();
 	
 }

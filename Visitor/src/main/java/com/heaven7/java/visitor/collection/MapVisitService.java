@@ -1,14 +1,14 @@
 package com.heaven7.java.visitor.collection;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.heaven7.java.visitor.MapIterateVisitor;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
-import com.heaven7.java.visitor.SaveCallback;
+import com.heaven7.java.visitor.MapSaveVisitor;
+import com.heaven7.java.visitor.MapTrimVisitor;
+import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
-import com.heaven7.java.visitor.SaveCallback.MapSaveCallback;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
 import com.heaven7.java.visitor.internal.OperateInterceptor;
@@ -48,12 +48,12 @@ public interface MapVisitService<K, V>{
 	
 	
 	/**
-	 * save the current elements by target {@linkplain SaveCallback}.
+	 * save the current elements by target {@linkplain SaveVisitor}.
 	 * @param visitor the save visitor.
 	 * @return this.
 	 * @since 1.0.3
 	 */
-	MapVisitService<K, V> save(MapSaveCallback<K, V> visitor);
+	MapVisitService<K, V> save(MapSaveVisitor<K, V> visitor);
 	/**
 	 * save the current elements to the target out collection.
 	 * @param outMap the out map .
@@ -388,23 +388,52 @@ public interface MapVisitService<K, V>{
 				MapIterateVisitor<K, V> visitor);
 
 		/**
+		 * <p> use {@linkplain #trim(Object, MapTrimVisitor)} instead.<p>
 		 * add a trim operation , it will execute after iterate.can only set once.
 		 * @param param the extra parameter
 		 * @param visitor the trim visitor
 		 * @return this.
+		 * @see {@linkplain #trim(Object, MapTrimVisitor)}
 		 */
+		@Deprecated
 		public abstract MapOperateManager<K, V> trim(@Nullable Object param,
 				TrimMapVisitor<K, V> visitor);
 
 		// ==========================================================
+		
+		/**
+		 * add a trim operation , it will execute after iterate.can only set once.
+		 * @param param the extra parameter
+		 * @param visitor the trim visitor
+		 * @return this.
+		 * @since 1.0.3
+		 */
+		@SuppressWarnings("deprecation")
+		public MapOperateManager<K, V> trim(@Nullable Object param,
+				MapTrimVisitor<K, V> visitor){
+			return trim(param, (TrimMapVisitor<K, V>)visitor);
+		}
 
 		/**
+		 * <p>use {@linkplain #trim(MapTrimVisitor)} instead.<p>
 		 * add a trim operation , it will execute after iterate.can only set once.
 		 * @param visitor the trim visitor
 		 * @return this.
 		 * @see {@linkplain #trim(Object, TrimMapVisitor)}.
+		 * @see {@linkplain #trim(MapTrimVisitor)}
 		 */
+		@Deprecated
 		public final MapOperateManager<K, V> trim(TrimMapVisitor<K, V> visitor) {
+			return trim(null, visitor);
+		}
+		/**
+		 * add a trim operation , it will execute after iterate.can only set once.
+		 * @param visitor the trim visitor
+		 * @return this.
+		 * @since 1.0.3
+		 * @see {@linkplain #trim(Object, MapTrimVisitor)}.
+		 */
+		public final MapOperateManager<K, V> trim(MapTrimVisitor<K, V> visitor) {
 			return trim(null, visitor);
 		}
 

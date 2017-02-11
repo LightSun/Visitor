@@ -7,17 +7,21 @@ import java.util.Map.Entry;
 
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
+import com.heaven7.java.visitor.MapSaveVisitor;
+import com.heaven7.java.visitor.MapTrimVisitor;
 import com.heaven7.java.visitor.Visitors;
+import com.heaven7.java.visitor.collection.IterationInfo;
 import com.heaven7.java.visitor.collection.KeyValuePair;
 import com.heaven7.java.visitor.collection.MapVisitService;
 import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.test.help.Student;
+import com.heaven7.java.visitor.util.Map;
 
 import junit.framework.TestCase;
 
 public class MapVisitServiceTest extends TestCase {
 
-	final int size = 6;
+	static final int size = 6;
 	final HashMap<String, Integer> map = new HashMap<String, Integer>();
 	MapVisitService<String, Integer> service;
 
@@ -28,6 +32,46 @@ public class MapVisitServiceTest extends TestCase {
 			map.put("key_" + i, i);
 		}
 		service = VisitServices.from(map);
+	}
+	
+	public void testSave(){
+		 service.beginOperateManager()
+			.delete(new MapPredicateVisitor<String, Integer>() {
+				@Override
+				public Boolean visit(KeyValuePair<String, Integer> pair, Object param) {
+					return pair.getValue() == 2;
+				}
+	       }).end().save(new MapSaveVisitor<String, Integer>() {
+			@Override
+			public void visit(Map<String, Integer> o) {
+				assertEquals(o.size(), size - 1);
+				
+				/**
+				 * must cause exception, this map is read-only map, can' be modify.
+				 */
+				try { 
+					o.clear();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	public void testTrim(){
+		service.beginOperateManager().trim(new MapTrimVisitor<String, Integer>() {
+			@Override
+			public Boolean visit(Map<String, Integer> t, Object param, IterationInfo info) {
+				// trim impl in here. but for test we just clear map.
+				t.clear();
+				return null;
+			}
+		}).end().save(new MapSaveVisitor<String, Integer>() {
+			@Override
+			public void visit(Map<String, Integer> o) {
+				assertEquals(o.size(), 0);
+			}
+		});
 	}
 
 	public void testResultList() {
