@@ -1,10 +1,10 @@
 package com.heaven7.java.visitor.collection;
 
 import static com.heaven7.java.visitor.internal.InternalUtil.newMap;
+import static com.heaven7.java.visitor.internal.InternalUtil.getVisitService;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +13,7 @@ import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
+import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Throwables;
 
 /**
@@ -116,11 +117,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	public <R> CollectionVisitService<R> transformToCollection(Object param, 
 			Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor) {
 		Throwables.checkNull(resultVisitor);
-		final List<R> resultList = visitForResultList(param, resultVisitor, null);
-		if(sort != null){
-			Collections.sort(resultList, sort);
-		}
-		return VisitServices.from(resultList);
+		return getVisitService(visitForResultList(param, resultVisitor, null), sort);
 	}
 	
 	@Override

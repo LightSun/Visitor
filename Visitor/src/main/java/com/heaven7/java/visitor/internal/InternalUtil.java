@@ -35,8 +35,7 @@ public final class InternalUtil {
 	 * @param list the collection
 	 * @return CollectionVisitService
 	 */
-	public static <T> CollectionVisitService<T> getVisitService(Comparator<? super T> c,
-			List<T> list) {
+	public static <T> CollectionVisitService<T> getVisitService(List<T> list, Comparator<? super T> c) {
 		if(c != null){
 			Collections.sort(list, c);
 			return VisitServices.from(list);
