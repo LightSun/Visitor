@@ -7,4 +7,9 @@
                                               
  #1.1.0                                               
     4。新增各种transform 携带 comparator的   方法                     
-    5. 添加 cancelIntercept for iterateControl.                     
+    5. 添加 cancelIntercept for iterateControl.    
+    6, 修改默认行为：
+         sorted Collection VisitService  ->  sorted Collection VisitService        
+         sorted Collection VisitService  ->  Map VisitService.  sorted determined by Comparator isn't null.
+         sorted Map VisitService         ->  sorted Collection VisitService
+         sorted Map VisitService         ->  Map VisitService. sorted determined by Comparator isn't null.
