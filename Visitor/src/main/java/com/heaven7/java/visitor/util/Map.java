@@ -42,8 +42,17 @@ public interface Map<K, V> {
 	List<V> values();
 	
 	//=================================================//
+	/**
+	 * to normal map
+	 * @return normal map
+	 */
 	java.util.Map<K, V> toNormalMap();
 	
 	boolean isEmpty();
+	/**
+	 * @return is sorted or not.
+	 * @since 1.1.0
+	 */
+	boolean isSorted();
 	
 }

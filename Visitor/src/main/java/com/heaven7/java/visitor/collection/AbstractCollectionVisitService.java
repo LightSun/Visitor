@@ -117,7 +117,8 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	public <R> CollectionVisitService<R> transformToCollection(Object param, 
 			Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor) {
 		Throwables.checkNull(resultVisitor);
-		return getVisitService(visitForResultList(param, resultVisitor, null), sort);
+		return getVisitService(visitForResultList(param, resultVisitor, null), sort, 
+				( this instanceof ListVisitService));
 	}
 	
 	@Override

@@ -97,4 +97,9 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 		mMap.putAll(map);
 	}
 
+	@Override
+	public boolean isSorted() {
+		return Predicates.isSortedMap(mMap);
+	}
+
 }

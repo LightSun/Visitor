@@ -97,4 +97,9 @@ public class UnmodifiableMap<K,V> implements Map<K, V> {
 		return mMap.isEmpty();
 	}
 
+	@Override
+	public boolean isSorted() {
+		return mMap.isSorted();
+	}
+
 }

@@ -111,4 +111,9 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 		}
 	}
 
+	@Override
+	public boolean isSorted() {
+		return true;
+	}
+
 }

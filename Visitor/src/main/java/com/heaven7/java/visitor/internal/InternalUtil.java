@@ -27,11 +27,33 @@ import com.heaven7.java.visitor.collection.VisitServices;
  *
  */
 public final class InternalUtil {
+	
+	/**
+	 * get the right {@linkplain CollectionVisitService}.
+	 * @param <T> the element type
+	 * @param list the list data
+	 * @param c the sort Comparator, can be null.
+	 * @param sort represent should regard as sorted {@linkplain CollectionVisitService}.
+	 * @return an instance of  {@linkplain CollectionVisitService}.
+	 */
+	public static <T> CollectionVisitService<T> getVisitService(List<T> list,
+			Comparator<? super T> c, boolean sort) {
+		//if should not sort return default CollectionVisitService .
+		if(!sort){
+			return getVisitService(list, c);
+		}else{
+			if(c != null){
+				Collections.sort(list, c);
+			}
+			return VisitServices.from(list);
+		}
+	}
 
 	/**
-	 * get the collection visit service.
+	 * get the collection visit service. if the Comparator is null return 
+	 * 'VisitServices.from((Collection) list)' or else return  'VisitServices.from(list)';
 	 * @param <T> the element type.
-	 * @param c sort comparator
+	 * @param c sort comparator , can be null.
 	 * @param list the collection
 	 * @return CollectionVisitService
 	 */

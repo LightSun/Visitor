@@ -1,6 +1,7 @@
 package com.heaven7.java.visitor.util;
 
 import java.util.List;
+import java.util.SortedMap;
 /**
  * some useful methods of predicate.
  * @author heaven7
@@ -21,5 +22,9 @@ public final class Predicates {
 	}
 	public static <K,V> boolean isEmpty(Map<K,V> map) {
 		return map == null || map.size() == 0;
+	}
+	
+	public static <K,V> boolean isSortedMap(java.util.Map<K, V> map){
+		return map instanceof SortedMap;
 	}
 }

@@ -195,7 +195,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		}
 		//clear cache
 		list.clear();
-		return getVisitService(results, comparator);
+		return getVisitService(results, comparator, mMap.isSorted());
 	}
 	
 	@Override
@@ -207,7 +207,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		}
 		//clear cache
 		list.clear();
-		return getVisitService(results, comparator);
+		return getVisitService(results, comparator, mMap.isSorted());
 	}
 	
 	@Override
@@ -237,7 +237,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		}
 		//clear cache
 		list.clear();
-		return getVisitService(results, comparator);
+		return getVisitService(results, comparator, mMap.isSorted());
 	}
 	
 	@Override
