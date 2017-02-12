@@ -15,8 +15,8 @@ public interface SaveVisitor<T> {
 	/**
 	 * visit to save collection
 	 * 
-	 * @param o
-	 *            the collection to save. And this collection is read-only.
+	 * @param collection
+	 *            the collection to save. But this collection is read-only.
 	 */
-	void visit(Collection<T> o);
+	void visit(Collection<T> collection);
 }

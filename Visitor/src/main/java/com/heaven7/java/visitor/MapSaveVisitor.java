@@ -16,8 +16,8 @@ public interface MapSaveVisitor<K, V>{
 	/**
 	 * visit to save map.
 	 * 
-	 * @param o
+	 * @param map
 	 *            the map to save, And this map is read-only.
 	 */
-	void visit(Map<K, V> o);
+	void visit(Map<K, V> map);
 }
