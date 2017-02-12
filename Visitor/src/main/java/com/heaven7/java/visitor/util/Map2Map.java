@@ -6,7 +6,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.heaven7.java.visitor.collection.KeyValuePair;
-
+/**
+ * an instance of {@linkplain com.heaven7.java.visitor.util.Map}. 
+ * convert {@linkplain Map} to {@linkplain com.heaven7.java.visitor.util.Map}
+ * @author heaven7
+ *
+ * @param <K> the key type
+ * @param <V> the value type
+ */
 public class Map2Map<K, V> extends AbstractMap<K, V> {
 
 	private final Map<K, V> mMap;

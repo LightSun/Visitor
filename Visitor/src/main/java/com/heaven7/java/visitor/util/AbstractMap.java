@@ -1,5 +1,12 @@
 package com.heaven7.java.visitor.util;
 
+/**
+ * a base impl of {@linkplain com.heaven7.java.visitor.util.Map}
+ * @author heaven7
+ *
+ * @param <K> the key type
+ * @param <V> the value type
+ */
 public abstract class AbstractMap<K,V> implements Map<K,V> {
 	
 	@Override
