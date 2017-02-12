@@ -108,12 +108,31 @@ public final class IterateControl<T> {
 	 *            the operate. see
 	 *            {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
 	 * @return this.
+	 * @see {@linkplain #cancelIntercept(int)}
 	 */
 	public IterateControl<T> interceptIfSuccess(int operate){
 		mCallback.checkOperation(operate);
 		int index = mInterceptOps.indexOf(operate);
 		if (index == -1) {
 			mInterceptOps.add(operate);
+		}
+		return this;
+	}
+	/**
+	 * cancel intercept the operation in iteration. That means Anti-interception the target operate, 
+	 *  no matter the visitor visit success or not.
+	 * @param operate
+	 *             the operate. see
+	 *            {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
+	 * @return this.
+	 * @since 1.1.0
+	 * @see {@linkplain #interceptIfSuccess(int)}
+	 */
+	public IterateControl<T> cancelIntercept(int operate){
+		mCallback.checkOperation(operate);
+		int index = mInterceptOps.indexOf(operate);
+		if (index != -1) {
+			mInterceptOps.remove(index);
 		}
 		return this;
 	}

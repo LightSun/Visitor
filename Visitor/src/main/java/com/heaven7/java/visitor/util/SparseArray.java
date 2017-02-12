@@ -365,7 +365,8 @@ public class SparseArray<E> {
      * @return a read-only list of the values in this SparseArray which are in ascending order, based on their
      * associated key
      */
-    public List<E> getValues() {
+    @SuppressWarnings("unchecked")
+	public List<E> getValues() {
         return Collections.unmodifiableList(Arrays.asList((E[])mValues));
     }
 

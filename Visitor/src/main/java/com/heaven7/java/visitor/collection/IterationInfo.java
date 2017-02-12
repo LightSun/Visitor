@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * the iteration info
+ * the iteration info, such as: delete count. update count, filter count, insert count and etc.
  * 
  * @author heaven7
  *
@@ -30,7 +30,7 @@ public class IterationInfo implements Serializable {
 	 */
 	private int currentSize;
 	/**
-	 * the current index in iteration. this is only used for {{@linkplain List}}
+	 * the current index in iteration. this is only used for {{@linkplain List}} in iteration.
 	 */
 	private int currentIndex = -1;
 

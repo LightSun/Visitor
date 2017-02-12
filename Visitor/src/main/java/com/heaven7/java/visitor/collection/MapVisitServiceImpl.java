@@ -8,7 +8,15 @@ import com.heaven7.java.visitor.MapResultVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.state.MapIterateState;
 import com.heaven7.java.visitor.util.Map;
-
+/**
+ * an impl of MapVisitService.
+ * @author heaven7
+ *
+ * @param <K> the key type
+ * @param <V> the value type
+ * @see {@linkplain MapVisitService}
+ * @see {@linkplain AbstractMapVisitService}
+ */
 /*public*/ class MapVisitServiceImpl<K, V> extends AbstractMapVisitService<K, V> {
 
 	private final IterationInfo mIterationInfo = new IterationInfo();

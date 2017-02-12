@@ -1,8 +1,13 @@
 package com.heaven7.java.visitor.util;
 
 import java.util.Collection;
-
-public class Throwables {
+/**
+ * some useful methods for check arguments.
+ * @author heaven7
+ *
+ */
+public final class Throwables {
+	private Throwables(){}
 
 	public static void checkNull(Object obj) {
 		if (obj == null) {

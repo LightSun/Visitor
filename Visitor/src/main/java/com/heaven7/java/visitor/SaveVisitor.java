@@ -9,6 +9,7 @@ import java.util.Collection;
  *
  * @param <T>
  *            the element type
+ * @since 1.0.3
  */
 public interface SaveVisitor<T> {
 	/**

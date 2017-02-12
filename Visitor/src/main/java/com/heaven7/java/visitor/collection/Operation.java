@@ -2,7 +2,11 @@ package com.heaven7.java.visitor.collection;
 
 import java.util.List;
 import java.util.Map;
-
+/**
+ * the base operation. contains: delete, filter, update, inert or trim
+ * @author heaven7
+ *
+ */
 public abstract class Operation {
 	
 	/** indicate the operate of delete */

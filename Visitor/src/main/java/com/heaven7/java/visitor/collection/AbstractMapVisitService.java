@@ -26,7 +26,7 @@ import com.heaven7.java.visitor.util.SparseArray;
 import com.heaven7.java.visitor.util.Throwables;
 import com.heaven7.java.visitor.util.UnmodifiableMap;
 /**
- * 
+ * a base impl of {@linkplain MapVisitService}.
  * @author heaven7
  *
  * @param <K> the key type
@@ -194,11 +194,8 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 			results.add(pair.getKey());
 		}
 		//clear cache
-		if(comparator != null){
-			Collections.sort(results, comparator);
-			return getVisitService(true, results);
-		}
-		return getVisitService(false, results);
+		list.clear();
+		return getVisitService(comparator, results);
 	}
 	
 	@Override
@@ -210,11 +207,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		}
 		//clear cache
 		list.clear();
-		if(comparator != null){
-			Collections.sort(results, comparator);
-			return getVisitService(true, results);
-		}
-		return getVisitService(false, results);
+		return getVisitService(comparator, results);
 	}
 	
 	@Override
@@ -244,11 +237,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		}
 		//clear cache
 		list.clear();
-		if(comparator != null){
-			Collections.sort(results, comparator);
-			return getVisitService(true, results);
-		}
-		return getVisitService(false, results);
+		return getVisitService(comparator, results);
 	}
 	
 	@Override

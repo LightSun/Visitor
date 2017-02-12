@@ -20,7 +20,6 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 
 import com.heaven7.java.visitor.collection.CollectionVisitService;
-import com.heaven7.java.visitor.collection.MapVisitService;
 import com.heaven7.java.visitor.collection.VisitServices;
 /**
  * this class only used internal.
@@ -32,30 +31,27 @@ public final class InternalUtil {
 	/**
 	 * get the collection visit service.
 	 * @param <T> the element type.
-	 * @param list indicate is list or not.
-	 * @param collection the collection
+	 * @param c sort comparator
+	 * @param list the collection
 	 * @return CollectionVisitService
 	 */
-	public static <T> CollectionVisitService<T> getVisitService(boolean list,
-			Collection<T> collection) {
-		return list ? VisitServices.from((List<T>) collection) 
-				: VisitServices.from(collection) ;
+	public static <T> CollectionVisitService<T> getVisitService(Comparator<? super T> c,
+			List<T> list) {
+		if(c != null){
+			Collections.sort(list, c);
+			return VisitServices.from(list);
+		}else{
+			return VisitServices.from((Collection<T>) list);
+		}
 	}
 	
 	/**
-	 * get the map visit service.
+	 * create a  map instance.
 	 * @param <K> the key type.
 	 * @param <V> the value type.
-	 * @param sorted indicate is sorted or not.
-	 * @param map the map
-	 * @return CollectionVisitService
+	 * @param comparator the key comparator , can be null.
+	 * @return TreeMap or HashMap determined by target comparator.
 	 */
-	public static <K, V> MapVisitService<K, V> getMapVisitService(boolean sorted,
-			Map<K,V> map) {
-		return sorted ? VisitServices.from((SortedMap<K, V>) map) 
-				: VisitServices.from(map) ;
-	}
-
 	public static <K, V> Map<K, V> newMap(Comparator<? super K> comparator) {
 		return comparator != null ? new TreeMap<K, V>(comparator) : new HashMap<K, V>();
 	}

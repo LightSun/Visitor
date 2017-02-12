@@ -3,7 +3,7 @@ package com.heaven7.java.visitor.collection;
 import com.heaven7.java.visitor.util.Throwables;
 
 /**
- * an entry like Map.Entry .
+ * an entry like Map.Entry .but read-only.
  * 
  * @author heaven7
  *

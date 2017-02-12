@@ -8,7 +8,13 @@ import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
 import com.heaven7.java.visitor.util.Map;
 import com.heaven7.java.visitor.util.Updatable;
-
+/**
+ * the operation of operate map.
+ * @author heaven7
+ *
+ * @param <K> the key type
+ * @param <V> the value type
+ */
 public class MapOperation<K, V> extends Operation {
 
 	private V mValue;
@@ -16,6 +22,7 @@ public class MapOperation<K, V> extends Operation {
 	private List<KeyValuePair<K, V>> mPairs;
 	private MapPredicateVisitor<K, V> mPredicateVisitor;
 	private MapIterateVisitor<K, V> mIterateVisitor;
+	@SuppressWarnings("deprecation")
 	private TrimMapVisitor<K, V> mTrimVisitor;
 
 	public static <K, V> MapOperation<K, V> createFilter(Object param, MapPredicateVisitor<K, V> predicate) {

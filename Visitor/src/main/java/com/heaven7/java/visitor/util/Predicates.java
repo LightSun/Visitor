@@ -1,8 +1,14 @@
 package com.heaven7.java.visitor.util;
 
 import java.util.List;
-
-public class Predicates {
+/**
+ * some useful methods of predicate.
+ * @author heaven7
+ *
+ */
+public final class Predicates {
+	
+	private Predicates(){}
 	
 	public static boolean equals(Object a, Object b) {
 		return (a == b) || (a != null && a.equals(b));
