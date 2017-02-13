@@ -9,7 +9,7 @@ Also we can tranform between  Collection (CollectionVisitService) and map (MapVi
 
 ```java
    dependencies {
-       compile 'com.heaven7.java.visitor:Visitor:1.0.2'
+       compile 'com.heaven7.java.visitor:Visitor:1.1.0'
    }
 ```
 
