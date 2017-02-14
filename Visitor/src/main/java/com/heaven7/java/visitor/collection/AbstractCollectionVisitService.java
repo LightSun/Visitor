@@ -1,7 +1,7 @@
 package com.heaven7.java.visitor.collection;
 
-import static com.heaven7.java.visitor.internal.InternalUtil.newMap;
 import static com.heaven7.java.visitor.internal.InternalUtil.getVisitService;
+import static com.heaven7.java.visitor.internal.InternalUtil.newMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +13,6 @@ import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
-import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Throwables;
 
 /**

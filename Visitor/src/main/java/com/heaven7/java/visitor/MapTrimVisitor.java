@@ -7,6 +7,7 @@ package com.heaven7.java.visitor;
  * @param <K> the key type
  * @param <V> the value type
  */
+@SuppressWarnings("deprecation")
 public interface MapTrimVisitor<K, V> extends TrimMapVisitor<K, V> {
 	
 	

@@ -34,7 +34,8 @@ import com.heaven7.java.visitor.util.Throwables;
  *            the type of element
  * @see ListVisitService
  */
-public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitService<T> implements CollectionVisitService<T> {
+public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitService<T>
+		implements CollectionVisitService<T> {
 
 	protected static final boolean DEBUG = true;
 
@@ -42,16 +43,17 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	private List<Integer> mOrderOps;
 	/** the intercept operate */
 	private List<Integer> mInterceptOps;
-	
+
 	private final IterateControl<CollectionVisitService<T>> mControl;
 	/** the operate interceptor */
 	private final GroupOperateInterceptor mGroupInterceptor = new GroupOperateInterceptor();
+	private OperateManager<T> mOpManager;
 
 	// OP_QUERY ;
 	// limitSize ,limit filter size. limit null size.
 
 	private final Collection<T> mCollection;
-	
+
 	/** the all Operation/operate of insert in iteration */
 	private List<CollectionOperation<T>> mInsertOps;
 	/** the all Operation/operate of final insert after iteration */
@@ -65,13 +67,12 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	private IterationInfo mIterationInfo;
 
-	/*protected*/ CollectionVisitServiceImpl(Collection<T> collection) {
+	/* protected */ CollectionVisitServiceImpl(Collection<T> collection) {
 		super();
 		checkNull(collection);
 		this.mCollection = collection;
-		mControl = IterateControl.<CollectionVisitService<T>>create(this, 
-				new ControlCallbackImpl());
-		//init default
+		mControl = IterateControl.<CollectionVisitService<T>>create(this, new ControlCallbackImpl());
+		// init default
 		mControl.begin().end();
 	}
 
@@ -113,8 +114,8 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			out = new ArrayList<T>();
 		}
 		final IterationInfo info = initAndGetIterationInfo();
-		IterateState.<T>multipleIterateState().visit(mCollection, hasExtraOperateInIteration(), mGroupInterceptor,
-				info, param, predicate, out);
+		IterateState.<T>multipleIterateState().visit(mCollection, hasExtraOperateInIteration(), mGroupInterceptor, info,
+				param, predicate, out);
 		handleFinalInsert(param, info);
 		return out;
 	}
@@ -146,7 +147,8 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	}
 
 	protected boolean visitImpl(Collection<T> collection, int rule, @Nullable Object param,
-			CollectionOperateInterceptor<T> interceptor, IterateVisitor<? super T> breakVisitor, final IterationInfo info) {
+			CollectionOperateInterceptor<T> interceptor, IterateVisitor<? super T> breakVisitor,
+			final IterationInfo info) {
 
 		final boolean hasExtra = hasExtraOperateInIteration();
 
@@ -217,7 +219,8 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			try {
 				for (int i = 0, len = mInserts.size(); i < len; i++) {
 					if (mInserts.get(i).insertLast(mCollection, param, info)) {
-						//info update :change to internal of CollectionOperation
+						// info update :change to internal of
+						// CollectionOperation
 					}
 				}
 			} catch (UnsupportedOperationException e) {
@@ -240,7 +243,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 				op = mUpdates.get(i);
 				if (isList && op.update((ListIterator<T>) lit, t, param, info)) {
 					return true;
-				} else if (op.update(t, param,info)) {
+				} else if (op.update(t, param, info)) {
 					return true;
 				}
 			}
@@ -256,8 +259,8 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		if (mDeleteOp != null) {
 			try {
 				return mDeleteOp.delete(it, t, param, info);
-				//it.remove(); // 之前必须调用next().
-				//info.incrementDelete();
+				// it.remove(); // 之前必须调用next().
+				// info.incrementDelete();
 			} catch (UnsupportedOperationException e) {
 				System.err.println("update failed. caused by the list is fixed. "
 						+ "so can't modified. are your list comes from 'Arrays.asList(...)' ? ");
@@ -317,7 +320,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	@Override
 	public OperateManager<T> beginOperateManager() {
-		return new OperateManagerImpl();
+		return mOpManager != null ? mOpManager : (mOpManager = new OperateManagerImpl());
 	}
 
 	private class GroupOperateInterceptor extends CollectionOperateInterceptor<T> {
@@ -447,8 +450,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		}
 
 		@Override
-		public OperateManager<T> update(T newT, @Nullable Object param,
-				PredicateVisitor<? super T> update) {
+		public OperateManager<T> update(T newT, @Nullable Object param, PredicateVisitor<? super T> update) {
 			checkNull(newT);
 			checkNull(update);
 			ensureUpdates();
@@ -457,8 +459,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		}
 
 		@Override
-		public OperateManager<T> insert(List<T> list, @Nullable Object param,
-				IterateVisitor<? super T> insert) {
+		public OperateManager<T> insert(List<T> list, @Nullable Object param, IterateVisitor<? super T> insert) {
 			checkEmpty(list);
 			ensureInserts();
 			mInsertOps.add(CollectionOperation.createInsert(list, param, insert));
@@ -466,8 +467,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		}
 
 		@Override
-		public OperateManager<T> insert(T newT, @Nullable Object param,
-				IterateVisitor<? super T> insert) {
+		public OperateManager<T> insert(T newT, @Nullable Object param, IterateVisitor<? super T> insert) {
 			checkNull(newT);
 			ensureInserts();
 			mInsertOps.add(CollectionOperation.createInsert(newT, param, insert));
@@ -475,8 +475,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		}
 
 		@Override
-		public OperateManager<T> insertFinally(T newT, @Nullable Object param,
-				IterateVisitor<? super T> insert) {
+		public OperateManager<T> insertFinally(T newT, @Nullable Object param, IterateVisitor<? super T> insert) {
 			checkNull(newT);
 			ensureFinalInserts();
 			mFinalInsertOps.add(CollectionOperation.createInsert(newT, param, insert));
@@ -484,8 +483,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		}
 
 		@Override
-		public OperateManager<T> insertFinally(List<T> list, @Nullable Object param,
-				IterateVisitor<? super T> insert) {
+		public OperateManager<T> insertFinally(List<T> list, @Nullable Object param, IterateVisitor<? super T> insert) {
 			checkEmpty(list);
 			ensureFinalInserts();
 			mFinalInsertOps.add(CollectionOperation.createInsert(list, param, insert));
@@ -494,20 +492,21 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	}
 
-	private class ControlCallbackImpl extends Callback{
+	private class ControlCallbackImpl extends Callback {
 
 		@Override
 		public void saveState(List<Integer> orderOps, List<Integer> interceptOps) {
 			mInterceptOps = interceptOps;
 			mOrderOps = orderOps;
 		}
+
 		@Override
 		public void checkOperation(int op) {
-			if(op < OP_DELETE || op > OP_INSERT){
+			if (op < OP_DELETE || op > OP_INSERT) {
 				throw new IllegalArgumentException("unsupport opertion");
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -517,17 +516,16 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		visitor.visit(unmodifiable(mCollection));
 		return this;
 	}
-	
+
 	@Override
 	public CollectionVisitService<T> save(Collection<T> out, boolean clearBeforeSave) {
 		Throwables.checkNull(out);
 		visitAll();
-		if(clearBeforeSave){
+		if (clearBeforeSave) {
 			out.clear();
 		}
 		out.addAll(mCollection);
 		return this;
 	}
-
 
 }
