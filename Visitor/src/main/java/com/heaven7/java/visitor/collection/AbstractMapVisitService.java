@@ -111,21 +111,6 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 	}
 
-	public void reset() {
-		mDeleteOp = null;
-		mFilterOp = null;
-		mTrimOp = null;
-		if (mFinalInsertOps != null) {
-			mFinalInsertOps.clear();
-		}
-		if (mUpdateOps != null) {
-			mUpdateOps.clear();
-		}
-		mOrderOps.clear();
-		mInterceptOps.clear();
-		mIterateControl.begin().end();
-	}
-	
 	/**
 	 * handle the finally operations of function.
 	 * @param param the parameter
@@ -157,6 +142,31 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 	
 	// ==================================================================//
+	
+	@Override
+	public void reset(int flags) {
+		if( (flags & FLAG_OPERATE_MANAGER) != 0 ){
+			mDeleteOp = null;
+			mFilterOp = null;
+			mTrimOp = null;
+			if (mFinalInsertOps != null) {
+				mFinalInsertOps.clear();
+			}
+			if (mUpdateOps != null) {
+				mUpdateOps.clear();
+			}
+		}
+		if( (flags & FLAG_OPERATE_ITERATE_CONTROL) != 0 ){
+			mOrderOps.clear();
+			mInterceptOps.clear();
+			mIterateControl.begin().end();
+		}
+	}
+	
+	@Override
+	public final void resetAll() {
+		reset(FLAG_OPERATE_ITERATE_CONTROL | FLAG_OPERATE_MANAGER);
+	}
 	
 	@Override
 	public MapVisitService<K, V> save(Map<K, V> outMap) {

@@ -23,7 +23,7 @@ import com.heaven7.java.visitor.internal.OperateInterceptor;
  * @see ListVisitService
  */
 //TODO need visitFirst/ visitLast / ?
-public interface CollectionVisitService<T>{
+public interface CollectionVisitService<T> extends VisitService{
 	
 	/**
 	 * the visit rule: visit all.
@@ -260,7 +260,7 @@ public interface CollectionVisitService<T>{
 			ResultVisitor<? super T, R> resultVisitor, @Nullable List<R> out);
 	
 	/**
-	 * visit the all elements for result, which is matched by the target predicate visitor.With the default predicate visitor which  always return true.
+	 * visit the all elements for result, With the default predicate visitor which  always return true.
 	 *
 	 * @param param
 	 *            the extra parameter for transport to the all visitors.

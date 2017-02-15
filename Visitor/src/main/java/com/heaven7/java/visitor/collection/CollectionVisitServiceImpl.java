@@ -167,21 +167,26 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		return true;
 	}
 
-	public void reset() {
-		mDeleteOp = null;
-		mFilterOp = null;
-		if (mInsertOps != null) {
-			mInsertOps.clear();
+	@Override
+	public void reset(int flags) {
+		if( (flags & FLAG_OPERATE_MANAGER) != 0 ){
+			mDeleteOp = null;
+			mFilterOp = null;
+			if (mInsertOps != null) {
+				mInsertOps.clear();
+			}
+			if (mUpdateOps != null) {
+				mUpdateOps.clear();
+			}
+			if (mFinalInsertOps != null) {
+				mFinalInsertOps.clear();
+			}
 		}
-		if (mUpdateOps != null) {
-			mUpdateOps.clear();
+		if( (flags & FLAG_OPERATE_ITERATE_CONTROL) != 0 ){
+			mOrderOps.clear();
+			mInterceptOps.clear();
+			mControl.begin().end();
 		}
-		if (mFinalInsertOps != null) {
-			mFinalInsertOps.clear();
-		}
-		mOrderOps.clear();
-		mInterceptOps.clear();
-		mControl.begin().end();
 	}
 
 	/**

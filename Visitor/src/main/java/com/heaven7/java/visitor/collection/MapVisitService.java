@@ -45,7 +45,7 @@ import com.heaven7.java.visitor.util.Map;
  * @see {@linkplain AbstractMapVisitService}
  * @see {@linkplain MapVisitServiceImpl}
  */
-public interface MapVisitService<K, V>{
+public interface MapVisitService<K, V> extends VisitService {
 	
 	
 	/**

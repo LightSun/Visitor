@@ -35,6 +35,11 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 	
 	@Override
+	public final void resetAll() {
+		reset(FLAG_OPERATE_MANAGER | FLAG_OPERATE_ITERATE_CONTROL);
+	}
+	
+	@Override
 	public CollectionVisitService<T> save(Collection<T> out) {
 		return save(out, false);
 	}
