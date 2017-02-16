@@ -8,6 +8,7 @@ import java.util.Collection;
  */
 public final class Throwables {
 	private Throwables(){}
+	
 
 	public static void checkNull(Object obj) {
 		if (obj == null) {

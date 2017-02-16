@@ -6,10 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.heaven7.java.visitor.FireBatchVisitor;
+import com.heaven7.java.visitor.FireVisitor;
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.SaveVisitor;
+import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.OperateInterceptor;
 
@@ -40,6 +43,66 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	public static final int VISIT_RULE_UNTIL_FAILED = 13;
 	
+	
+	/**
+	 * fire the all element by target {@linkplain FireBatchVisitor} and etc.
+	 * @param param the parameter , can be null
+	 * @param fireVisitor fire batch visitor 
+	 * @param throwVisitor the throwable visitor, can be null.
+	 * @return this
+	 * @since 1.1.1
+	 * @see {@linkplain #fireBatch(FireBatchVisitor, ThrowableVisitor)}
+	 * @see {@linkplain #fireBatch(Object,FireBatchVisitor, ThrowableVisitor)}
+	 */
+	CollectionVisitService<T> fireBatch(FireBatchVisitor<T> fireVisitor);
+	/**
+	 * fire the all element by target {@linkplain FireBatchVisitor} and etc.
+	 * @param param the parameter , can be null
+	 * @param fireVisitor fire batch visitor 
+	 * @param throwVisitor the throwable visitor, can be null.
+	 * @return this
+	 * @since 1.1.1
+	 * @see {@linkplain #fireBatch(Object,FireBatchVisitor, ThrowableVisitor)}
+	 */
+	CollectionVisitService<T> fireBatch(FireBatchVisitor<T> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
+	/**
+	 * fire the all element by target {@linkplain FireBatchVisitor} and etc.
+	 * @param param the parameter , can be null
+	 * @param fireVisitor fire batch visitor 
+	 * @param throwVisitor the throwable visitor, can be null.
+	 * @return this
+	 * @since 1.1.1
+	 */
+	CollectionVisitService<T> fireBatch(@Nullable Object param, FireBatchVisitor<T> fireVisitor,@Nullable ThrowableVisitor throwVisitor);
+	
+	/**
+	 * fire the all element by target {@linkplain FireVisitor}.
+	 * @param param the parameter , can be null
+	 * @param fireVisitor fire visitor 
+	 * @return this
+	 * @since 1.1.1
+	 * @see [{@linkplain #fire(FireVisitor, ThrowableVisitor)}
+	 * @see [{@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
+	 */
+	CollectionVisitService<T> fire(FireVisitor<T> fireVisitor);
+	/**
+	 * fire the all element by target {@linkplain FireVisitor} and etc.
+	 * @param fireVisitor fire visitor 
+	 * @param throwVisitor the throwable visitor, can be null.
+	 * @return this
+	 * @since 1.1.1
+	 * @see [{@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
+	 */
+	CollectionVisitService<T> fire(FireVisitor<T> fireVisitor,@Nullable ThrowableVisitor throwVisitor);
+	/**
+	 * fire the all element by target {@linkplain FireVisitor} and etc.
+	 * @param param the parameter , can be null
+	 * @param fireVisitor fire visitor 
+	 * @param throwVisitor the throwable visitor, can be null.
+	 * @return this
+	 * @since 1.1.1
+	 */
+	CollectionVisitService<T> fire(@Nullable Object param, FireVisitor<T> fireVisitor,@Nullable ThrowableVisitor throwVisitor);
 	
 	/**
 	 * save the current elements by target {@linkplain SaveVisitor}.

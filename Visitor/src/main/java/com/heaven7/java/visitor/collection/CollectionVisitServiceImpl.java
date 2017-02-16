@@ -74,6 +74,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		//init default
 		mControl.begin().end();
 	}
+	
+	//===============================================================================
+	
+
 
 	// =============================================================================//
 	@Override
@@ -209,6 +213,17 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			IterationInfo info) {
 
 		return false;
+	}
+	
+	/**
+	 * this is different with {@linkplain #hasExtraOperateInIteration} .
+	 * @return true if has operation .
+	 */
+	protected boolean hasOperation(){
+		if(mFinalInsertOps != null && mFinalInsertOps.size() > 0){
+			return true;
+		}
+		return hasExtraOperateInIteration();
 	}
 
 	private boolean handleInsert(Iterator<T> it, T t, Object param, final IterationInfo info) {
