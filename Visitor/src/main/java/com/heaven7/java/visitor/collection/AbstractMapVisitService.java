@@ -8,7 +8,6 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 import static com.heaven7.java.visitor.internal.InternalUtil.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -144,7 +143,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	// ==================================================================//
 	
 	@Override
-	public void reset(int flags) {
+	public MapVisitService<K, V> reset(int flags) {
 		if( (flags & FLAG_OPERATE_MANAGER) != 0 ){
 			mDeleteOp = null;
 			mFilterOp = null;
@@ -161,11 +160,12 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 			mInterceptOps.clear();
 			mIterateControl.begin().end();
 		}
+		return this;
 	}
 	
 	@Override
-	public final void resetAll() {
-		reset(FLAG_OPERATE_ITERATE_CONTROL | FLAG_OPERATE_MANAGER);
+	public final MapVisitService<K, V> resetAll() {
+		return reset(FLAG_OPERATE_ITERATE_CONTROL | FLAG_OPERATE_MANAGER);
 	}
 	
 	@Override

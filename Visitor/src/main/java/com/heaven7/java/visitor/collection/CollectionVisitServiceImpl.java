@@ -168,7 +168,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	}
 
 	@Override
-	public void reset(int flags) {
+	public CollectionVisitService<T> reset(int flags) {
 		if( (flags & FLAG_OPERATE_MANAGER) != 0 ){
 			mDeleteOp = null;
 			mFilterOp = null;
@@ -187,6 +187,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			mInterceptOps.clear();
 			mControl.begin().end();
 		}
+		return this;
 	}
 
 	/**

@@ -23,7 +23,7 @@ import com.heaven7.java.visitor.internal.OperateInterceptor;
  * @see ListVisitService
  */
 //TODO need visitFirst/ visitLast / ?
-public interface CollectionVisitService<T> extends VisitService{
+public interface CollectionVisitService<T> extends VisitService<CollectionVisitService<T>>{
 	
 	/**
 	 * the visit rule: visit all.

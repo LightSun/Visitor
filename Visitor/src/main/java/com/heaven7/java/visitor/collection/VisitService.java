@@ -7,7 +7,7 @@ import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager
  * @author heaven7
  * @since 1.1.1
  */
-public interface VisitService {
+public interface VisitService<T extends VisitService<T>> {
 	
 	/**
 	 *  a flag operate manager flag , correspond to {@linkplain OperateManager}, often used for reset.
@@ -21,14 +21,14 @@ public interface VisitService {
 	
 	
 	/**
-	 * reset current visit service.
+	 * reset current visit service by target flags.
 	 * @param flags {@linkplain #FLAG_OPERATE_MANAGER} or {@linkplain #FLAG_OPERATE_ITERATE_CONTROL}.
 	 */
-	void reset(int flags);
+	T reset(int flags);
 	
 	/**
 	 * reset all operations. a convenient method for call {@linkplain #reset(int)} that use all flags.
 	 */
-	void resetAll();
+	T resetAll();
 
 }
