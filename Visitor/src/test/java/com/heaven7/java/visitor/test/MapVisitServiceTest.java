@@ -1,14 +1,18 @@
 package com.heaven7.java.visitor.test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.heaven7.java.visitor.MapFireBatchVisitor;
+import com.heaven7.java.visitor.MapFireVisitor;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
 import com.heaven7.java.visitor.MapSaveVisitor;
 import com.heaven7.java.visitor.MapTrimVisitor;
+import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.collection.IterationInfo;
 import com.heaven7.java.visitor.collection.KeyValuePair;
@@ -21,17 +25,55 @@ import junit.framework.TestCase;
 
 public class MapVisitServiceTest extends TestCase {
 
-	static final int size = 6;
+	static final int SIZE = 6;
 	final HashMap<String, Integer> map = new HashMap<String, Integer>();
 	MapVisitService<String, Integer> service;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < SIZE; i++) {
 			map.put("key_" + i, i);
 		}
 		service = VisitServices.from(map);
+	}
+	
+	public void testFire2(){
+		 service.beginOperateManager()
+			.delete(new MapPredicateVisitor<String, Integer>() {
+				@Override
+				public Boolean visit(KeyValuePair<String, Integer> pair, Object param) {
+					return pair.getValue() == 2;
+				}
+	       }).end().fireBatch(new MapFireBatchVisitor<String, Integer>() {
+			@Override
+			public Void visit(Collection<KeyValuePair<String, Integer>> collection, Object param) {
+				assertEquals(collection.size(), SIZE - 1);
+				return null;
+			}
+		});
+	}
+	
+	public void testFire(){
+		 service.beginOperateManager()
+			.delete(new MapPredicateVisitor<String, Integer>() {
+				@Override
+				public Boolean visit(KeyValuePair<String, Integer> pair, Object param) {
+					return pair.getValue() == 2;
+				}
+	       }).end().fire(new MapFireVisitor<String, Integer>() {
+			
+			@Override
+			public Boolean visit(KeyValuePair<String, Integer> pair, Object param) {
+				throw new IllegalArgumentException("");
+			}
+		}, new ThrowableVisitor() {
+			@Override
+			public Void visit(Throwable t) {
+				assertTrue( t instanceof IllegalArgumentException);
+				return null;
+			}
+		});
 	}
 	
 	public void testSave(){
@@ -44,7 +86,7 @@ public class MapVisitServiceTest extends TestCase {
 	       }).end().save(new MapSaveVisitor<String, Integer>() {
 			@Override
 			public void visit(Map<String, Integer> o) {
-				assertEquals(o.size(), size - 1);
+				assertEquals(o.size(), SIZE - 1);
 				
 				/**
 				 * must cause exception, this map is read-only map, can' be modify.
@@ -90,8 +132,8 @@ public class MapVisitServiceTest extends TestCase {
 						}
 					}, null);
 
-		assertEquals(results.size(), size - 1);
-		assertEquals(map.size(), size - 1);
+		assertEquals(results.size(), SIZE - 1);
+		assertEquals(map.size(), SIZE - 1);
 	}
 
 	public void testResult() {
@@ -114,7 +156,7 @@ public class MapVisitServiceTest extends TestCase {
 		});
 
 		assertEquals(result, "5___500");
-		assertEquals(map.size(), size - 1);
+		assertEquals(map.size(), SIZE - 1);
 	}
 
 	public void testQuery() {
@@ -134,7 +176,7 @@ public class MapVisitServiceTest extends TestCase {
 				});
 
 		assertEquals(pair.getValue().intValue(), 5);
-		assertEquals(map.size(), size - 1);
+		assertEquals(map.size(), SIZE - 1);
 	}
 
 	public void testQueryList() {
@@ -146,8 +188,8 @@ public class MapVisitServiceTest extends TestCase {
 					}
 				}).end().visitForQueryList(Visitors.<String, Integer>trueMapPredicateVisitor(), null);
 
-		assertEquals(queryResults.size(), size - 1);
-		assertEquals(map.size(), size - 1);
+		assertEquals(queryResults.size(), SIZE - 1);
+		assertEquals(map.size(), SIZE - 1);
 	}
 
 	public static void main(String[] args) {

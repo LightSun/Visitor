@@ -102,7 +102,8 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return this
 	 * @since 1.1.1
 	 */
-	CollectionVisitService<T> fire(@Nullable Object param, FireVisitor<T> fireVisitor,@Nullable ThrowableVisitor throwVisitor);
+	CollectionVisitService<T> fire(@Nullable Object param, FireVisitor<T> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
+	
 	
 	/**
 	 * save the current elements by target {@linkplain SaveVisitor}.
