@@ -15,6 +15,7 @@ import com.heaven7.java.visitor.util.Updatable;
  * @param <K> the key type
  * @param <V> the value type
  */
+@SuppressWarnings("deprecation")
 public class MapOperation<K, V> extends Operation {
 
 	private V mValue;
@@ -22,7 +23,6 @@ public class MapOperation<K, V> extends Operation {
 	private List<KeyValuePair<K, V>> mPairs;
 	private MapPredicateVisitor<K, V> mPredicateVisitor;
 	private MapIterateVisitor<K, V> mIterateVisitor;
-	@SuppressWarnings("deprecation")
 	private TrimMapVisitor<K, V> mTrimVisitor;
 
 	public static <K, V> MapOperation<K, V> createFilter(Object param, MapPredicateVisitor<K, V> predicate) {

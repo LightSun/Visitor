@@ -38,6 +38,7 @@ import com.heaven7.java.visitor.util.UnmodifiableMap;
  * @param <V>
  *            the value type
  */
+@SuppressWarnings("deprecation")
 public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K, V> {
 
 	private final List<KeyValuePair<K, V>> mCachePairs = new ArrayList<KeyValuePair<K, V>>();
@@ -665,7 +666,6 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 			return this;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public MapOperateManager<K, V> trim(Object param, TrimMapVisitor<K, V> visitor) {
 			checkNull(visitor);

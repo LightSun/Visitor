@@ -56,6 +56,7 @@ import com.heaven7.java.visitor.util.Map;
  * @see {@linkplain AbstractMapVisitService}
  * @see {@linkplain MapVisitServiceImpl}
  */
+@SuppressWarnings("deprecation")
 public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V>> {
 
 	/**
@@ -744,7 +745,6 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 		 * @return this.
 		 * @since 1.0.3
 		 */
-		@SuppressWarnings("deprecation")
 		public MapOperateManager<K, V> trim(@Nullable Object param, MapTrimVisitor<K, V> visitor) {
 			return trim(param, (TrimMapVisitor<K, V>) visitor);
 		}

@@ -17,7 +17,6 @@ import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.Visitors;
-import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Throwables;
 
 /**
