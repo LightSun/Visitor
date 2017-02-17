@@ -8,14 +8,16 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 import static com.heaven7.java.visitor.internal.InternalUtil.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.heaven7.java.visitor.MapFireBatchVisitor;
+import com.heaven7.java.visitor.MapFireVisitor;
 import com.heaven7.java.visitor.MapIterateVisitor;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
 import com.heaven7.java.visitor.MapSaveVisitor;
+import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.anno.Nullable;
@@ -36,6 +38,7 @@ import com.heaven7.java.visitor.util.UnmodifiableMap;
  * @param <V>
  *            the value type
  */
+@SuppressWarnings("deprecation")
 public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K, V> {
 
 	private final List<KeyValuePair<K, V>> mCachePairs = new ArrayList<KeyValuePair<K, V>>();
@@ -116,21 +119,6 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 	}
 
-	public void reset() {
-		mDeleteOp = null;
-		mFilterOp = null;
-		mTrimOp = null;
-		if (mFinalInsertOps != null) {
-			mFinalInsertOps.clear();
-		}
-		if (mUpdateOps != null) {
-			mUpdateOps.clear();
-		}
-		mOrderOps.clear();
-		mInterceptOps.clear();
-		mIterateControl.begin().end();
-	}
-
 	/**
 	 * handle the finally operations of function.
 	 * 
@@ -169,6 +157,79 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 
 	// ==================================================================//
+	
+	@Override
+	public MapVisitService<K, V> fireBatch(MapFireBatchVisitor<K, V> fireVisitor) {
+		return fireBatch(fireVisitor, null);
+	}
+	@Override
+	public MapVisitService<K, V> fireBatch(MapFireBatchVisitor<K, V> fireVisitor, ThrowableVisitor tv) {
+		return fireBatch(null, fireVisitor, tv);
+	}
+	
+	@Override
+	public MapVisitService<K, V> fireBatch(Object param, MapFireBatchVisitor<K, V> fireVisitor,
+			ThrowableVisitor tv) {
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
+		try {
+			fireVisitor.visit(list, param);
+		} catch (Exception e) {
+			processThrowable(e, tv);
+		} finally {
+			list.clear();
+		}
+		return this;
+	}
+
+	@Override
+	public MapVisitService<K, V> fire(MapFireVisitor<K, V> fireVisitor) {
+		return fire(fireVisitor, null);
+	}
+	@Override
+	public MapVisitService<K, V> fire(MapFireVisitor<K, V> fireVisitor, ThrowableVisitor throwVisitor) {
+		return fire(null, fireVisitor, throwVisitor);
+	}
+
+	@Override
+	public MapVisitService<K, V> fire(Object param, MapFireVisitor<K, V> fireVisitor, ThrowableVisitor tv) {
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
+		try {
+			for (KeyValuePair<K, V> pair : list) {
+				fireVisitor.visit(pair, param);
+			}
+		} catch (Exception e) {
+			processThrowable(e, tv);
+		} finally {
+			list.clear();
+		}
+		return this;
+	}
+
+	@Override
+	public MapVisitService<K, V> reset(int flags) {
+		if ((flags & FLAG_OPERATE_MANAGER) != 0) {
+			mDeleteOp = null;
+			mFilterOp = null;
+			mTrimOp = null;
+			if (mFinalInsertOps != null) {
+				mFinalInsertOps.clear();
+			}
+			if (mUpdateOps != null) {
+				mUpdateOps.clear();
+			}
+		}
+		if ((flags & FLAG_OPERATE_ITERATE_CONTROL) != 0) {
+			mOrderOps.clear();
+			mInterceptOps.clear();
+			mIterateControl.begin().end();
+		}
+		return this;
+	}
+
+	@Override
+	public final MapVisitService<K, V> resetAll() {
+		return reset(FLAG_OPERATE_ITERATE_CONTROL | FLAG_OPERATE_MANAGER);
+	}
 
 	@Override
 	public MapVisitService<K, V> save(Map<K, V> outMap) {
@@ -606,7 +667,6 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 			return this;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public MapOperateManager<K, V> trim(Object param, TrimMapVisitor<K, V> visitor) {
 			checkNull(visitor);

@@ -13,3 +13,6 @@
          sorted Collection VisitService  ->  Map VisitService.  sorted determined by Comparator isn't null.
          sorted Map VisitService         ->  sorted Collection VisitService
          sorted Map VisitService         ->  Map VisitService. sorted determined by Comparator isn't null.
+         
+#1.1.1
+     add fire method for visit service

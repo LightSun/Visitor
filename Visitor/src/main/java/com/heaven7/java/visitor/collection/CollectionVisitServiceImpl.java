@@ -75,6 +75,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		// init default
 		mControl.begin().end();
 	}
+	
+	//===============================================================================
+	
+
 
 	// =============================================================================//
 	@Override
@@ -169,21 +173,27 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		return true;
 	}
 
-	public void reset() {
-		mDeleteOp = null;
-		mFilterOp = null;
-		if (mInsertOps != null) {
-			mInsertOps.clear();
+	@Override
+	public CollectionVisitService<T> reset(int flags) {
+		if( (flags & FLAG_OPERATE_MANAGER) != 0 ){
+			mDeleteOp = null;
+			mFilterOp = null;
+			if (mInsertOps != null) {
+				mInsertOps.clear();
+			}
+			if (mUpdateOps != null) {
+				mUpdateOps.clear();
+			}
+			if (mFinalInsertOps != null) {
+				mFinalInsertOps.clear();
+			}
 		}
-		if (mUpdateOps != null) {
-			mUpdateOps.clear();
+		if( (flags & FLAG_OPERATE_ITERATE_CONTROL) != 0 ){
+			mOrderOps.clear();
+			mInterceptOps.clear();
+			mControl.begin().end();
 		}
-		if (mFinalInsertOps != null) {
-			mFinalInsertOps.clear();
-		}
-		mOrderOps.clear();
-		mInterceptOps.clear();
-		mControl.begin().end();
+		return this;
 	}
 
 	/**
@@ -205,6 +215,17 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			IterationInfo info) {
 
 		return false;
+	}
+	
+	/**
+	 * this is different with {@linkplain #hasExtraOperateInIteration} .
+	 * @return true if has operation .
+	 */
+	protected boolean hasOperation(){
+		if(mFinalInsertOps != null && mFinalInsertOps.size() > 0){
+			return true;
+		}
+		return hasExtraOperateInIteration();
 	}
 
 	private boolean handleInsert(Iterator<T> it, T t, Object param, final IterationInfo info) {

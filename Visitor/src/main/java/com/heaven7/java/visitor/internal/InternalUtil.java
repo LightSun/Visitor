@@ -19,14 +19,25 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 
+import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.collection.CollectionVisitService;
 import com.heaven7.java.visitor.collection.VisitServices;
+import com.heaven7.java.visitor.util.VisitException;
 /**
  * this class only used internal.
  * @author heaven7
  *
  */
 public final class InternalUtil {
+	
+	
+	public static void processThrowable(Throwable e, ThrowableVisitor tv){
+		if(tv != null){
+			tv.visit(e);
+		}else{
+			throw new VisitException(e);
+		}
+	}
 	
 	/**
 	 * get the right {@linkplain CollectionVisitService}.
