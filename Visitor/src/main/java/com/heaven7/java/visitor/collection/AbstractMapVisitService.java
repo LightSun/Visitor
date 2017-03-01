@@ -233,7 +233,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 	@Override
 	public final MapVisitService<K, V> resetAll() {
-		return reset(FLAG_OPERATE_ITERATE_CONTROL | FLAG_OPERATE_MANAGER);
+		return reset(FLAG_ALL);
 	}
 
 	@Override

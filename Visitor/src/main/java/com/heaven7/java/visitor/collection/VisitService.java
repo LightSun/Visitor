@@ -21,6 +21,10 @@ public interface VisitService<T extends VisitService<T>> {
 	int FLAG_OPERATE_ITERATE_CONTROL  = 0x00000002;
 	
 	
+	/**
+	 * contains the all flags.
+	 * @since 1.1.2
+	 */
 	int FLAG_ALL = FLAG_OPERATE_MANAGER | FLAG_OPERATE_ITERATE_CONTROL;
 	
 	

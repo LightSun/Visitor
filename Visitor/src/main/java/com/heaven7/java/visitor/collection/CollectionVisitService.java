@@ -13,6 +13,7 @@ import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.ThrowableVisitor;
+import com.heaven7.java.visitor.anno.DependOn;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
 import com.heaven7.java.visitor.internal.Cacheable;
@@ -57,6 +58,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see {@linkplain #fireBatch(FireBatchVisitor, ThrowableVisitor)}
 	 * @see {@linkplain #fireBatch(Object,FireBatchVisitor, ThrowableVisitor)}
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fireBatch(FireBatchVisitor<T> fireVisitor);
 	/**
 	 * fire the all element by target {@linkplain FireBatchVisitor} and etc.
@@ -67,6 +69,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @since 1.1.1
 	 * @see {@linkplain #fireBatch(Object,FireBatchVisitor, ThrowableVisitor)}
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fireBatch(FireBatchVisitor<T> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
 	/**
 	 * fire the all element by target {@linkplain FireBatchVisitor} and etc.
@@ -76,6 +79,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return this
 	 * @since 1.1.1
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fireBatch(@Nullable Object param, FireBatchVisitor<T> fireVisitor,@Nullable ThrowableVisitor throwVisitor);
 	
 	/**
@@ -87,6 +91,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see [{@linkplain #fire(FireVisitor, ThrowableVisitor)}
 	 * @see [{@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fire(FireVisitor<T> fireVisitor);
 	/**
 	 * fire the all element by target {@linkplain FireVisitor} and etc.
@@ -96,6 +101,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @since 1.1.1
 	 * @see [{@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fire(FireVisitor<T> fireVisitor,@Nullable ThrowableVisitor throwVisitor);
 	/**
 	 * fire the all element by target {@linkplain FireVisitor} and etc.
@@ -105,6 +111,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return this
 	 * @since 1.1.1
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fire(@Nullable Object param, FireVisitor<T> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
 	
 	
@@ -114,6 +121,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return this.
 	 * @since 1.0.3
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> save(SaveVisitor<T> visitor);
 	/**
 	 * save the current elements to the target out collection.
@@ -122,6 +130,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return this.
 	 * @since 1.0.3
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> save(Collection<T> out, boolean clearBeforeSave);
 	
 	/**
@@ -131,6 +140,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @since 1.0.3
 	 * @see {@linkplain #save(Collection, boolean)}
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> save(Collection<T> out);
 	
 	/**
@@ -142,6 +152,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.1.0
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K> MapVisitService<K,T> transformToMapAsValues(@Nullable Object param, 
 			@Nullable Comparator<? super K> comparator, ResultVisitor<? super T, K> keyVisitor);
 	
@@ -153,6 +164,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.0.2
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K> MapVisitService<K,T> transformToMapAsValues(@Nullable Object param, ResultVisitor<? super T, K> keyVisitor);
 	
 	/**
@@ -163,6 +175,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see {@linkplain #transformToMapAsValues(Object, ResultVisitor)}
 	 * @since 1.0.2
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K> MapVisitService<K,T> transformToMapAsValues(ResultVisitor<? super T, K> keyVisitor);
 	
 	/**
@@ -174,6 +187,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.1.0
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<V> MapVisitService<T,V> transformToMapAsKeys(@Nullable Object param, 
 			@Nullable Comparator<? super T> comparator, ResultVisitor<? super T, V> valueVisitor);
 	
@@ -185,6 +199,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.0.2
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<V> MapVisitService<T,V> transformToMapAsKeys(@Nullable Object param, ResultVisitor<? super T, V> valueVisitor);
 	
 	/**
@@ -195,6 +210,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see {@linkplain #transformToMapAsKeys(Object, ResultVisitor)}
 	 * @since 1.0.2
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<V> MapVisitService<T,V> transformToMapAsKeys(ResultVisitor<? super T, V> valueVisitor);
 	
 	/**
@@ -208,6 +224,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.1.0
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K,V> MapVisitService<K, V> transformToMap(@Nullable Object param,@Nullable Comparator<? super K> comparator,
 			ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
 	
@@ -221,6 +238,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.0.2
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K,V> MapVisitService<K, V> transformToMap(@Nullable Object param, ResultVisitor<? super T, K> keyVisitor, 
 			ResultVisitor<? super T, V> valueVisitor);
 	
@@ -234,6 +252,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see {@linkplain #transformToMap(Object, ResultVisitor, ResultVisitor)}
 	 * @since 1.0.2
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K,V> MapVisitService<K, V> transformToMap(ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
 
 	/**
@@ -249,6 +268,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @since 1.1.0
 	 * 
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> CollectionVisitService<R> transformToCollection(@Nullable Object param,
 			@Nullable Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor);
 	
@@ -263,6 +283,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see {@linkplain #transformToCollection(Object, Comparator, ResultVisitor)}
 	 * @since 1.0.2
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> CollectionVisitService<R> transformToCollection(@Nullable Object param, ResultVisitor<? super T, R> resultVisitor);
 	
 	/**
@@ -275,6 +296,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see {@linkplain #transformToCollection(Object, Comparator, ResultVisitor)}
 	 * @since 1.0.2
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> CollectionVisitService<R> transformToCollection(ResultVisitor<? super T, R> resultVisitor);
 	
 	//============================================================================================================
@@ -293,6 +315,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the result of this visit
 	 * @see {@linkplain #visitForResultList(Object, PredicateVisitor, ResultVisitor, List)}
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> R visitForResult(@Nullable Object param, PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor);
 	
 	/**
@@ -307,6 +330,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the result of this visit
 	 * @see {@linkplain #visitForResultList(Object, PredicateVisitor, ResultVisitor, List)}
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> R visitForResult(PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor);
 
 	/**
@@ -324,6 +348,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 *            the result type of visit.
 	 * @return the list of visit result
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> List<R> visitForResultList(@Nullable Object param, PredicateVisitor<? super T> predicate,
 			ResultVisitor<? super T, R> resultVisitor, @Nullable List<R> out);
 	
@@ -342,6 +367,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see {@linkplain #visitForResultList(Object, PredicateVisitor, ResultVisitor, List)}
 	 * @since 1.0.1
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> List<R> visitForResultList(@Nullable Object param, ResultVisitor<? super T, R> resultVisitor, @Nullable List<R> out);
 	
 	/**
@@ -357,6 +383,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 *            the result type of visit.
 	 * @return the collection of visit result
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> List<R> visitForResultList(PredicateVisitor<? super T> predicate, ResultVisitor<? super T, R> resultVisitor, @Nullable List<R> out);
 	
 	/**
@@ -372,6 +399,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the collection of visit result
 	 * @since 1.0.1
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> List<R> visitForResultList(ResultVisitor<? super T, R> resultVisitor, @Nullable List<R> out);
 
 	/**
@@ -385,6 +413,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 *            the out list, can be null.
 	 * @return the list 
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	List<T> visitForQueryList(@Nullable Object param, PredicateVisitor<? super T> predicate,@Nullable List<T> out);
 	
 	/**
@@ -396,6 +425,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 *            the out list, can be null.
 	 * @return
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	List<T> visitForQueryList(PredicateVisitor<? super T> predicate,@Nullable List<T> out);
 	
 
@@ -408,6 +438,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 *            the predicate visitor
 	 * @return the target element by find in array.
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	T visitForQuery(@Nullable Object param, PredicateVisitor<? super T> predicate);
 	
 	/**
@@ -417,6 +448,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 *            the predicate visitor
 	 * @return the target element by find in array.
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	T visitForQuery(PredicateVisitor<? super T> predicate);
 
 	/**
@@ -424,6 +456,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param param the extra parameter.
 	 * @return true if operate success.
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitAll(@Nullable Object param);
 	
 	/**
@@ -431,6 +464,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * equal to <pre>visitAll(null). </pre>
 	 * @return true if operate success.
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitAll();
 
 	/**
@@ -439,6 +473,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param breakVisitor the break visitor
 	 * @return true if operate success.
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitUntilSuccess(@Nullable Object param, IterateVisitor<? super T> breakVisitor);
 	
 	/**
@@ -446,6 +481,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param breakVisitor the break visitor
 	 * @return true if operate success.
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitUntilSuccess(IterateVisitor<? super T> breakVisitor);
 
 	/**
@@ -454,12 +490,14 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param breakVisitor the break visitor
 	 * @return true if operate success.
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitUntilFailed(@Nullable Object param, IterateVisitor<? super T> breakVisitor);
 	/**
 	 * visit the all elements until failed, but carry no extra data. by default this is same with {@linkplain #visitAll(Object)}.
 	 * @param breakVisitor the break visitor
 	 * @return true if operate success.
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitUntilFailed(IterateVisitor<? super T> breakVisitor);
 	
 	/**
