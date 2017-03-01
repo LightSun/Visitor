@@ -90,7 +90,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 
 	@Override
 	public final CollectionVisitService<T> resetAll() {
-		return reset(FLAG_OPERATE_MANAGER | FLAG_OPERATE_ITERATE_CONTROL);
+		return reset(FLAG_ALL);
 	}
 
 	@Override
@@ -256,7 +256,8 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	/**
-	 * do visit service.
+	 * do visit service. if current collection is empty, the parameter and break visitor will be ignored.
+	 * instead it will directly execute the insert-finally operation and return true.
 	 * 
 	 * @param rule
 	 *            the rule . VISIT_RULE_ALL, VISIT_RULE_UNTIL_SUCCESS or

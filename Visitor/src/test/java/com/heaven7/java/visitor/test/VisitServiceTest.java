@@ -51,6 +51,70 @@ public class VisitServiceTest extends TestCase {
 		return mStus.size();
 	}
 	
+	public void testCacheIterateControl(){
+		final int size = getStudentSize();
+		List<Student> list = new ArrayList<Student>();
+		
+		final String newNameOfStudent = "testCacheIterateControl"; 
+		final Student preStudent = mStus.get(0);
+		/**
+		 *  cache IterateControl and OperateManager.
+		 * here we just test update one and then suppose to delete it.
+		 */
+		mService.beginIterateControl()
+			.first(OP_UPDATE)
+			.second(OP_FILTER)
+			.then(OP_DELETE)
+			.last(OP_INSERT)
+			.interceptIfSuccess(OP_UPDATE) //intercept the op--->update
+			.cache().end()
+			.beginOperateManager().update(createStudent(newNameOfStudent),
+					new PredicateVisitor<Student>() {
+						@Override
+						public Boolean visit(Student t, Object param) {
+							//id = 1 is the first element of list
+							return t.getId() == 1; 
+						}
+					}).delete(new PredicateVisitor<Student>() {
+						@Override
+						public Boolean visit(Student t, Object param) {
+							assertNotSame(t.getName(), newNameOfStudent);
+							return t.getName().equals(newNameOfStudent);
+						}
+					}).cache().end()
+			.save(list, true);
+		assertEquals(size, list.size());
+		assertEquals(newNameOfStudent, list.get(0).getName());
+		
+		//before test cache, we replace the student(name is 'testCacheIterateControl' ) to previous.
+		mStus.set(0, preStudent);
+		
+		mService.save(list, true);
+		assertEquals(size, list.size());
+		assertEquals(newNameOfStudent, list.get(0).getName());
+	}
+	
+	public void testCacheOperateManager(){
+		final int size = getStudentSize();
+		List<Student> list = new ArrayList<Student>();
+		//how to delete last?
+		mService.beginOperateManager()
+		//just delete the student of id = 1
+			.filter(new PredicateVisitor<Student>() {
+				@Override
+				public Boolean visit(Student t, Object param) {
+					return t.getId() == 1;
+				}
+			}).cache().end().visitForQueryList(Visitors.truePredicateVisitor(), list);
+		assertEquals(size - 1, list.size());
+		list.clear();
+		
+		//last called cache.  so the operateManager's op is cached.
+		mService.visitForQueryList(Visitors.truePredicateVisitor(), list);
+		assertEquals(size - 1, list.size());
+		list.clear();
+	}
+	
 	public void testSave3(){
 		final int size = getStudentSize();
 		List<Student> list = new ArrayList<Student>();

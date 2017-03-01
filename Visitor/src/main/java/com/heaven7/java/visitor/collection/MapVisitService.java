@@ -15,6 +15,8 @@ import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
+import com.heaven7.java.visitor.internal.Cacheable;
+import com.heaven7.java.visitor.internal.Endable;
 import com.heaven7.java.visitor.internal.OperateInterceptor;
 import com.heaven7.java.visitor.util.Map;
 
@@ -640,8 +642,15 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param <V>
 	 *            the value type.
 	 */
-	public static abstract class MapOperateManager<K, V> {
+	public static abstract class MapOperateManager<K, V> implements Endable<MapVisitService<K, V>>,
+	         Cacheable<MapOperateManager<K, V>> {
 
+		/**
+		 * cache the setting of {@linkplain MapOperateManager}.
+		 * @since 1.1.2
+		 */
+		@Override
+		public abstract MapOperateManager<K, V> cache();
 		/**
 		 * end the operate manager and return to {@linkplain MapVisitService}.
 		 * 

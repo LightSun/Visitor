@@ -9,6 +9,9 @@ import static com.heaven7.java.visitor.internal.InternalUtil.op2String;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.heaven7.java.visitor.internal.Cacheable;
+import com.heaven7.java.visitor.internal.Endable;
+
 /**
  * the iterate control used to control the order of all operate (
  * {@linkplain VisitService#OP_FILTER}} and etc.). But
@@ -52,7 +55,7 @@ import java.util.List;
  * @see {@linkplain VisitService#OP_UPDATE}
  * @see {@linkplain VisitService#OP_INSERT}
  */
-public final class IterateControl<T> {
+public final class IterateControl<T> implements Endable<T>, Cacheable<IterateControl<T>>{
 	
 	private static final boolean DEBUG = false;
 	
@@ -87,6 +90,7 @@ public final class IterateControl<T> {
 	 * 
 	 * @return the original object
 	 */
+	@Override
 	public T end(){
 		if (DEBUG) {
 			System.out.println("the operate order is: ");
@@ -222,6 +226,16 @@ public final class IterateControl<T> {
 	}
 	
 	/**
+	 * cache the setting of current {@linkplain IterateControl}.
+	 * @since 1.1.2
+	 */
+	@Override
+	public IterateControl<T> cache() {
+		mCallback.applyCache();
+		return this;
+	}
+	
+	/**
 	 * the callback of iterate control
 	 * @author heaven7
 	 *
@@ -249,6 +263,16 @@ public final class IterateControl<T> {
 			orderOps.add(OP_INSERT);
 		}
 		
+		/**
+		 * apply the cache cmd for {@linkplain IterateControl}.
+		 * this is only called by {@linkplain IterateControl#cache()}.
+		 * Default is empty implements.
+		 * @since 1.1.2
+		 */
+		public void applyCache() {
+			
+		}
+
 		/**
 		 * check the target operate
 		 * @param op {@linkplain Operation#OP_DELETE} and etc.

@@ -14,10 +14,13 @@ import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
+import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
+import com.heaven7.java.visitor.internal.Cacheable;
+import com.heaven7.java.visitor.internal.Endable;
 import com.heaven7.java.visitor.internal.OperateInterceptor;
 
 /**
- * the super interface of 'Visit-Service'
+ * the super interface of collection 'Visit-Service'
  * @author heaven7
  *
  * @param <T> the type of element
@@ -244,6 +247,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 *           the  result visitor       
 	 * @return the new {@linkplain CollectionVisitService}.
 	 * @since 1.1.0
+	 * 
 	 */
 	<R> CollectionVisitService<R> transformToCollection(@Nullable Object param,
 			@Nullable Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor);
@@ -516,12 +520,19 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param <R> the return type for {@link #end()}}
 	 * @param <T> the parametric type of most method
 	 */
-	public static abstract class OperateManager<T> {
+	public static abstract class OperateManager<T> implements Cacheable<OperateManager<T>>,
+	         Endable<CollectionVisitService<T>>{
 
 		OperateManager() {
 			super();
 		}
-	    
+		
+		/**
+		 * cache the all operate which is set by the {@linkplain OperateManager}.
+		 * @return the original object
+		 */
+		public abstract OperateManager<T> cache() ;
+		
 		/**
 		 * end the operate and return the target object
 		 * @return the original object
@@ -659,7 +670,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		 * add a insert operation. This means: 
 		 * pending insert the element in the iteration({@linkplain Iterator} or {@linkplain ListIterator}) if possible.
 		 * But this only support for List, or else has nothing effect.
-		 * @param newT the element to insert
+		 * @param newT the new element to insert
 		 * @param param the extra parameter
 		 * @param insert the insert iterate visitor. see {@linkplain IterateVisitor}.
 		 * @return this.

@@ -67,6 +67,9 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	private IterationInfo mIterationInfo;
 
+	/** the flags of clean up, default is {@linkplain VisitService#FLAG_ALL}*/
+	private int mCleanUpFlags = FLAG_ALL ;
+
 	/* protected */ CollectionVisitServiceImpl(Collection<T> collection) {
 		super();
 		checkNull(collection);
@@ -90,7 +93,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		final IterationInfo info = initAndGetIterationInfo();
 		R r = IterateState.<T>singleIterateState().visitForResult(mCollection, hasExtraOperateInIteration(),
 				mGroupInterceptor, info, param, predicate, resultVisitor, null);
-		handleFinalInsert(param, info);
+		doLast(param);
 		return r;
 	}
 
@@ -106,7 +109,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		final IterationInfo info = initAndGetIterationInfo();
 		IterateState.<T>multipleIterateState().visitForResult(mCollection, hasExtraOperateInIteration(),
 				mGroupInterceptor, info, param, predicate, resultVisitor, out);
-		handleFinalInsert(param, info);
+		doLast(param);
 		return out;
 	}
 
@@ -120,7 +123,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		final IterationInfo info = initAndGetIterationInfo();
 		IterateState.<T>multipleIterateState().visit(mCollection, hasExtraOperateInIteration(), mGroupInterceptor, info,
 				param, predicate, out);
-		handleFinalInsert(param, info);
+		doLast(param);
 		return out;
 	}
 
@@ -131,7 +134,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		final IterationInfo info = initAndGetIterationInfo();
 		T result = IterateState.<T>singleIterateState().visit(mCollection, hasExtraOperateInIteration(),
 				mGroupInterceptor, info, param, predicate, null);
-		handleFinalInsert(param, info);
+		doLast(param);
 		return result;
 	}
 
@@ -141,12 +144,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			return false;
 		}
 		final IterationInfo info = initAndGetIterationInfo();
-
 		mGroupInterceptor.begin();
 		boolean result = visitImpl(mCollection, rule, param, mGroupInterceptor, breakVisitor, info);
 		mGroupInterceptor.end();
-
-		handleFinalInsert(param, info);
+		doLast(param);
 		return result;
 	}
 
@@ -171,6 +172,12 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			}
 		}
 		return true;
+	}
+	
+	protected void doLast(Object param){
+		handleFinalInsert(param, mIterationInfo);
+		reset(mCleanUpFlags);
+		mCleanUpFlags = FLAG_ALL;
 	}
 
 	@Override
@@ -446,7 +453,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	private class OperateManagerImpl extends OperateManager<T> {
 
 		@Override
-		public CollectionVisitServiceImpl<T> end() {
+		public CollectionVisitService<T> end() {
 			return CollectionVisitServiceImpl.this;
 		}
 
@@ -511,6 +518,12 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			return this;
 		}
 
+		@Override
+		public OperateManager<T> cache() {
+			mCleanUpFlags &= ~FLAG_OPERATE_MANAGER;
+			return this;
+		}
+
 	}
 
 	private class ControlCallbackImpl extends Callback {
@@ -526,6 +539,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			if (op < OP_DELETE || op > OP_INSERT) {
 				throw new IllegalArgumentException("unsupport opertion");
 			}
+		}
+		@Override
+		public void applyCache() {
+			mCleanUpFlags &= ~ FLAG_OPERATE_ITERATE_CONTROL;
 		}
 
 	}

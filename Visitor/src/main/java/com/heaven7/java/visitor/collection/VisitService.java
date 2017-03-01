@@ -1,5 +1,6 @@
 package com.heaven7.java.visitor.collection;
 
+import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
 
 /**
@@ -20,15 +21,20 @@ public interface VisitService<T extends VisitService<T>> {
 	int FLAG_OPERATE_ITERATE_CONTROL  = 0x00000002;
 	
 	
+	int FLAG_ALL = FLAG_OPERATE_MANAGER | FLAG_OPERATE_ITERATE_CONTROL;
+	
+	
 	/**
 	 * reset current visit service by target flags.
 	 * @param flags {@linkplain #FLAG_OPERATE_MANAGER} or {@linkplain #FLAG_OPERATE_ITERATE_CONTROL}.
 	 */
+	@Independence
 	T reset(int flags);
 	
 	/**
 	 * reset all operations. a convenient method for call {@linkplain #reset(int)} that use all flags.
 	 */
+	@Independence
 	T resetAll();
 
 }

@@ -22,6 +22,12 @@ public class Student {
 		this.courses = courses != null ? courses : genterateTestCourse();
 	}
 	
+	public void cpy(Student  stu){
+		this.id = stu.id;
+		this.name = stu.name;
+		this.courses = stu.courses;
+	}
+	
 	public static void resetId(){
 		sId = 0;
 	}

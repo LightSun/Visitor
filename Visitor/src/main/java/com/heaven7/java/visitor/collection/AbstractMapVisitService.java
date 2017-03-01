@@ -63,6 +63,9 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	private List<Integer> mOrderOps;
 	/** the intercept operate */
 	private List<Integer> mInterceptOps;
+	
+	/** the flags of clean up */
+	private int mCleanUpFlags = FLAG_ALL;
 
 	protected final Map<K, V> mMap;
 
@@ -154,6 +157,8 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		if (mTrimOp != null) {
 			mTrimOp.trim(map, param, info);
 		}
+		reset(mCleanUpFlags);
+		mCleanUpFlags = FLAG_ALL;
 	}
 
 	// ==================================================================//
@@ -580,6 +585,11 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 
 	private class IterateCallbackImpl extends Callback {
+		
+		@Override
+		public void applyCache() {
+			mCleanUpFlags &= ~FLAG_OPERATE_ITERATE_CONTROL;
+		}
 
 		@Override
 		public void saveState(List<Integer> orderOps, List<Integer> interceptOps) {
@@ -613,6 +623,12 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 
 	private class MapOperateManagerImpl extends MapOperateManager<K, V> {
+		
+		@Override
+		public MapOperateManager<K, V> cache() {
+			mCleanUpFlags &= ~FLAG_OPERATE_MANAGER;
+			return this;
+		}
 		@Override
 		public MapVisitService<K, V> end() {
 			return AbstractMapVisitService.this;

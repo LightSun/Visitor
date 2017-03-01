@@ -99,6 +99,7 @@ public class CollectionOperation<T> extends Operation{
 
 	public boolean update(ListIterator<T> lit, T t, Object defaultParam, IterationInfo info) {
 		if (shouldUpdate(t, defaultParam)) {
+			System.out.println("update success: old element = " + t + " ,new element =" + mNewElement);
 			lit.set(mNewElement);
 			info.incrementUpdate();
 			return true;
