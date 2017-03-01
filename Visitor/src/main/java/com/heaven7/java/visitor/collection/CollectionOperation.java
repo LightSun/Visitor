@@ -85,24 +85,19 @@ public class CollectionOperation<T> extends Operation{
 		this.mVisitor = null;
 	}
 
-	@SuppressWarnings({ "unchecked" })
-	public boolean update(T t, Object defaultParam,IterationInfo info) {
+	@SuppressWarnings("unchecked")
+	public boolean update(ListIterator<T> it, T t, Object defaultParam, IterationInfo info) {
 		if (shouldUpdate(t, defaultParam)) {
-			if (t instanceof Updatable) {
+			//System.out.println("update success: old element = " + t + " ,new element =" + mNewElement);
+			if(t instanceof Updatable) {
 				((Updatable<T>) t).updateFrom(mNewElement);
 				info.incrementUpdate();
 				return true;
+			}else if(it != null){
+				it.set(mNewElement);
+				info.incrementUpdate();
 			}
-		}
-		return false;
-	}
-
-	public boolean update(ListIterator<T> lit, T t, Object defaultParam, IterationInfo info) {
-		if (shouldUpdate(t, defaultParam)) {
-			System.out.println("update success: old element = " + t + " ,new element =" + mNewElement);
-			lit.set(mNewElement);
-			info.incrementUpdate();
-			return true;
+			return false;
 		}
 		return false;
 	}

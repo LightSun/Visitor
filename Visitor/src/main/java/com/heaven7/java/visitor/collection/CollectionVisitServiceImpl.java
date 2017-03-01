@@ -264,16 +264,15 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		if (mUpdates == null || mUpdates.size() == 0) {
 			return false;
 		}
-		final boolean isList = lit != null && (lit instanceof ListIterator);
+		final ListIterator<T> listIt = (lit != null && (lit instanceof ListIterator)) 
+				? (ListIterator<T>)lit : null;
 		CollectionOperation<T> op;
 		try {
 			for (int i = 0, size = mUpdates.size(); i < size; i++) {
 				op = mUpdates.get(i);
-				if (isList && op.update((ListIterator<T>) lit, t, param, info)) {
+				if (op.update(listIt, t, param, info)) {
 					return true;
-				} else if (op.update(t, param, info)) {
-					return true;
-				}
+				} 
 			}
 		} catch (UnsupportedOperationException e) {
 			System.err.println("update failed. caused by the list is fixed. "

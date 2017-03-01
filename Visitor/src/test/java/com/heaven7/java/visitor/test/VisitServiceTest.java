@@ -58,7 +58,7 @@ public class VisitServiceTest extends TestCase {
 		final String newNameOfStudent = "testCacheIterateControl"; 
 		final Student preStudent = mStus.get(0);
 		/**
-		 *  cache IterateControl and OperateManager.
+		 *  cache the setting of IterateControl and OperateManager.
 		 * here we just test update one and then suppose to delete it.
 		 */
 		mService.beginIterateControl()
