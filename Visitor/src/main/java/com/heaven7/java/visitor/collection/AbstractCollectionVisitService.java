@@ -3,6 +3,7 @@ package com.heaven7.java.visitor.collection;
 import static com.heaven7.java.visitor.internal.InternalUtil.getVisitService;
 import static com.heaven7.java.visitor.internal.InternalUtil.newMap;
 import static com.heaven7.java.visitor.internal.InternalUtil.processThrowable;
+import static com.heaven7.java.visitor.internal.InternalUtil.unmodifiable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +16,7 @@ import com.heaven7.java.visitor.FireVisitor;
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.util.Throwables;
@@ -96,6 +98,30 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	@Override
 	public CollectionVisitService<T> save(Collection<T> out) {
 		return save(out, false);
+	}
+	
+	@Override
+	public CollectionVisitService<T> save(SaveVisitor<T> visitor) {
+		Throwables.checkNull(visitor);
+		final List<T> results = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
+		try{
+		    visitor.visit(unmodifiable(results));
+		}finally{
+			results.clear();
+		}
+		return this;
+	}
+
+	@Override
+	public CollectionVisitService<T> save(Collection<T> out, boolean clearBeforeSave) {
+		Throwables.checkNull(out);
+		if (clearBeforeSave) {
+			out.clear();
+		}
+		final List<T> results = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
+		out.addAll(results);
+		results.clear();
+		return this;
 	}
 
 	@Override

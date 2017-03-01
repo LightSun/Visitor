@@ -66,7 +66,11 @@ public class VisitServiceTest extends TestCase {
 			.second(OP_FILTER)
 			.then(OP_DELETE)
 			.last(OP_INSERT)
-			.interceptIfSuccess(OP_UPDATE) //intercept the op--->update
+			/**
+			 * intercept the op--->update.
+			 * this means: the next visitor will not visit it.
+			 */
+			.interceptIfSuccess(OP_UPDATE) 
 			.cache().end()
 			.beginOperateManager().update(createStudent(newNameOfStudent),
 					new PredicateVisitor<Student>() {
@@ -83,15 +87,15 @@ public class VisitServiceTest extends TestCase {
 						}
 					}).cache().end()
 			.save(list, true);
-		assertEquals(size, list.size());
-		assertEquals(newNameOfStudent, list.get(0).getName());
+		assertEquals(size -1 , list.size());
+		assertEquals(2, list.get(0).getId());
 		
 		//before test cache, we replace the student(name is 'testCacheIterateControl' ) to previous.
 		mStus.set(0, preStudent);
 		
 		mService.save(list, true);
-		assertEquals(size, list.size());
-		assertEquals(newNameOfStudent, list.get(0).getName());
+		assertEquals(size - 1, list.size());
+		assertEquals(2, list.get(0).getId());
 	}
 	
 	public void testCacheOperateManager(){
@@ -172,7 +176,7 @@ public class VisitServiceTest extends TestCase {
 				@Override
 				public void visit(Collection<Student> o) {
 					//filter not delete. so size unchanged.
-					assertEquals(o.size(), size);
+					assertEquals(o.size(), size - 1);
 				}
 			});
 	}

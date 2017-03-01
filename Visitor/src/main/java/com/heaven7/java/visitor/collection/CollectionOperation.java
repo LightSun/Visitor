@@ -96,6 +96,7 @@ public class CollectionOperation<T> extends Operation{
 			}else if(it != null){
 				it.set(mNewElement);
 				info.incrementUpdate();
+				return true;
 			}
 			return false;
 		}
