@@ -8,6 +8,7 @@ import java.util.ListIterator;
 
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
+import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.util.Predicates;
 import com.heaven7.java.visitor.util.Updatable;
 /**
@@ -86,7 +87,7 @@ public class CollectionOperation<T> extends Operation{
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean update(ListIterator<T> it, T t, Object defaultParam, IterationInfo info) {
+	public boolean update(@Nullable ListIterator<T> it, T t, Object defaultParam, IterationInfo info) {
 		if (shouldUpdate(t, defaultParam)) {
 			//System.out.println("update success: old element = " + t + " ,new element =" + mNewElement);
 			if(t instanceof Updatable) {

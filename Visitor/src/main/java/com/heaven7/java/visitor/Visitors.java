@@ -12,6 +12,11 @@ import com.heaven7.java.visitor.collection.KeyValuePair;
 public final class Visitors {
 
 	private Visitors(){}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> ResultVisitor<T, String> toStringVisitor(){
+		return (ResultVisitor<T, String>) sDefaultStringVisitor;
+	}
 	/**
 	 * @param <T>
 	 *            the element type
@@ -193,6 +198,13 @@ public final class Visitors {
 		@Override
 		public Boolean visit(Object t, Object param, IterationInfo info) {
 			return Boolean.FALSE;
+		}
+	};
+	private static final ResultVisitor<Object, String> sDefaultStringVisitor = 
+			new ResultVisitor<Object, String>() {
+		@Override
+		public String visit(Object t, Object param) {
+			return t.toString();
 		}
 	};
 

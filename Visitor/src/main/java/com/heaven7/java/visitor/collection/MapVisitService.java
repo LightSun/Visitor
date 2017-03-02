@@ -685,9 +685,9 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 
 		/**
 		 * cache the setting of {@linkplain MapOperateManager}.
+		 * @return this
 		 * @since 1.1.2
 		 */
-		@Override
 		public abstract MapOperateManager<K, V> cache();
 		/**
 		 * end the operate manager and return to {@linkplain MapVisitService}.

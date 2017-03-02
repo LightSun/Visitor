@@ -14,6 +14,7 @@ import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.anno.DependOn;
+import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
 import com.heaven7.java.visitor.internal.Cacheable;
@@ -27,7 +28,7 @@ import com.heaven7.java.visitor.internal.OperateInterceptor;
  * @param <T> the type of element
  * @see AbstractCollectionVisitService
  * @see CollectionVisitServiceImpl
- * @see ListVisitService
+ * @see ListVisitServiceImpl
  */
 //TODO need visitFirst/ visitLast / ?
 public interface CollectionVisitService<T> extends VisitService<CollectionVisitService<T>>{
@@ -514,6 +515,26 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	OperateManager<T> beginOperateManager();
 	
+	//=======================================================================================
+	
+	/**
+	 * cast to {@linkplain ListVisitService} if can.
+	 * @return {@linkplain ListVisitService}.
+	 * @throws UnsupportedOperationException if the collection isn't list.
+	 * @since 1.1.2
+	 */
+	ListVisitService<T> asListService() throws UnsupportedOperationException;
+	
+	/**
+	 * the size of collection
+	 * @return the size
+	 * @since 1.1.2
+	 */
+	@Independence
+	int size();
+	
+	//=======================================================================================
+	
 	/**
 	 * the operate interceptor in iteration({@linkplain Iterator} or [{@linkplain ListIterator}) for {@linkplain Collection}.
 	 * @author heaven7
@@ -555,7 +576,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 *  </ul>
 	 * @author heaven7
 	 *
-	 * @param <R> the return type for {@link #end()}}
+	 * @param <R> the return type for {@link #end()}
 	 * @param <T> the parametric type of most method
 	 */
 	public static abstract class OperateManager<T> implements Cacheable<OperateManager<T>>,
@@ -568,6 +589,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		/**
 		 * cache the all operate which is set by the {@linkplain OperateManager}.
 		 * @return the original object
+		 * @since 1.1.2
 		 */
 		public abstract OperateManager<T> cache() ;
 		

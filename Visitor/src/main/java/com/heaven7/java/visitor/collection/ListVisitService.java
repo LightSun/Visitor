@@ -1,130 +1,86 @@
 package com.heaven7.java.visitor.collection;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.Comparator;
 import java.util.List;
-import java.util.ListIterator;
 
-import com.heaven7.java.visitor.IterateVisitor;
+import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.anno.Independence;
+import com.heaven7.java.visitor.anno.Nullable;
+
 /**
- * list visit service
+ * list visit service 
  * @author heaven7
  *
- * @param <T> the element type
+ * @param <T> the element type.
+ * @since 1.1.2
  */
-final class ListVisitService<T> extends CollectionVisitServiceImpl<T> implements CollectionVisitService<T>  {
+@Independence("all methods is independent in here.")
+public interface ListVisitService<T> extends CollectionVisitService<T>{
 
-	protected ListVisitService(List<T> collection) {
-		super(collection);
-	}
+	/**
+	 * get a sub visit service by the target start index and count.
+	 * @param start the start index of list
+	 * @param count the count of you want 
+	 * @return a instance of {@linkplain ListVisitService}
+	 * @since 1.1.2
+	 */
+	ListVisitService<T> subService(int start, int count);
 	
-	@Override
-	protected boolean visitImpl(Collection<T> collection, int rule, Object param, CollectionOperateInterceptor<T> interceptor,
-			IterateVisitor<? super T> breakVisitor, final IterationInfo info) {
-
-		final boolean hasExtra = hasExtraOperateInIteration();
-		final Iterator<T> it = ((List<T>) collection).listIterator();
-		
-		boolean result = false;
-		Boolean visitResult;
-		T t;
-
-		//list support break
-		switch (rule) {
-		case VISIT_RULE_UNTIL_FAILED: {
-			if(hasExtra){
-				for (; it.hasNext();) {
-					t = it.next();
-					if (interceptor.intercept(it, t, param, info)) {
-						continue;
-					}
-					visitResult = breakVisitor.visit(t, param, info);
-					if (visitResult == null || !visitResult) {
-						result = true;
-						break;
-					}
-				}
-			}else{
-				for (; it.hasNext();) {
-					t = it.next();
-					visitResult = breakVisitor.visit(t, param, info);
-					if (visitResult == null || !visitResult) {
-						result = true;
-						break;
-					}
-				}
-			}
-		}
-			break;
-
-		case VISIT_RULE_UNTIL_SUCCESS: {
-			if(hasExtra){
-				for (; it.hasNext();) {
-					t = it.next();
-					if (interceptor.intercept(it, t, param, info)) {
-						continue;
-					}
-					
-					visitResult = breakVisitor.visit(t, param, info);
-					if (visitResult != null && visitResult) {
-						result = true;
-						break;
-					}
-				}
-			}else{
-				for (; it.hasNext();) {
-					t = it.next();
-					
-					visitResult = breakVisitor.visit(t, param, info);
-					if (visitResult != null && visitResult) {
-						result = true;
-						break;
-					}
-				}
-			}
-		}
-			break;
-
-		case VISIT_RULE_ALL: {
-			if(hasExtra){
-				for (; it.hasNext();) {
-					t = it.next();
-					interceptor.intercept(it, t, param, info);
-				}
-			}
-			result = true;
-		}
-			break;
-
-		default:
-			throw new RuntimeException("unsupport rule = " + rule);
-		}
-		return result;
-	}
-
-	@Override
-	protected boolean onHandleInsert(List<CollectionOperation<T>> inserts, Iterator<T> it, T t, Object param,
-			IterationInfo info) {
-		final ListIterator<T> lit = (ListIterator<T>) it;
-		info.setCurrentIndex(lit.previousIndex());
-
-		//final boolean hasInfo = info != null;
-		try {
-			CollectionOperation<T> op;
-			for (ListIterator<CollectionOperation<T>> olit = inserts.listIterator(); olit.hasNext();) {
-				op = olit.next();
-				if (op.insert(lit, t, param, info)) {
-					//info update: impl move to internal
-					return true;
-				}
-			}
-		} catch (UnsupportedOperationException e) {
-			System.err.println("insert failed. caused by the list is fixed. "
-					+ "so can't modified. are your list comes from 'Arrays.asList(...)' ? ");
-		}
-		return false;
-	}
+	/**
+	 * return a sub visit service .from current ListVisitService.
+	 * @param count the count from the first element of list
+	 * @return {@linkplain ListVisitService}
+	 * @since 1.1.2
+	 */
+	ListVisitService<T> headService(int count);
 	
+	/**
+	 * return a sub visit service. from current ListVisitService. 
+	 * <ul>
+	 * <li>from index is list.size - count.
+	 *  <li>to index is list.size.
+	 *  </ul>
+	 * @param count the count from the last element of list
+	 * @return {@linkplain ListVisitService}
+	 * @since 1.1.2
+	 */
+	ListVisitService<T> tailService(int count);
 	
-
+	/**
+	 * reverse the order of list. this is equal to 
+	 * <p>reverseService(true)
+	 * @return {@linkplain ListVisitService}
+	 * @since 1.1.2
+	 */
+	ListVisitService<T> reverseService();
+	
+	/**
+	 * reverse the order of list
+	 * @param reverseOriginList true to reverse the origin list.false otherwise.
+	 * @return {@linkplain ListVisitService}
+	 * @since 1.1.2
+	 */
+	ListVisitService<T> reverseService(boolean reverseOriginList);
+	
+	ListVisitService<T> shuffleService(boolean shuffleOriginlist);
+	
+	ListVisitService<T> shuffleService();
+	
+	ListVisitService<T> sortService(Comparator<? super T> c);
+	
+	ListVisitService<T> sortService(Comparator<? super T> c, boolean sortOriginList);
+	
+	//TODO <K, V> MapVisitService<K, List<T>> listGroupMapService(ResultVisitor<T, K> keyVisitor);
+	
+	//==================== String ===========================
+	ListVisitService<String> joinToStringService(String joinMark, int everyGroupCount);
+	
+	ListVisitService<String> joinToStringService(@Nullable Object param, 
+			ResultVisitor<T, String> stringVisitor, String joinMark, int everyGroupCount);
+	
+	ListVisitService<String> joinToStringService(ResultVisitor<T, String> stringVisitor,
+			String joinMark, int everyGroupCount);
+	
+	String joinToString(String joinMark);
+	//========================= end string ========================
 }

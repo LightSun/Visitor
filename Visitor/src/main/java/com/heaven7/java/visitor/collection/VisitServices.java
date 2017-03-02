@@ -19,7 +19,7 @@ import com.heaven7.java.visitor.util.SparseArray2Map;
 public final class VisitServices {
 
 	/**
-	 * create {@linkplain CollectionVisitServiceImpl} from the target
+	 * create {@linkplain CollectionVisitService} from the target
 	 * collection. <br>
 	 * <b>Note: don't use {@linkplain Arrays#asList(Object...)} in here. </b>
 	 * 
@@ -34,7 +34,7 @@ public final class VisitServices {
 	}
 
 	/**
-	 * create {@linkplain CollectionVisitServiceImpl} from the target list.<br>
+	 * create {@linkplain ListVisitService} from the target list.<br>
 	 * <b>Note: don't use {@linkplain Arrays#asList(Object...)} in here. </b>
 	 * 
 	 * @param <T>
@@ -43,8 +43,8 @@ public final class VisitServices {
 	 *            the target list.
 	 * @return an instance of {@linkplain CollectionVisitServiceImpl}
 	 */
-	public static <T> CollectionVisitService<T> from(List<T> list) {
-		return new ListVisitService<T>(list);
+	public static <T> ListVisitService<T> from(List<T> list) {
+		return new ListVisitServiceImpl<T>(list);
 	}
 
 	/**

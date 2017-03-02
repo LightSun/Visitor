@@ -29,7 +29,7 @@ import com.heaven7.java.visitor.util.Throwables;
  * @param <T>
  *            the type
  * @see CollectionVisitServiceImpl
- * @see ListVisitService
+ * @see ListVisitServiceImpl
  */
 public abstract class AbstractCollectionVisitService<T> implements CollectionVisitService<T> {
 
@@ -203,7 +203,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 			ResultVisitor<? super T, R> resultVisitor) {
 		Throwables.checkNull(resultVisitor);
 		return getVisitService(visitForResultList(param, resultVisitor, null), sort,
-				(this instanceof ListVisitService));
+				(this instanceof ListVisitServiceImpl));
 	}
 
 	@Override
@@ -295,5 +295,14 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	 * @return true if operate success.
 	 */
 	protected abstract boolean visit(int rule, Object param, IterateVisitor<? super T> breakVisitor);
+	
+	//=======================================
+	
+	@Override
+	public ListVisitService<T> asListService() throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
+	
+	//===================================================
 
 }

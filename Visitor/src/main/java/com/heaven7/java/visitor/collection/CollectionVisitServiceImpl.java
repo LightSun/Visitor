@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.SortedSet;
 
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
@@ -29,12 +30,14 @@ import com.heaven7.java.visitor.util.SparseArray;
  *
  * @param <T>
  *            the type of element
- * @see ListVisitService
+ * @see ListVisitServiceImpl
  */
 public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitService<T>
 		implements CollectionVisitService<T> {
 
 	protected static final boolean DEBUG = true;
+	
+	private final Collection<T> mCollection;
 
 	/** the ordered operate */
 	private List<Integer> mOrderOps;
@@ -45,11 +48,6 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	/** the operate interceptor */
 	private final GroupOperateInterceptor mGroupInterceptor = new GroupOperateInterceptor();
 	private OperateManager<T> mOpManager;
-
-	// OP_QUERY ;
-	// limitSize ,limit filter size. limit null size.
-
-	private final Collection<T> mCollection;
 
 	/** the all Operation/operate of insert in iteration */
 	private List<CollectionOperation<T>> mInsertOps;
@@ -78,7 +76,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	
 	//===============================================================================
 	
-
+	@Override
+	public int size() {
+		return mCollection.size();
+	}
 
 	// =============================================================================//
 	@Override
@@ -175,6 +176,18 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		handleFinalInsert(param, mIterationInfo);
 		reset(mCleanUpFlags);
 		mCleanUpFlags = FLAG_ALL;
+	}
+	protected List<T> asList(){
+		if(mCollection instanceof List){
+			return (List<T>) mCollection;
+		}
+		throw new UnsupportedOperationException();
+	}
+	protected SortedSet<T> asSortedSet(){
+		if(mCollection instanceof SortedSet){
+			return (SortedSet<T>) mCollection;
+		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

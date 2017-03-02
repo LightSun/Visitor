@@ -11,12 +11,13 @@ import com.heaven7.java.visitor.collection.IterateControl;
 /**
  * indicate the method is used independent, other-operate will not effect this method.
  * this is different with thread safe.
- * in visitor library ,other-operate:  such as any sub of {@linkplain OperateManager}, {@linkplain IterateControl}.
+ * <p>in visitor library ,what is other-operate? 
+ *   eg: any sub of {@linkplain OperateManager}, {@linkplain IterateControl}.
  * @author heaven7
  * @since 1.1.2
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.TYPE})
 public @interface Independence {
 	
 	/**
