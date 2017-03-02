@@ -457,6 +457,11 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	public MapVisitService.MapOperateManager<K, V> beginOperateManager() {
 		return mOpManager == null ? (mOpManager = new MapOperateManagerImpl()) : mOpManager;
 	}
+	
+	@Override
+	public int size() {
+		return mMap.size();
+	}
 	// ======================================================
 
 	protected boolean handleDelete(Map<K, V> map, KeyValuePair<K, V> pair, Object param, IterationInfo info) {

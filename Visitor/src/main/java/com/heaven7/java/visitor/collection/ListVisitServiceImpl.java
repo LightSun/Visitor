@@ -1,5 +1,7 @@
 package com.heaven7.java.visitor.collection;
 
+import static com.heaven7.java.visitor.util.Throwables.checkNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,11 +9,13 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.anno.Nullable;
+import com.heaven7.java.visitor.internal.InternalUtil;
 
 /**
  * list visit service
@@ -32,7 +36,7 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 	}
 
 	// ==============================================================
-
+	
 	@Override
 	public ListVisitService<T> asListService() throws UnsupportedOperationException {
 		return this;
@@ -272,6 +276,37 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 		}
 		joinToStringService(joinMark, Integer.MAX_VALUE).save(mTempStrs, true);
 		return mTempStrs.size() > 0 ? mTempStrs.get(0) : "";
+	}
+	
+	@Override
+	public <K> MapVisitService<K, List<T>> groupService(ResultVisitor<T, K> keyVisitor) {
+		return groupService(null, keyVisitor);
+	}
+	
+	@Override
+	public <K> MapVisitService<K, List<T>> groupService(@Nullable Object param, 
+			ResultVisitor<T, K> keyVisitor) {
+		return groupService(param, keyVisitor, Visitors.<T,T>unchangeResultVisitor());
+	}
+
+	@Override
+	public <K, V> MapVisitService<K, List<V>> groupService(Object param, ResultVisitor<T, K> keyVisitor,
+			ResultVisitor<T, V> valueVisitor) {
+		checkNull(keyVisitor);
+		final List<T> list = asList();
+		final Map<K, List<V>> map = InternalUtil.newMap(null);
+		List<V> val;
+		K key;
+		for(T t : list){
+			key = keyVisitor.visit(t, param);
+			val = map.get(key);
+			if(val == null){
+				val = new ArrayList<V>();
+				map.put(key, val);
+			}
+			val.add(valueVisitor.visit(t, param));
+		}
+		return VisitServices.from(map);
 	}
 
 }

@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.SortedSet;
 
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
@@ -20,6 +19,7 @@ import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.IterateControl.Callback;
 import com.heaven7.java.visitor.internal.state.IterateState;
+import com.heaven7.java.visitor.util.Collections2;
 import com.heaven7.java.visitor.util.SparseArray;
 
 /**
@@ -177,17 +177,9 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		reset(mCleanUpFlags);
 		mCleanUpFlags = FLAG_ALL;
 	}
+	
 	protected List<T> asList(){
-		if(mCollection instanceof List){
-			return (List<T>) mCollection;
-		}
-		throw new UnsupportedOperationException();
-	}
-	protected SortedSet<T> asSortedSet(){
-		if(mCollection instanceof SortedSet){
-			return (SortedSet<T>) mCollection;
-		}
-		throw new UnsupportedOperationException();
+		return Collections2.asList(mCollection);
 	}
 
 	@Override

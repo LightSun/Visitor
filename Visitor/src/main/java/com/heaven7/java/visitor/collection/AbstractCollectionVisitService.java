@@ -19,6 +19,7 @@ import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.Visitors;
+import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Throwables;
 
 /**
@@ -38,7 +39,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	protected AbstractCollectionVisitService() {
 		super();
 	}
-	
+
 	@Override
 	public CollectionVisitService<T> fireBatch(FireBatchVisitor<T> visitor) {
 		return fireBatch(visitor, null);
@@ -48,10 +49,9 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	public CollectionVisitService<T> fireBatch(FireBatchVisitor<T> visitor, ThrowableVisitor tv) {
 		return fireBatch(null, visitor, tv);
 	}
-	
+
 	@Override
-	public CollectionVisitService<T> fireBatch(Object param, FireBatchVisitor<T> visitor,
-			ThrowableVisitor tv) {
+	public CollectionVisitService<T> fireBatch(Object param, FireBatchVisitor<T> visitor, ThrowableVisitor tv) {
 		Throwables.checkNull(visitor);
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
 		try {
@@ -63,12 +63,12 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 		}
 		return this;
 	}
-	
+
 	@Override
 	public CollectionVisitService<T> fire(FireVisitor<T> fireVisitor) {
 		return fire(fireVisitor, null);
 	}
-	
+
 	@Override
 	public CollectionVisitService<T> fire(FireVisitor<T> visitor, ThrowableVisitor tv) {
 		return fire(null, visitor, tv);
@@ -99,14 +99,14 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	public CollectionVisitService<T> save(Collection<T> out) {
 		return save(out, false);
 	}
-	
+
 	@Override
 	public CollectionVisitService<T> save(SaveVisitor<T> visitor) {
 		Throwables.checkNull(visitor);
 		final List<T> results = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
-		try{
-		    visitor.visit(unmodifiable(results));
-		}finally{
+		try {
+			visitor.visit(unmodifiable(results));
+		} finally {
 			results.clear();
 		}
 		return this;
@@ -122,6 +122,77 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 		out.addAll(results);
 		results.clear();
 		return this;
+	}
+	
+	@Override
+	public <K> MapVisitService<K, List<T>> transformToMapByGroup(ResultVisitor<T, K> keyVisitor) {
+		return transformToMapByGroup(null, keyVisitor);
+	}
+	
+	@Override
+	public <K> MapVisitService<K, List<T>> transformToMapByGroup(Comparator<? super K> comparator,
+			ResultVisitor<T, K> keyVisitor) {
+		return transformToMapByGroup(null, comparator, keyVisitor);
+	}
+	
+	@Override
+	public <K> MapVisitService<K, List<T>> transformToMapByGroup(Object param, 
+			Comparator<? super K> comparator, ResultVisitor<T, K> keyVisitor) {
+		Throwables.checkNull(keyVisitor);
+		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
+		try {
+			final Map<K, List<T>> map = InternalUtil.newMap(comparator);
+			K key;
+			List<T> value;
+			for (T t : list) {
+				key = keyVisitor.visit(t, param);
+				value = map.get(key);
+				if (value == null) {
+					value = new ArrayList<T>();
+					map.put(key, value);
+				}
+				value.add(t);
+			}
+			return VisitServices.from(map);
+		} finally {
+			list.clear();
+		}
+	}
+	
+	@Override
+	public <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(ResultVisitor<T, K> keyVisitor,
+			ResultVisitor<T, V> valueVisitor) {
+		return transformToMapByGroupValue(null, keyVisitor, valueVisitor);
+	}
+	@Override
+	public <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(Comparator<? super K> comparator,
+			ResultVisitor<T, K> keyVisitor, ResultVisitor<T, V> valueVisitor) {
+		return transformToMapByGroupValue(null , comparator, keyVisitor, valueVisitor);
+	}
+
+	@Override
+	public <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(Object param, Comparator<? super K> comparator,
+			ResultVisitor<T, K> keyVisitor, ResultVisitor<T, V> valueVisitor) {
+		Throwables.checkNull(keyVisitor);
+		Throwables.checkNull(valueVisitor);
+		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
+		try {
+			final Map<K, List<V>> map = InternalUtil.newMap(comparator);
+			K key;
+			List<V> value;
+			for (T t : list) {
+				key = keyVisitor.visit(t, param);
+				value = map.get(key);
+				if (value == null) {
+					value = new ArrayList<V>();
+					map.put(key, value);
+				}
+				value.add(valueVisitor.visit(t, param));
+			}
+			return VisitServices.from(map);
+		} finally {
+			list.clear();
+		}
 	}
 
 	@Override
@@ -203,7 +274,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 			ResultVisitor<? super T, R> resultVisitor) {
 		Throwables.checkNull(resultVisitor);
 		return getVisitService(visitForResultList(param, resultVisitor, null), sort,
-				(this instanceof ListVisitServiceImpl));
+				(this instanceof ListVisitService));
 	}
 
 	@Override
@@ -282,8 +353,9 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	/**
-	 * do visit service. if current collection is empty, the parameter and break visitor will be ignored.
-	 * instead it will directly execute the insert-finally operation and return true.
+	 * do visit service. if current collection is empty, the parameter and break
+	 * visitor will be ignored. instead it will directly execute the
+	 * insert-finally operation and return true.
 	 * 
 	 * @param rule
 	 *            the rule . VISIT_RULE_ALL, VISIT_RULE_UNTIL_SUCCESS or
@@ -295,14 +367,14 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	 * @return true if operate success.
 	 */
 	protected abstract boolean visit(int rule, Object param, IterateVisitor<? super T> breakVisitor);
-	
-	//=======================================
-	
+
+	// =======================================
+
 	@Override
 	public ListVisitService<T> asListService() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
-	
-	//===================================================
+
+	// ===================================================
 
 }

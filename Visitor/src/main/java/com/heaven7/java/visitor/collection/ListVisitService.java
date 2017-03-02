@@ -62,25 +62,118 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 */
 	ListVisitService<T> reverseService(boolean reverseOriginList);
 	
+	/**
+	 * shuffle the collection.
+	 * @param shuffleOriginlist shuffle the origin list or not.
+	 * @return this or new {@linkplain ListVisitService}
+	 * @since 1.1.2
+	 */
 	ListVisitService<T> shuffleService(boolean shuffleOriginlist);
 	
+	/**
+	 * shuffle the collection.
+	 * @param shuffleOriginlist shuffle the origin list or not.
+	 * @return this
+	 * @since 1.1.2
+	 */
 	ListVisitService<T> shuffleService();
 	
+	/**
+	 * sort the collection.
+	 * @param c the comparator used to sort.
+	 * @return this
+	 * @see {@linkplain #sortService(Comparator, boolean)}
+	 * @since 1.1.2
+	 */
 	ListVisitService<T> sortService(Comparator<? super T> c);
 	
+	/**
+	 * sort the collection.
+	 * @param c the comparator used to sort.
+	 * @param sortOriginList sort the origin list or not.
+	 * @return this or new {@linkplain ListVisitService}
+	 * @see {@linkplain #sortService(Comparator)}
+	 * @since 1.1.2
+	 */
 	ListVisitService<T> sortService(Comparator<? super T> c, boolean sortOriginList);
 	
-	//TODO <K, V> MapVisitService<K, List<T>> listGroupMapService(ResultVisitor<T, K> keyVisitor);
+	/**
+	 * group the collection to {@linkplain MapVisitService}.
+	 * @param <K> the key type
+	 * @param keyVisitor the key visitor.
+	 * @return {@linkplain MapVisitService}
+	 * @see {@linkplain #groupService(Object, ResultVisitor, ResultVisitor)}
+	 * @see {@linkplain #groupService(ResultVisitor, ResultVisitor)}
+	 * @since 1.1.2
+	 */
+	<K> MapVisitService<K, List<T>> groupService(ResultVisitor<T, K> keyVisitor);
+	
+	/**
+	 * group the collection to {@linkplain MapVisitService}.
+	 * @param <K> the key type
+	 * @param param the parameter which is used to visitor.
+	 * @param keyVisitor the key visitor.
+	 * @return {@linkplain MapVisitService}
+	 * @see {@linkplain #groupService(Object, ResultVisitor, ResultVisitor)}
+	 * @see {@linkplain #groupService(ResultVisitor)}
+	 * @since 1.1.2
+	 */
+	<K> MapVisitService<K, List<T>> groupService(@Nullable Object param, ResultVisitor<T, K> keyVisitor);
+	
+	/**
+	 * group the collection to {@linkplain MapVisitService}.
+	 * @param <K> the key type
+	 * @param <V> the type of list value
+	 * @param param the parameter which is used to visitor.
+	 * @param keyVisitor the key visitor.
+	 * @param valueVisitor the value visitor.
+	 * @return {@linkplain MapVisitService}
+	 * @see {@linkplain #groupService(Object, ResultVisitor, ResultVisitor)}
+	 * @see {@linkplain #groupService(ResultVisitor)}
+	 * @since 1.1.2
+	 */
+	<K, V> MapVisitService<K, List<V>> groupService(@Nullable Object param, ResultVisitor<T, K> keyVisitor,
+			ResultVisitor<T, V>  valueVisitor);
 	
 	//==================== String ===========================
+	/**
+	 * join or concat the group elements to string list.
+	 * @param joinMark the join/concat mark
+	 * @param everyGroupCount the count of every group.may last group's smaller than this. 
+	 * @return String ListVisitService
+	 * @since 1.1.2
+	 */
 	ListVisitService<String> joinToStringService(String joinMark, int everyGroupCount);
 	
+	/**
+	 * join or concat the group elements to string list.
+	 * @param param the parameter which is used by visitor.
+	 * @param stringVisitor the result visitor.
+	 * @param joinMark the join/concat mark
+	 * @param everyGroupCount the count of every group.may last group's smaller than this. 
+	 * @return String ListVisitService
+	 * @since 1.1.2
+	 */
 	ListVisitService<String> joinToStringService(@Nullable Object param, 
 			ResultVisitor<T, String> stringVisitor, String joinMark, int everyGroupCount);
 	
+	/**
+	 * join or concat the group elements to string list.
+	 * @param stringVisitor the result visitor.
+	 * @param joinMark the join/concat mark
+	 * @param everyGroupCount the count of every group.may last group's smaller than this. 
+	 * @return String ListVisitService
+	 * @since 1.1.2
+	 */
 	ListVisitService<String> joinToStringService(ResultVisitor<T, String> stringVisitor,
 			String joinMark, int everyGroupCount);
 	
+	/**
+	 * join or concat the all elements to a string.
+	 * @param joinMark the join/concat mark
+	 * @return a join string result
+	 * @since 1.1.2
+	 */
 	String joinToString(String joinMark);
 	//========================= end string ========================
 }

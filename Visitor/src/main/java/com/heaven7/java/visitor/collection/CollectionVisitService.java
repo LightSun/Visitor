@@ -145,6 +145,95 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	CollectionVisitService<T> save(Collection<T> out);
 	
 	/**
+	 * transform to map visit service by group.
+	 * @param <K> the key type 
+	 * @param param the parameter
+	 * @param comparator the comparator to sort key if you want to transform to sorted map.
+	 * @param keyVisitor the key visitor
+	 * @return a grouped map visit service.
+	 * @see {@linkplain #transformToMapByGroup(Comparator, ResultVisitor)}
+	 * @see {@linkplain #transformToMapByGroup(ResultVisitor)}
+	 * @since 1.1.2
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K> MapVisitService<K, List<T>> transformToMapByGroup(@Nullable Object param, 
+			@Nullable Comparator<? super K> comparator,  ResultVisitor<T, K> keyVisitor);
+	
+	/**
+	 * transform to map visit service by group.
+	 * @param <K> the key type 
+	 * @param comparator the comparator to sort key if you want to transform to sorted map.
+	 * @param keyVisitor the key visitor
+	 * @return a grouped map visit service.
+	 * @see {@linkplain #transformToMapByGroup(ResultVisitor)}
+	 * @see {@linkplain #transformToMapByGroup(Object,Comparator, ResultVisitor)}
+	 * @since 1.1.2
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K> MapVisitService<K, List<T>> transformToMapByGroup( @Nullable Comparator<? super K> comparator,
+			ResultVisitor<T, K> keyVisitor);
+	
+	/**
+	 * transform to simple map visit service by group.
+	 * @param <K> the key type 
+	 * @param keyVisitor the key visitor
+	 * @return a grouped map visit service.
+	 * @see {@linkplain #transformToMapByGroup(Comparator, ResultVisitor)}
+	 * @see {@linkplain #transformToMapByGroup(Object,Comparator, ResultVisitor)}
+	 * @since 1.1.2
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K> MapVisitService<K, List<T>> transformToMapByGroup(ResultVisitor<T, K> keyVisitor);
+	
+	/**
+	 * transform to map visit service by group value which is indicate by valueVisitor.
+	 * @param <K> the key type 
+	 * @param <V> the type of List value
+	 * @param param the parameter
+	 * @param comparator the comparator to sort key if you want to transform to sorted map.
+	 * @param keyVisitor the key visitor
+	 * @param valueVisitor the value visitor.
+	 * @return a grouped map visit service.
+	 * @see {@linkplain #transformToMapByGroupValue(Comparator, ResultVisitor, ResultVisitor)}
+	 * @see {@linkplain #transformToMapByGroupValue(ResultVisitor, ResultVisitor)}
+	 * @since 1.1.2
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(@Nullable Object param, Comparator<? super K> comparator, 
+			ResultVisitor<T, K> keyVisitor, ResultVisitor<T, V>  valueVisitor);
+	
+	/**
+	 * transform to map visit service by group value which is indicate by valueVisitor.
+	 * @param <K> the key type 
+	 * @param <V> the type of List value
+	 * @param comparator the comparator to sort key if you want to transform to sorted map.
+	 * @param keyVisitor the key visitor
+	 * @param valueVisitor the value visitor.
+	 * @return a grouped map visit service.
+	 * @see {@linkplain #transformToMapByGroupValue(Object,Comparator, ResultVisitor, ResultVisitor)}
+	 * @see {@linkplain #transformToMapByGroupValue(ResultVisitor, ResultVisitor)}
+	 * @since 1.1.2
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(Comparator<? super K> comparator, 
+			ResultVisitor<T, K> keyVisitor, ResultVisitor<T, V>  valueVisitor);
+	
+	/**
+	 * transform to simple map visit service by group value which is indicate by valueVisitor.
+	 * @param <K> the key type 
+	 * @param <V> the type of List value
+	 * @param keyVisitor the key visitor
+	 * @param valueVisitor the value visitor.
+	 * @return a grouped map visit service.
+	 * @see {@linkplain #transformToMapByGroupValue(Object,Comparator, ResultVisitor, ResultVisitor)}
+	 * @see {@linkplain #transformToMapByGroupValue(ResultVisitor, ResultVisitor)}
+	 * @since 1.1.2
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(ResultVisitor<T, K> keyVisitor,
+			ResultVisitor<T, V>  valueVisitor);
+	
+	/**
 	 * transform this service to map service. And the value type is T.
 	 * @param <K> the key type
 	 * @param param the extra parameter

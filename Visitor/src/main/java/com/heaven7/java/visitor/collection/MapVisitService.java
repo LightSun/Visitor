@@ -14,6 +14,7 @@ import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
 import com.heaven7.java.visitor.anno.DependOn;
+import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
 import com.heaven7.java.visitor.internal.Cacheable;
@@ -639,6 +640,14 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @return the iterate control.
 	 */
 	MapOperateManager<K, V> beginOperateManager();
+	
+	/**
+	 * count the size of map.
+	 * @return the size of map
+	 * @since 1.1.2
+	 */
+	@Independence
+	int size();
 
 	/**
 	 * an {@linkplain OperateInterceptor} which used for map.
