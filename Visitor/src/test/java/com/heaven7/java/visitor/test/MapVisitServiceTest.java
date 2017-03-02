@@ -2,6 +2,7 @@ package com.heaven7.java.visitor.test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -12,6 +13,7 @@ import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
 import com.heaven7.java.visitor.MapSaveVisitor;
 import com.heaven7.java.visitor.MapTrimVisitor;
+import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.collection.IterationInfo;
@@ -36,6 +38,22 @@ public class MapVisitServiceTest extends TestCase {
 			map.put("key_" + i, i);
 		}
 		service = VisitServices.from(map);
+	}
+	
+	public void testTransformToCollection2(){
+		//service.transformToCollection2().asListService(); //must cause exception
+		int size = service.transformToCollection2(new Comparator<KeyValuePair<String,Integer>>() {
+			@Override
+			public int compare(KeyValuePair<String, Integer> o1, KeyValuePair<String, Integer> o2) {
+				return o1.getValue().compareTo(o2.getValue());
+			}
+		}).asListService().save(new SaveVisitor<KeyValuePair<String,Integer>>() {
+			@Override
+			public void visit(Collection<KeyValuePair<String, Integer>> collection) {
+				System.out.println(collection);
+			}
+		}).size();
+		assertEquals(SIZE, size);
 	}
 	
 	public void testFire2(){

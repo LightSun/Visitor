@@ -135,6 +135,14 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	<K, V> MapVisitService<K, List<V>> groupService(@Nullable Object param, ResultVisitor<T, K> keyVisitor,
 			ResultVisitor<T, V>  valueVisitor);
 	
+	/**
+	 * group the list to scrap ListVisitService.
+	 * @param memberCount the member count of group, But may last group's count smaller than it. 
+	 * @return ListVisitService
+	 * @since 1.1.2
+	 */
+	ListVisitService<List<T>> groupService(int memberCount);
+	
 	//==================== String ===========================
 	/**
 	 * join or concat the group elements to string list.
@@ -161,7 +169,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * join or concat the group elements to string list.
 	 * @param stringVisitor the result visitor.
 	 * @param joinMark the join/concat mark
-	 * @param everyGroupCount the count of every group.may last group's smaller than this. 
+	 * @param everyGroupCount the expect count of every group. But may last group's smaller than it. 
 	 * @return String ListVisitService
 	 * @since 1.1.2
 	 */

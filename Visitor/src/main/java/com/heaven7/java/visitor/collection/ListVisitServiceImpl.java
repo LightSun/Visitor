@@ -308,5 +308,26 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 		}
 		return VisitServices.from(map);
 	}
+	
+	@Override
+	public ListVisitService<List<T>> groupService(int everyGroupCount) {
+		final List<List<T>> totalList = new ArrayList<List<T>>();
+		final List<T> list = asList();
+		
+		final int size = list.size();
+		List<T> temp = new ArrayList<T>();
+		
+		for (int i = 0; i < size; i++) {
+			temp.add(list.get(i));
+			if ((i + 1) % everyGroupCount == 0) {
+				totalList.add(temp);
+				temp = new ArrayList<T>();
+			} 
+		}
+		if (size % everyGroupCount != 0) {
+			totalList.add(temp);
+		}
+		return VisitServices.from(totalList);
+	}
 
 }

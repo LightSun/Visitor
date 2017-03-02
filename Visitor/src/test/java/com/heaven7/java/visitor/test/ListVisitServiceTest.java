@@ -32,6 +32,17 @@ public class ListVisitServiceTest extends VisitServiceTest {
 		mList.add(100);
 		mListService = VisitServices.from(mList);
 	}
+	
+	public void testGroupService3(){
+		int groupSize = 3;
+		mListService.groupService(groupSize).save(new SaveVisitor<List<Integer>>() {
+			@Override
+			public void visit(Collection<List<Integer>> collection) {
+				System.out.println(collection);
+				assertEquals(mList.size() / groupSize + 1, collection.size());
+			}
+		});
+	}
 
 	public void testTransformByGroup(){
 		CollectionVisitService<List<Integer>> service = mListService
