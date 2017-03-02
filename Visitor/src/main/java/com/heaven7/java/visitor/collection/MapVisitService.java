@@ -196,6 +196,24 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	MapVisitService<K, V> save(Map<K, V> outMap);
+	
+	//================================================================
+	/**
+	 * transform to collection which contains the all matched key-values directly.
+	 * @return CollectionVisitService
+	 * @since 1.1.2
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	CollectionVisitService<KeyValuePair<K, V>> transformToCollection2();
+	
+	/**
+	 * transform to collection which contains the all matched key-values directly.
+	 * @param c the comparator if you want to transform to list visit service.
+	 * @return CollectionVisitService
+	 * @since 1.1.2
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	CollectionVisitService<KeyValuePair<K, V>> transformToCollection2(Comparator<KeyValuePair<K, V>> c);
 
 	/**
 	 * transform to {@linkplain CollectionVisitService} by keys .

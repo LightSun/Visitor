@@ -259,6 +259,19 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		visitor.visit(new UnmodifiableMap<K, V>(mMap));
 		return this;
 	}
+	
+	@Override
+	public CollectionVisitService<KeyValuePair<K, V>> transformToCollection2() {
+		return transformToCollection2(null);
+	}
+	
+	@Override
+	public CollectionVisitService<KeyValuePair<K, V>> transformToCollection2(
+			Comparator<KeyValuePair<K, V>> c) {
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), 
+			  null);
+		return getVisitService(list, c, mMap.isSorted());
+	}
 
 	@Override
 	public CollectionVisitService<K> transformToCollectionByKeys() {
