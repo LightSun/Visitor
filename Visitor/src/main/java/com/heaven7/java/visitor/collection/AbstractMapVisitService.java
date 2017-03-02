@@ -63,7 +63,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	private List<Integer> mOrderOps;
 	/** the intercept operate */
 	private List<Integer> mInterceptOps;
-	
+
 	/** the flags of clean up */
 	private int mCleanUpFlags = FLAG_ALL;
 
@@ -162,20 +162,20 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 
 	// ==================================================================//
-	
+
 	@Override
 	public MapVisitService<K, V> fireBatch(MapFireBatchVisitor<K, V> fireVisitor) {
 		return fireBatch(fireVisitor, null);
 	}
+
 	@Override
 	public MapVisitService<K, V> fireBatch(MapFireBatchVisitor<K, V> fireVisitor, ThrowableVisitor tv) {
 		return fireBatch(null, fireVisitor, tv);
 	}
-	
+
 	@Override
-	public MapVisitService<K, V> fireBatch(Object param, MapFireBatchVisitor<K, V> fireVisitor,
-			ThrowableVisitor tv) {
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
+	public MapVisitService<K, V> fireBatch(Object param, MapFireBatchVisitor<K, V> fireVisitor, ThrowableVisitor tv) {
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), mCachePairs);
 		try {
 			fireVisitor.visit(list, param);
 		} catch (Exception e) {
@@ -190,6 +190,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	public MapVisitService<K, V> fire(MapFireVisitor<K, V> fireVisitor) {
 		return fire(fireVisitor, null);
 	}
+
 	@Override
 	public MapVisitService<K, V> fire(MapFireVisitor<K, V> fireVisitor, ThrowableVisitor throwVisitor) {
 		return fire(null, fireVisitor, throwVisitor);
@@ -197,7 +198,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 	@Override
 	public MapVisitService<K, V> fire(Object param, MapFireVisitor<K, V> fireVisitor, ThrowableVisitor tv) {
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), mCachePairs);
 		try {
 			for (KeyValuePair<K, V> pair : list) {
 				fireVisitor.visit(pair, param);
@@ -259,17 +260,15 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		visitor.visit(new UnmodifiableMap<K, V>(mMap));
 		return this;
 	}
-	
+
 	@Override
 	public CollectionVisitService<KeyValuePair<K, V>> transformToCollection2() {
 		return transformToCollection2(null);
 	}
-	
+
 	@Override
-	public CollectionVisitService<KeyValuePair<K, V>> transformToCollection2(
-			Comparator<KeyValuePair<K, V>> c) {
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), 
-			  null);
+	public CollectionVisitService<KeyValuePair<K, V>> transformToCollection2(Comparator<KeyValuePair<K, V>> c) {
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), null);
 		return getVisitService(list, c, mMap.isSorted());
 	}
 
@@ -280,7 +279,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 	@Override
 	public CollectionVisitService<K> transformToCollectionByKeys(Comparator<? super K> comparator) {
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), mCachePairs);
 		final List<K> results = new ArrayList<K>();
 		for (KeyValuePair<K, V> pair : list) {
 			results.add(pair.getKey());
@@ -292,7 +291,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 	@Override
 	public CollectionVisitService<V> transformToCollectionByValues(Comparator<? super V> comparator) {
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), mCachePairs);
 		final List<V> results = new ArrayList<V>();
 		for (KeyValuePair<K, V> pair : list) {
 			results.add(pair.getValue());
@@ -322,7 +321,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 			MapResultVisitor<K, V, R> resultVisitor) {
 		Throwables.checkNull(resultVisitor);
 
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), mCachePairs);
 		final List<R> results = new ArrayList<R>();
 		for (KeyValuePair<K, V> pair : list) {
 			results.add(resultVisitor.visit(pair, param));
@@ -347,7 +346,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 			MapResultVisitor<K, V, K2> keyVisitor) {
 		Throwables.checkNull(keyVisitor);
 
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), null);
 		final java.util.Map<K2, V> map = newMap(comparator);
 		for (KeyValuePair<K, V> pair : list) {
 			map.put(keyVisitor.visit(pair, param), pair.getValue());
@@ -372,7 +371,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 			MapResultVisitor<K, V, V2> valueVisitor) {
 		Throwables.checkNull(valueVisitor);
 
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), null);
 		final java.util.Map<K, V2> map = newMap(comparator);
 		for (KeyValuePair<K, V> pair : list) {
 			map.put(pair.getKey(), valueVisitor.visit(pair, param));
@@ -389,7 +388,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 	@Override
 	public MapVisitService<V, K> transformToMapBySwap(Comparator<? super V> comparator) {
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), null);
 		final java.util.Map<V, K> map = newMap(comparator);
 		for (KeyValuePair<K, V> pair : list) {
 			map.put(pair.getValue(), pair.getKey());
@@ -417,7 +416,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		Throwables.checkNull(keyVisitor);
 		Throwables.checkNull(valueVisitor);
 
-		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.trueMapPredicateVisitor(), null);
+		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), null);
 		final java.util.Map<K2, V2> map = newMap(comparator);
 		for (KeyValuePair<K, V> pair : list) {
 			map.put(keyVisitor.visit(pair, param), valueVisitor.visit(pair, param));
@@ -431,12 +430,12 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 	@Override
 	public <R> List<R> visitForResultList(Object param, MapResultVisitor<K, V, R> resultVisitor, List<R> out) {
-		return visitForResultList(param, Visitors.trueMapPredicateVisitor(), resultVisitor, out);
+		return visitForResultList(param, Visitors.<K,V>trueMapPredicateVisitor(), resultVisitor, out);
 	}
 
 	@Override
 	public <R> List<R> visitForResultList(MapResultVisitor<K, V, R> resultVisitor, List<R> out) {
-		return visitForResultList(null, Visitors.trueMapPredicateVisitor(), resultVisitor, out);
+		return visitForResultList(null, Visitors.<K,V>trueMapPredicateVisitor(), resultVisitor, out);
 	}
 
 	@Override
@@ -470,7 +469,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	public MapVisitService.MapOperateManager<K, V> beginOperateManager() {
 		return mOpManager == null ? (mOpManager = new MapOperateManagerImpl()) : mOpManager;
 	}
-	
+
 	@Override
 	public int size() {
 		return mMap.size();
@@ -509,7 +508,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	 * visit the all key-values by deal with the all operations.
 	 */
 	protected void visitAll() {
-		visitForQueryList(Visitors.trueMapPredicateVisitor(), mCachePairs);
+		visitForQueryList(Visitors.<K, V>trueMapPredicateVisitor(), mCachePairs);
 		mCachePairs.clear();
 	}
 
@@ -603,7 +602,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 
 	private class IterateCallbackImpl extends Callback {
-		
+
 		@Override
 		public void applyCache() {
 			mCleanUpFlags &= ~FLAG_OPERATE_ITERATE_CONTROL;
@@ -641,12 +640,13 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 
 	private class MapOperateManagerImpl extends MapOperateManager<K, V> {
-		
+
 		@Override
 		public MapOperateManager<K, V> cache() {
 			mCleanUpFlags &= ~FLAG_OPERATE_MANAGER;
 			return this;
 		}
+
 		@Override
 		public MapVisitService<K, V> end() {
 			return AbstractMapVisitService.this;

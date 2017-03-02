@@ -266,7 +266,7 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 
 	@Override
 	public ListVisitService<String> joinToStringService(String joinMark, int everyGroupCount) {
-		return joinToStringService(null, Visitors.toStringVisitor(), joinMark, everyGroupCount);
+		return joinToStringService(null, Visitors.<T>toStringVisitor(), joinMark, everyGroupCount);
 	}
 
 	@Override
