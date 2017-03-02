@@ -23,37 +23,43 @@ import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.collection.CollectionVisitService;
 import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.util.VisitException;
+
 /**
  * this class only used internal.
+ * 
  * @author heaven7
  *
  */
 public final class InternalUtil {
-	
-	
-	public static void processThrowable(Throwable e, ThrowableVisitor tv){
-		if(tv != null){
+
+	public static void processThrowable(Throwable e, ThrowableVisitor tv) {
+		if (tv != null) {
 			tv.visit(e);
-		}else{
+		} else {
 			throw new VisitException(e);
 		}
 	}
-	
+
 	/**
 	 * get the right {@linkplain CollectionVisitService}.
-	 * @param <T> the element type
-	 * @param list the list data
-	 * @param c the sort Comparator, can be null.
-	 * @param sort represent should regard as sorted {@linkplain CollectionVisitService}.
-	 * @return an instance of  {@linkplain CollectionVisitService}.
+	 * 
+	 * @param <T>
+	 *            the element type
+	 * @param list
+	 *            the list data
+	 * @param c
+	 *            the sort Comparator, can be null.
+	 * @param sort
+	 *            represent should regard as sorted
+	 *            {@linkplain CollectionVisitService}.
+	 * @return an instance of {@linkplain CollectionVisitService}.
 	 */
-	public static <T> CollectionVisitService<T> getVisitService(List<T> list,
-			Comparator<? super T> c, boolean sort) {
-		//if should not sort return default CollectionVisitService .
-		if(!sort){
+	public static <T> CollectionVisitService<T> getVisitService(List<T> list, Comparator<? super T> c, boolean sort) {
+		// if should not sort return default CollectionVisitService .
+		if (!sort) {
 			return getVisitService(list, c);
-		}else{
-			if(c != null){
+		} else {
+			if (c != null) {
 				Collections.sort(list, c);
 			}
 			return VisitServices.from(list);
@@ -61,27 +67,36 @@ public final class InternalUtil {
 	}
 
 	/**
-	 * get the collection visit service. if the Comparator is null return 
-	 * 'VisitServices.from((Collection) list)' or else return  'VisitServices.from(list)';
-	 * @param <T> the element type.
-	 * @param c sort comparator , can be null.
-	 * @param list the collection
+	 * get the collection visit service. if the Comparator is null return
+	 * 'VisitServices.from((Collection) list)' or else return
+	 * 'VisitServices.from(list)';
+	 * 
+	 * @param <T>
+	 *            the element type.
+	 * @param c
+	 *            sort comparator , can be null.
+	 * @param list
+	 *            the collection
 	 * @return CollectionVisitService
 	 */
 	public static <T> CollectionVisitService<T> getVisitService(List<T> list, Comparator<? super T> c) {
-		if(c != null){
+		if (c != null) {
 			Collections.sort(list, c);
 			return VisitServices.from(list);
-		}else{
+		} else {
 			return VisitServices.from((Collection<T>) list);
 		}
 	}
-	
+
 	/**
-	 * create a  map instance.
-	 * @param <K> the key type.
-	 * @param <V> the value type.
-	 * @param comparator the key comparator , can be null.
+	 * create a map instance.
+	 * 
+	 * @param <K>
+	 *            the key type.
+	 * @param <V>
+	 *            the value type.
+	 * @param comparator
+	 *            the key comparator , can be null.
 	 * @return TreeMap or HashMap determined by target comparator.
 	 */
 	public static <K, V> Map<K, V> newMap(Comparator<? super K> comparator) {
