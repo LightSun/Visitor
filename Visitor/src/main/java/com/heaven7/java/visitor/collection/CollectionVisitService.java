@@ -160,7 +160,8 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 			@Nullable Comparator<? super K> comparator,  ResultVisitor<T, K> keyVisitor);
 	
 	/**
-	 * transform to map visit service by group.
+	 * transform to map visit service by group. and the comparator is used to sort key if you
+	 *  want to transform to sorted map.
 	 * @param <K> the key type 
 	 * @param comparator the comparator to sort key if you want to transform to sorted map.
 	 * @param keyVisitor the key visitor
@@ -174,7 +175,8 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 			ResultVisitor<T, K> keyVisitor);
 	
 	/**
-	 * transform to simple map visit service by group.
+	 * transform to simple map visit service by group.and the comparator is used to sort key if you
+	 *  want to transform to sorted map.
 	 * @param <K> the key type 
 	 * @param keyVisitor the key visitor
 	 * @return a grouped map visit service.
@@ -187,6 +189,8 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	
 	/**
 	 * transform to map visit service by group value which is indicate by valueVisitor.
+	 * and the comparator is used to sort key if you
+	 *  want to transform to sorted map.
 	 * @param <K> the key type 
 	 * @param <V> the type of List value
 	 * @param param the parameter
@@ -204,6 +208,8 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	
 	/**
 	 * transform to map visit service by group value which is indicate by valueVisitor.
+	 * and the comparator is used to sort key if you
+	 *  want to transform to sorted map.
 	 * @param <K> the key type 
 	 * @param <V> the type of List value
 	 * @param comparator the comparator to sort key if you want to transform to sorted map.
@@ -220,6 +226,8 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	
 	/**
 	 * transform to simple map visit service by group value which is indicate by valueVisitor.
+	 * and the comparator is used to sort key if you
+	 *  want to transform to sorted map.
 	 * @param <K> the key type 
 	 * @param <V> the type of List value
 	 * @param keyVisitor the key visitor
