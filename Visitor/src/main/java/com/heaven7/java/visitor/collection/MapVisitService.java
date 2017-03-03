@@ -204,6 +204,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @return CollectionVisitService
 	 * @since 1.1.2
 	 */
+	@Deprecated
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	CollectionVisitService<KeyValuePair<K, V>> transformToCollection2();
 	
@@ -214,9 +215,29 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @return CollectionVisitService
 	 * @since 1.1.2
 	 */
+	@Deprecated
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	CollectionVisitService<KeyValuePair<K, V>> transformToCollection2(Comparator<KeyValuePair<K, V>> c);
 
+	/**
+	 * transform to collection which contains the all matched key-value pairs directly.
+	 * so the element type of collection is {@linkplain KeyValuePair}.
+	 * @return CollectionVisitService
+	 * @since 1.1.2
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	CollectionVisitService<KeyValuePair<K, V>> transformToCollectionByPairs();
+	
+	/**
+	 * transform to collection which contains the all matched key-value pairs directly.
+	 * so the element type of collection is {@linkplain KeyValuePair}.
+	 * @param c the comparator if you want to transform to list visit service.
+	 * @return CollectionVisitService
+	 * @since 1.1.2
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	CollectionVisitService<KeyValuePair<K, V>> transformToCollectionByPairs(Comparator<KeyValuePair<K, V>> c);
+	
 	/**
 	 * transform to {@linkplain CollectionVisitService} by keys .
 	 * 

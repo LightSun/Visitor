@@ -265,7 +265,17 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	public CollectionVisitService<KeyValuePair<K, V>> transformToCollection2() {
 		return transformToCollection2(null);
 	}
+	
+	@Override
+	public CollectionVisitService<KeyValuePair<K, V>> transformToCollectionByPairs() {
+		return transformToCollectionByPairs(null);
+	}
+	@Override
+	public CollectionVisitService<KeyValuePair<K, V>> transformToCollectionByPairs(Comparator<KeyValuePair<K, V>> c) {
+		return transformToCollection2(c);
+	}
 
+	@Deprecated
 	@Override
 	public CollectionVisitService<KeyValuePair<K, V>> transformToCollection2(Comparator<KeyValuePair<K, V>> c) {
 		final List<KeyValuePair<K, V>> list = visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), null);
