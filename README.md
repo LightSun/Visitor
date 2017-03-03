@@ -13,7 +13,7 @@ Also we can tranform between  Collection (CollectionVisitService) and map (MapVi
 ```java
    //in jcenter 
    dependencies {
-       compile 'com.heaven7.java.visitor:Visitor:1.1.2'
+       compile 'com.heaven7.java.visitor:Visitor:1.1.3'
    }
 ```
 
