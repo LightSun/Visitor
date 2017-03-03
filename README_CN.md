@@ -70,13 +70,13 @@ public void testTransform0() {
 	}
 ```
     - 看出来了吧，没错。这个框架就是采用链式编程结构 快速操作 collection和map. 并在之间可以相互转化。
-
-
+     并且添加一些groovy的特性.
+     
 ## Gradle config
 
 ```java
    dependencies {
-       compile 'com.heaven7.java.visitor:Visitor:1.1.2'
+       compile 'com.heaven7.java.visitor:Visitor:1.1.3'
    }
 ```
 
