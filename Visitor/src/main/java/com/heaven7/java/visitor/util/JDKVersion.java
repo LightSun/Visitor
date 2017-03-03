@@ -5,7 +5,8 @@ package com.heaven7.java.visitor.util;
  * @author heaven7
  * @since 1.1.2
  */
-public final class JDKVersion {
+//not  opened.
+/*public*/ final class JDKVersion {
 
 	private static final String VERSION;
 	static {
