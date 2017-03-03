@@ -12,8 +12,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
-import java.util.NavigableSet;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -113,22 +111,29 @@ public final class InternalUtil {
 	 * @return a unmodifiable collection
 	 */
 	public static <T> Collection<T> unmodifiable(Collection<T> collection) {
+		
 		if (collection instanceof List) {
 			return Collections.unmodifiableList((List<? extends T>) collection);
-		} else if (collection instanceof NavigableSet) {
-			return Collections.unmodifiableNavigableSet((NavigableSet<T>) collection);
-		} else if (collection instanceof SortedSet) {
+		} 
+		/*else if (collection instanceof NavigableSet) {
+			if(JDKVersion.isJdK18()){ //jdk1.8
+			    return Collections.unmodifiableNavigableSet((NavigableSet<T>) collection);
+			}
+		} */
+		else if (collection instanceof SortedSet) {
 			return Collections.unmodifiableSortedSet((SortedSet<T>) collection);
 		} else if (collection instanceof Set) {
-			return Collections.unmodifiableSet((Set<T>) collection);
+			return Collections.unmodifiableSet((Set<? extends T>) collection);
 		}
 		return Collections.unmodifiableCollection(collection);
 	}
 
 	public static <K, V> Map<K, V> unmodifiable(Map<K, V> map) {
-		if (map instanceof NavigableMap) {
+		//jdk1.8
+		/*if (map instanceof NavigableMap) {
 			return Collections.unmodifiableNavigableMap((NavigableMap<K, ? extends V>) map);
-		} else if (map instanceof SortedMap) {
+		} else*/ 
+		if (map instanceof SortedMap) {
 			return Collections.unmodifiableSortedMap((SortedMap<K, ? extends V>) map);
 		}
 		return Collections.unmodifiableMap(map);
