@@ -24,6 +24,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return a instance of {@linkplain ListVisitService}
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<T> subService(int start, int count);
 	
 	/**
@@ -32,6 +33,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return {@linkplain ListVisitService}
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<T> headService(int count);
 	
 	/**
@@ -44,6 +46,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return {@linkplain ListVisitService}
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<T> tailService(int count);
 	
 	/**
@@ -52,6 +55,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return {@linkplain ListVisitService}
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<T> reverseService();
 	
 	/**
@@ -60,6 +64,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return {@linkplain ListVisitService}
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<T> reverseService(boolean reverseOriginList);
 	
 	/**
@@ -68,6 +73,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return this or new {@linkplain ListVisitService}
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<T> shuffleService(boolean shuffleOriginlist);
 	
 	/**
@@ -76,6 +82,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return this
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<T> shuffleService();
 	
 	/**
@@ -85,6 +92,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @see {@linkplain #sortService(Comparator, boolean)}
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<T> sortService(Comparator<? super T> c);
 	
 	/**
@@ -95,6 +103,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @see {@linkplain #sortService(Comparator)}
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<T> sortService(Comparator<? super T> c, boolean sortOriginList);
 	
 	/**
@@ -106,6 +115,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @see {@linkplain #groupService(ResultVisitor, ResultVisitor)}
 	 * @since 1.1.2
 	 */
+	@Independence
 	<K> MapVisitService<K, List<T>> groupService(ResultVisitor<T, K> keyVisitor);
 	
 	/**
@@ -118,6 +128,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @see {@linkplain #groupService(ResultVisitor)}
 	 * @since 1.1.2
 	 */
+	@Independence
 	<K> MapVisitService<K, List<T>> groupService(@Nullable Object param, ResultVisitor<T, K> keyVisitor);
 	
 	/**
@@ -132,6 +143,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @see {@linkplain #groupService(ResultVisitor)}
 	 * @since 1.1.2
 	 */
+	@Independence
 	<K, V> MapVisitService<K, List<V>> groupService(@Nullable Object param, ResultVisitor<T, K> keyVisitor,
 			ResultVisitor<T, V>  valueVisitor);
 	
@@ -141,6 +153,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return ListVisitService
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<List<T>> groupService(int memberCount);
 	
 	//==================== String ===========================
@@ -151,6 +164,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return String ListVisitService
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<String> joinToStringService(String joinMark, int everyGroupCount);
 	
 	/**
@@ -162,6 +176,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return String ListVisitService
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<String> joinToStringService(@Nullable Object param, 
 			ResultVisitor<T, String> stringVisitor, String joinMark, int everyGroupCount);
 	
@@ -173,6 +188,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return String ListVisitService
 	 * @since 1.1.2
 	 */
+	@Independence
 	ListVisitService<String> joinToStringService(ResultVisitor<T, String> stringVisitor,
 			String joinMark, int everyGroupCount);
 	
@@ -182,6 +198,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return a join string result
 	 * @since 1.1.2
 	 */
+	@Independence
 	String joinToString(String joinMark);
 	//========================= end string ========================
 }

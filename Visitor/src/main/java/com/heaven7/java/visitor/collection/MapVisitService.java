@@ -200,6 +200,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	//================================================================
 	/**
 	 * transform to collection which contains the all matched key-values directly.
+	 * so the element type of collection is {@linkplain KeyValuePair}.
 	 * @return CollectionVisitService
 	 * @since 1.1.2
 	 */
@@ -208,6 +209,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	
 	/**
 	 * transform to collection which contains the all matched key-values directly.
+	 * so the element type of collection is {@linkplain KeyValuePair}.
 	 * @param c the comparator if you want to transform to list visit service.
 	 * @return CollectionVisitService
 	 * @since 1.1.2
