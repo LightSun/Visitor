@@ -26,7 +26,6 @@ import com.heaven7.java.visitor.util.VisitException;
  * this class only used internal.
  * 
  * @author heaven7
- *
  */
 public final class InternalUtil {
 
