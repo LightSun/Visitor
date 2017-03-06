@@ -23,11 +23,12 @@ public final class Comparators {
 		return (Comparator<T>) DEFAULT_COMPARATOR;
 	}
 
-	private static final Comparator<Object> DEFAULT_COMPARATOR = new Comparator<Object>(){
-		@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("rawtypes")
+	private static final Comparator DEFAULT_COMPARATOR = new Comparator(){
+		@SuppressWarnings({"unchecked" })
 		@Override
 		public int compare(Object o1, Object o2) {
-			if((o1 instanceof Comparable) && (o2 instanceof Comparable)){
+			if( (o1 instanceof Comparable) && (o2 instanceof Comparable) ){
 				return ((Comparable)o1).compareTo(o2);
 			}
 			throw new IllegalStateException("must implements interface Comparable.");
