@@ -19,7 +19,7 @@ public final class Comparators {
 	 * @since 1.1.5
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Comparator<T> getDefaultComparator(){
+	public static <T extends Comparable<T>> Comparator<T> getDefaultComparator(){
 		return (Comparator<T>) DEFAULT_COMPARATOR;
 	}
 
