@@ -21,6 +21,7 @@ import com.heaven7.java.visitor.collection.KeyValuePair;
 import com.heaven7.java.visitor.collection.MapVisitService;
 import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.test.help.Student;
+import com.heaven7.java.visitor.util.Comparators;
 import com.heaven7.java.visitor.util.Map;
 
 import junit.framework.TestCase;
@@ -49,12 +50,7 @@ public class MapVisitServiceTest extends TestCase {
 				assertEquals(str, param);
 				return pair.getValue() <= 3;
 			}
-		}, new Comparator<String>() {
-			@Override
-			public int compare(String o1, String o2) {
-				return o1.compareTo(o2);
-			}
-		});
+		}, Comparators.<String>getDefaultComparator());
 		assertEquals(service2.size(), 4); //0,1,2,3
 		service2.save(new MapSaveVisitor<String, Integer>() {
 			@Override

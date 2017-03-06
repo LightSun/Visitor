@@ -6,7 +6,7 @@ import java.util.SortedSet;
 /**
  * expand util class of Collections.
  * @author heaven7
- * @since 1.1,.2
+ * @since 1.1.2
  */
 public class Collections2 {
 
@@ -23,4 +23,5 @@ public class Collections2 {
 		}
 		throw new UnsupportedOperationException();
 	}
+	
 }
