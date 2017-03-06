@@ -1,7 +1,5 @@
 package com.heaven7.java.visitor.collection;
 
-import com.heaven7.java.visitor.util.Throwables;
-
 /**
  * an entry like Map.Entry .but read-only.
  * 
@@ -17,17 +15,16 @@ public final class KeyValuePair<K, V> {
 	private K key;
 	private V value;
 
-	KeyValuePair(K key, V value) {
+	private KeyValuePair(K key, V value) {
 		super();
 		this.key = key;
 		this.value = value;
 	}
 
 	public static <K, V> KeyValuePair<K, V> create(K key, V value) {
-		Throwables.checkNull(key);
 		return new KeyValuePair<K, V>(key, value);
 	}
-
+	
 	void setKeyValue(K key, V value) {
 		this.key = key;
 		this.value = value;

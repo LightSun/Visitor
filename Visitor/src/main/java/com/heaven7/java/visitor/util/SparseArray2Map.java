@@ -116,4 +116,13 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 		return true;
 	}
 
+	@Override
+	public void startTravel(com.heaven7.java.visitor.util.Map.MapTravelCallback<Integer, E> travelCallback) {
+		final SparseArray<E> mMap = this.mMap;
+		final int size = mMap.size();
+		for (int i = size - 1; i >= 0; i--) {
+			travelCallback.onTravel(mMap.keyAt(i), mMap.valueAt(i));
+		}
+	}
+
 }

@@ -6,13 +6,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.heaven7.java.visitor.collection.KeyValuePair;
+
 /**
- * an instance of {@linkplain com.heaven7.java.visitor.util.Map}. 
- * convert {@linkplain Map} to {@linkplain com.heaven7.java.visitor.util.Map}
+ * an instance of {@linkplain com.heaven7.java.visitor.util.Map}. convert
+ * {@linkplain Map} to {@linkplain com.heaven7.java.visitor.util.Map}
+ * 
  * @author heaven7
  *
- * @param <K> the key type
- * @param <V> the value type
+ * @param <K>
+ *            the key type
+ * @param <V>
+ *            the value type
  */
 public class Map2Map<K, V> extends AbstractMap<K, V> {
 
@@ -55,7 +59,7 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 	public List<KeyValuePair<K, V>> getKeyValues() {
 		if (mList == null) {
 			mList = new ArrayList<>();
-		}else{
+		} else {
 			mList.clear();
 		}
 		final List<KeyValuePair<K, V>> list = this.mList;
@@ -67,9 +71,9 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 
 	@Override
 	public List<K> keys() {
-		if(mKeys == null){
+		if (mKeys == null) {
 			mKeys = new ArrayList<>();
-		}else{
+		} else {
 			mKeys.clear();
 		}
 		final List<K> list = mKeys;
@@ -79,9 +83,9 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 
 	@Override
 	public List<V> values() {
-		if(mValues == null){
+		if (mValues == null) {
 			mValues = new ArrayList<V>();
-		}else{
+		} else {
 			mValues.clear();
 		}
 		final List<V> list = mValues;
@@ -107,6 +111,13 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 	@Override
 	public boolean isSorted() {
 		return Predicates.isSortedMap(mMap);
+	}
+
+	@Override
+	public void startTravel(com.heaven7.java.visitor.util.Map.MapTravelCallback<K, V> travelCallback) {
+		for (Entry<K, V> en : mMap.entrySet()) {
+			travelCallback.onTravel(en.getKey(), en.getValue());
+		}
 	}
 
 }

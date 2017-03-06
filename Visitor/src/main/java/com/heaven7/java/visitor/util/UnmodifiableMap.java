@@ -102,4 +102,9 @@ public class UnmodifiableMap<K,V> implements Map<K, V> {
 		return mMap.isSorted();
 	}
 
+	@Override
+	public void startTravel(com.heaven7.java.visitor.util.Map.MapTravelCallback<K, V> travelCallback) {
+		mMap.startTravel(travelCallback);
+	}
+
 }

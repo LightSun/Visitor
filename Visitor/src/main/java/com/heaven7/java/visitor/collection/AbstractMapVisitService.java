@@ -25,6 +25,7 @@ import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.IterateControl.Callback;
 import com.heaven7.java.visitor.util.Map;
+import com.heaven7.java.visitor.util.Map.MapTravelCallback;
 import com.heaven7.java.visitor.util.Predicates;
 import com.heaven7.java.visitor.util.SparseArray;
 import com.heaven7.java.visitor.util.Throwables;
@@ -502,12 +503,19 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	public MapVisitService<K, V> subService(Object param, MapPredicateVisitor<K, V> predicate,
 			Comparator<? super K> c) {
 		checkNull(predicate);
+		
 		final java.util.Map<K, V> map = newMap(c);
-		for (KeyValuePair<K, V> pair : mMap.getKeyValues()) {
-			if (predicate.visit(pair, param)) {
-				map.put(pair.getKey(), pair.getValue());
+		final KeyValuePair<K, V> pair = KeyValuePair.create(null, null);
+		
+		mMap.startTravel(new MapTravelCallback<K, V>() {
+			@Override
+			public void onTravel(K key, V value) {
+				pair.setKeyValue(key, value);
+				if (predicate.visit(pair, param)) {
+					map.put(key, value);
+				}
 			}
-		}
+		});
 		return VisitServices.from(map);
 	}
 	// ======================================================
