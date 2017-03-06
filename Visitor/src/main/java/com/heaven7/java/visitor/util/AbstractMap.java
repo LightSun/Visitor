@@ -39,5 +39,9 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
 		return size() == 0;
 	}
 	
+	@Override
+	public String toString() {
+		return toNormalMap().toString();
+	}
 
 }

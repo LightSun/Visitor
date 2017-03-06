@@ -34,15 +34,39 @@ public class MapVisitServiceTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		// 0 - 5
 		for (int i = 0; i < SIZE; i++) {
 			map.put("key_" + i, i);
 		}
 		service = VisitServices.from(map);
 	}
 	
+	public void testSubService(){
+		final String str = "testSubService";
+		MapVisitService<String, Integer> service2 = service.subService(str, new MapPredicateVisitor<String, Integer>() {
+			@Override
+			public Boolean visit(KeyValuePair<String, Integer> pair, Object param) {
+				assertEquals(str, param);
+				return pair.getValue() <= 3;
+			}
+		}, new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o1.compareTo(o2);
+			}
+		});
+		assertEquals(service2.size(), 4); //0,1,2,3
+		service2.save(new MapSaveVisitor<String, Integer>() {
+			@Override
+			public void visit(Map<String, Integer> map) {
+				System.out.println(map.toString());
+			}
+		});
+	}
+	
 	public void testTransformToCollection2(){
 		//service.transformToCollection2().asListService(); //must cause exception
-		int size = service.transformToCollection2(new Comparator<KeyValuePair<String,Integer>>() {
+		int size = service.transformToCollectionByPairs(new Comparator<KeyValuePair<String,Integer>>() {
 			@Override
 			public int compare(KeyValuePair<String, Integer> o1, KeyValuePair<String, Integer> o2) {
 				return o1.getValue().compareTo(o2.getValue());

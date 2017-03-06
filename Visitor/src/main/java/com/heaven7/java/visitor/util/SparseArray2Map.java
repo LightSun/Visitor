@@ -49,7 +49,7 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 	public List<KeyValuePair<Integer, E>> getKeyValues() {
 		if (mTempPairs == null) {
 			mTempPairs = new ArrayList<>();
-		}else{
+		} else {
 			mTempPairs.clear();
 		}
 		final List<KeyValuePair<Integer, E>> list = this.mTempPairs;
@@ -63,9 +63,9 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 
 	@Override
 	public List<Integer> keys() {
-		if(mKeys == null){
+		if (mKeys == null) {
 			mKeys = new ArrayList<>();
-		}else{
+		} else {
 			mKeys.clear();
 		}
 		final List<Integer> list = mKeys;
@@ -84,9 +84,9 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 
 	@Override
 	public Map<Integer, E> toNormalMap() {
-		if(mNormalMap == null){
+		if (mNormalMap == null) {
 			mNormalMap = new HashMap<Integer, E>();
-		}else{
+		} else {
 			mNormalMap.clear();
 		}
 		final Map<Integer, E> map = mNormalMap;

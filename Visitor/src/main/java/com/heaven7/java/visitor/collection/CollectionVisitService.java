@@ -627,7 +627,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param param the extra parameter which will be visit by visitor.
 	 * @param visitor the predicate visitor, if visit success means contains the element.
 	 * @return a sub {@linkplain CollectionVisitService}
-	 * @since 1.1.3
+	 * @since 1.1.5
 	 */
 	@Independence
 	CollectionVisitService<T> subService(@Nullable Object param, PredicateVisitor<T> visitor);
@@ -636,7 +636,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * get a sub visit service by target visitor.
 	 * @param visitor the predicate visitor , if visit success means contains the element.
 	 * @return a sub {@linkplain CollectionVisitService}
-	 * @since 1.1.3
+	 * @since 1.1.5
 	 */
 	@Independence
 	CollectionVisitService<T> subService(PredicateVisitor<T> visitor);

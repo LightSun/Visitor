@@ -13,7 +13,7 @@ import com.heaven7.java.visitor.internal.InternalUtil;
  * @param <V> the value type
  * @since 1.0.3
  */
-public class UnmodifiableMap<K,V> implements Map<K, V> {
+public class UnmodifiableMap<K,V> extends AbstractMap<K, V> implements Map<K, V> {
 	
 	private final Map<K, V> mMap;
 	

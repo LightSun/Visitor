@@ -697,7 +697,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param predicate the predicate visitor.
 	 * @param c the Comparator , can be null. if you don't care about the sort.
 	 * @return  a sub map visit service
-	 * @since 1.1.3
+	 * @since 1.1.5
 	 * @see {@linkplain #subService(MapPredicateVisitor)}
 	 * @see {@linkplain #subService(Object, MapPredicateVisitor)}
 	 */
@@ -710,7 +710,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param param the extra parameter used by visitor.
 	 * @param predicate the predicate visitor.
 	 * @return  a sub map visit service
-	 * @since 1.1.3
+	 * @since 1.1.5
 	 * @see {@linkplain #subService(Object, MapPredicateVisitor, Comparator)}
 	 * @see {@linkplain #subService(MapPredicateVisitor)}
 	 */
@@ -721,7 +721,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * get a sub map visit service by target visitor(filter).
 	 * @param predicate the predicate visitor.
 	 * @return  a sub map visit service
-	 * @since 1.1.3
+	 * @since 1.1.5
 	 * @see {@linkplain #subService(Object, MapPredicateVisitor)}
 	 * @see {@linkplain #subService(Object, MapPredicateVisitor, Comparator)}
 	 */
