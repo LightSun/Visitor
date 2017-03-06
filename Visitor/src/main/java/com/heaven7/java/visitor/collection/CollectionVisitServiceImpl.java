@@ -4,6 +4,7 @@ import static com.heaven7.java.visitor.collection.Operation.OP_DELETE;
 import static com.heaven7.java.visitor.collection.Operation.OP_FILTER;
 import static com.heaven7.java.visitor.collection.Operation.OP_INSERT;
 import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
+import static com.heaven7.java.visitor.util.Predicates.isTrue;
 import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
 import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
@@ -350,6 +351,18 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	@Override
 	public OperateManager<T> beginOperateManager() {
 		return mOpManager != null ? mOpManager : (mOpManager = new OperateManagerImpl());
+	}
+	
+	@Override
+	public CollectionVisitService<T> subService(Object param, PredicateVisitor<T> visitor) {
+		checkNull(visitor);
+		final List<T> list = new ArrayList<T>();
+		for(T t : asList()){
+			if(isTrue(visitor.visit(t, param))){
+				list.add(t);
+			}
+		}
+		return VisitServices.from((Collection<T>)list);
 	}
 
 	private class GroupOperateInterceptor extends CollectionOperateInterceptor<T> {

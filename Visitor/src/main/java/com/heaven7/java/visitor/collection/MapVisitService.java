@@ -198,7 +198,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	MapVisitService<K, V> save(Map<K, V> outMap);
 	
 	//================================================================
-	/**
+	/**<p>use {@linkplain #transformToCollectionByPairs()} instead</p>
 	 * transform to collection which contains the all matched key-values directly.
 	 * so the element type of collection is {@linkplain KeyValuePair}.
 	 * @return CollectionVisitService
@@ -209,6 +209,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	CollectionVisitService<KeyValuePair<K, V>> transformToCollection2();
 	
 	/**
+	 * <p>use {@linkplain #transformToCollectionByPairs(Comparator)} instead</p>
 	 * transform to collection which contains the all matched key-values directly.
 	 * so the element type of collection is {@linkplain KeyValuePair}.
 	 * @param c the comparator if you want to transform to list visit service.
@@ -689,6 +690,43 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 */
 	@Independence
 	int size();
+	
+	/**
+	 * get a sub map visit service by target visitor(filter) and sort comparator.
+	 * @param param the extra parameter used by visitor.
+	 * @param predicate the predicate visitor.
+	 * @param c the Comparator , can be null. if you don't care about the sort.
+	 * @return  a sub map visit service
+	 * @since 1.1.3
+	 * @see {@linkplain #subService(MapPredicateVisitor)}
+	 * @see {@linkplain #subService(Object, MapPredicateVisitor)}
+	 */
+	@Independence
+	MapVisitService<K, V> subService(@Nullable Object param, MapPredicateVisitor<K, V> predicate, 
+			@Nullable Comparator<? super K> c);
+	
+	/**
+	 * get a sub map visit service by target visitor(filter).
+	 * @param param the extra parameter used by visitor.
+	 * @param predicate the predicate visitor.
+	 * @return  a sub map visit service
+	 * @since 1.1.3
+	 * @see {@linkplain #subService(Object, MapPredicateVisitor, Comparator)}
+	 * @see {@linkplain #subService(MapPredicateVisitor)}
+	 */
+	@Independence
+	MapVisitService<K, V> subService(@Nullable Object param, MapPredicateVisitor<K, V> predicate);
+	
+	/**
+	 * get a sub map visit service by target visitor(filter).
+	 * @param predicate the predicate visitor.
+	 * @return  a sub map visit service
+	 * @since 1.1.3
+	 * @see {@linkplain #subService(Object, MapPredicateVisitor)}
+	 * @see {@linkplain #subService(Object, MapPredicateVisitor, Comparator)}
+	 */
+	@Independence
+	MapVisitService<K, V> subService(MapPredicateVisitor<K, V> predicate);
 
 	/**
 	 * an {@linkplain OperateInterceptor} which used for map.

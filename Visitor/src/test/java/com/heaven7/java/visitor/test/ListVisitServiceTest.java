@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
+import com.heaven7.java.visitor.FireVisitor;
 import com.heaven7.java.visitor.MapSaveVisitor;
+import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.collection.CollectionVisitService;
@@ -31,6 +33,29 @@ public class ListVisitServiceTest extends VisitServiceTest {
 		mList.add(5);
 		mList.add(100);
 		mListService = VisitServices.from(mList);
+	}
+	
+	public void testSubserviceFromCollection(){
+		int size = mListService.subService(new PredicateVisitor<Integer>() {
+			@Override
+			public Boolean visit(Integer t, Object param) {
+				return t.toString().length() == 1;
+			}
+		}).size();
+		assertEquals(4, size);
+		
+		 mListService.subService(new PredicateVisitor<Integer>() {
+				@Override
+				public Boolean visit(Integer t, Object param) {
+					return t.toString().length() == 1;
+				}
+			}).asListService().headService(2).fire(new FireVisitor<Integer>() {
+				@Override
+				public Boolean visit(Integer t, Object param) {
+					System.out.println("fire: " + t);
+					return null;
+				}
+			});
 	}
 	
 	public void testGroupService3(){

@@ -1,5 +1,6 @@
 package com.heaven7.java.visitor.collection;
 
+import static com.heaven7.java.visitor.util.Predicates.isTrue;
 import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import com.heaven7.java.visitor.IterateVisitor;
+import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.anno.Nullable;
@@ -158,7 +160,19 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 		}
 		return VisitServices.from(asList().subList(start, start + count));
 	}
-
+	
+	@Override
+	public CollectionVisitService<T> subService(Object param, PredicateVisitor<T> visitor) {
+		checkNull(visitor);
+		final List<T> list = new ArrayList<T>();
+		for(T t : asList()){
+			if(isTrue(visitor.visit(t, param))){
+				list.add(t);
+			}
+		}
+		return VisitServices.from(list);
+	}
+	
 	@Override
 	public ListVisitService<T> headService(int count) {
 		return subService(0, count);

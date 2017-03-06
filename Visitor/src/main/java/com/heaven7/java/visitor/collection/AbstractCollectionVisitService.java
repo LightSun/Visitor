@@ -41,17 +41,17 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public CollectionVisitService<T> fireBatch(FireBatchVisitor<T> visitor) {
+	public final CollectionVisitService<T> fireBatch(FireBatchVisitor<T> visitor) {
 		return fireBatch(visitor, null);
 	}
 
 	@Override
-	public CollectionVisitService<T> fireBatch(FireBatchVisitor<T> visitor, ThrowableVisitor tv) {
+	public final CollectionVisitService<T> fireBatch(FireBatchVisitor<T> visitor, ThrowableVisitor tv) {
 		return fireBatch(null, visitor, tv);
 	}
 
 	@Override
-	public CollectionVisitService<T> fireBatch(Object param, FireBatchVisitor<T> visitor, ThrowableVisitor tv) {
+	public final CollectionVisitService<T> fireBatch(Object param, FireBatchVisitor<T> visitor, ThrowableVisitor tv) {
 		Throwables.checkNull(visitor);
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
 		try {
@@ -65,17 +65,17 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public CollectionVisitService<T> fire(FireVisitor<T> fireVisitor) {
+	public final CollectionVisitService<T> fire(FireVisitor<T> fireVisitor) {
 		return fire(fireVisitor, null);
 	}
 
 	@Override
-	public CollectionVisitService<T> fire(FireVisitor<T> visitor, ThrowableVisitor tv) {
+	public final CollectionVisitService<T> fire(FireVisitor<T> visitor, ThrowableVisitor tv) {
 		return fire(null, visitor, tv);
 	}
 
 	@Override
-	public CollectionVisitService<T> fire(Object param, FireVisitor<T> visitor, ThrowableVisitor tv) {
+	public final CollectionVisitService<T> fire(Object param, FireVisitor<T> visitor, ThrowableVisitor tv) {
 		Throwables.checkNull(visitor);
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
 		try {
@@ -96,12 +96,12 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public CollectionVisitService<T> save(Collection<T> out) {
+	public final CollectionVisitService<T> save(Collection<T> out) {
 		return save(out, false);
 	}
 
 	@Override
-	public CollectionVisitService<T> save(SaveVisitor<T> visitor) {
+	public final CollectionVisitService<T> save(SaveVisitor<T> visitor) {
 		Throwables.checkNull(visitor);
 		final List<T> results = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
 		try {
@@ -113,7 +113,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public CollectionVisitService<T> save(Collection<T> out, boolean clearBeforeSave) {
+	public final CollectionVisitService<T> save(Collection<T> out, boolean clearBeforeSave) {
 		Throwables.checkNull(out);
 		if (clearBeforeSave) {
 			out.clear();
@@ -125,18 +125,18 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 	
 	@Override
-	public <K> MapVisitService<K, List<T>> transformToMapByGroup(ResultVisitor<T, K> keyVisitor) {
+	public final <K> MapVisitService<K, List<T>> transformToMapByGroup(ResultVisitor<T, K> keyVisitor) {
 		return transformToMapByGroup(null, keyVisitor);
 	}
 	
 	@Override
-	public <K> MapVisitService<K, List<T>> transformToMapByGroup(Comparator<? super K> comparator,
+	public final <K> MapVisitService<K, List<T>> transformToMapByGroup(Comparator<? super K> comparator,
 			ResultVisitor<T, K> keyVisitor) {
 		return transformToMapByGroup(null, comparator, keyVisitor);
 	}
 	
 	@Override
-	public <K> MapVisitService<K, List<T>> transformToMapByGroup(Object param, 
+	public final <K> MapVisitService<K, List<T>> transformToMapByGroup(Object param, 
 			Comparator<? super K> comparator, ResultVisitor<T, K> keyVisitor) {
 		Throwables.checkNull(keyVisitor);
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
@@ -160,18 +160,18 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 	
 	@Override
-	public <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(ResultVisitor<T, K> keyVisitor,
+	public final <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(ResultVisitor<T, K> keyVisitor,
 			ResultVisitor<T, V> valueVisitor) {
 		return transformToMapByGroupValue(null, keyVisitor, valueVisitor);
 	}
 	@Override
-	public <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(Comparator<? super K> comparator,
+	public final <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(Comparator<? super K> comparator,
 			ResultVisitor<T, K> keyVisitor, ResultVisitor<T, V> valueVisitor) {
 		return transformToMapByGroupValue(null , comparator, keyVisitor, valueVisitor);
 	}
 
 	@Override
-	public <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(Object param, Comparator<? super K> comparator,
+	public final <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(Object param, Comparator<? super K> comparator,
 			ResultVisitor<T, K> keyVisitor, ResultVisitor<T, V> valueVisitor) {
 		Throwables.checkNull(keyVisitor);
 		Throwables.checkNull(valueVisitor);
@@ -196,17 +196,17 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public <K> MapVisitService<K, T> transformToMapAsValues(ResultVisitor<? super T, K> keyVisitor) {
+	public final <K> MapVisitService<K, T> transformToMapAsValues(ResultVisitor<? super T, K> keyVisitor) {
 		return transformToMapAsValues(null, keyVisitor);
 	}
 
 	@Override
-	public <K> MapVisitService<K, T> transformToMapAsValues(Object param, ResultVisitor<? super T, K> keyVisitor) {
+	public final <K> MapVisitService<K, T> transformToMapAsValues(Object param, ResultVisitor<? super T, K> keyVisitor) {
 		return transformToMapAsValues(param, null, keyVisitor);
 	}
 
 	@Override
-	public <K> MapVisitService<K, T> transformToMapAsValues(Object param, Comparator<? super K> comparator,
+	public final <K> MapVisitService<K, T> transformToMapAsValues(Object param, Comparator<? super K> comparator,
 			ResultVisitor<? super T, K> keyVisitor) {
 		Throwables.checkNull(keyVisitor);
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
@@ -219,17 +219,17 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public <V> MapVisitService<T, V> transformToMapAsKeys(ResultVisitor<? super T, V> valueVisitor) {
+	public final <V> MapVisitService<T, V> transformToMapAsKeys(ResultVisitor<? super T, V> valueVisitor) {
 		return transformToMapAsKeys(null, valueVisitor);
 	}
 
 	@Override
-	public <V> MapVisitService<T, V> transformToMapAsKeys(Object param, ResultVisitor<? super T, V> valueVisitor) {
+	public final <V> MapVisitService<T, V> transformToMapAsKeys(Object param, ResultVisitor<? super T, V> valueVisitor) {
 		return transformToMapAsKeys(param, null, valueVisitor);
 	}
 
 	@Override
-	public <V> MapVisitService<T, V> transformToMapAsKeys(Object param, Comparator<? super T> comparator,
+	public final <V> MapVisitService<T, V> transformToMapAsKeys(Object param, Comparator<? super T> comparator,
 			ResultVisitor<? super T, V> valueVisitor) {
 		Throwables.checkNull(valueVisitor);
 
@@ -243,19 +243,19 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public <K, V> MapVisitService<K, V> transformToMap(ResultVisitor<? super T, K> keyVisitor,
+	public final <K, V> MapVisitService<K, V> transformToMap(ResultVisitor<? super T, K> keyVisitor,
 			ResultVisitor<? super T, V> valueVisitor) {
 		return transformToMap(null, keyVisitor, valueVisitor);
 	}
 
 	@Override
-	public <K, V> MapVisitService<K, V> transformToMap(Object param, ResultVisitor<? super T, K> keyVisitor,
+	public final <K, V> MapVisitService<K, V> transformToMap(Object param, ResultVisitor<? super T, K> keyVisitor,
 			ResultVisitor<? super T, V> valueVisitor) {
 		return transformToMap(param, null, keyVisitor, valueVisitor);
 	}
 
 	@Override
-	public <K, V> MapVisitService<K, V> transformToMap(Object param, Comparator<? super K> comparator,
+	public final <K, V> MapVisitService<K, V> transformToMap(Object param, Comparator<? super K> comparator,
 			ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor) {
 		Throwables.checkNull(keyVisitor);
 		Throwables.checkNull(valueVisitor);
@@ -270,7 +270,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public <R> CollectionVisitService<R> transformToCollection(Object param, Comparator<? super R> sort,
+	public final <R> CollectionVisitService<R> transformToCollection(Object param, Comparator<? super R> sort,
 			ResultVisitor<? super T, R> resultVisitor) {
 		Throwables.checkNull(resultVisitor);
 		return getVisitService(visitForResultList(param, resultVisitor, null), sort,
@@ -278,12 +278,12 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public <R> CollectionVisitService<R> transformToCollection(ResultVisitor<? super T, R> resultVisitor) {
+	public final <R> CollectionVisitService<R> transformToCollection(ResultVisitor<? super T, R> resultVisitor) {
 		return transformToCollection(null, resultVisitor);
 	}
 
 	@Override
-	public <R> CollectionVisitService<R> transformToCollection(Object param,
+	public final <R> CollectionVisitService<R> transformToCollection(Object param,
 			ResultVisitor<? super T, R> resultVisitor) {
 		return transformToCollection(param, null, resultVisitor);
 	}
@@ -373,6 +373,11 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	@Override
 	public ListVisitService<T> asListService() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public final CollectionVisitService<T> subService(PredicateVisitor<T> visitor) {
+		return subService(null, visitor);
 	}
 
 	// ===================================================

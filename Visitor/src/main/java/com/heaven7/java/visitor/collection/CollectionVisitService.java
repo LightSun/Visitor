@@ -623,6 +623,26 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	ListVisitService<T> asListService() throws UnsupportedOperationException;
 	
 	/**
+	 * get a sub visit service by target visitor and parameter.
+	 * @param param the extra parameter which will be visit by visitor.
+	 * @param visitor the predicate visitor, if visit success means contains the element.
+	 * @return a sub {@linkplain CollectionVisitService}
+	 * @since 1.1.3
+	 */
+	@Independence
+	CollectionVisitService<T> subService(@Nullable Object param, PredicateVisitor<T> visitor);
+	
+	/**
+	 * get a sub visit service by target visitor.
+	 * @param visitor the predicate visitor , if visit success means contains the element.
+	 * @return a sub {@linkplain CollectionVisitService}
+	 * @since 1.1.3
+	 */
+	@Independence
+	CollectionVisitService<T> subService(PredicateVisitor<T> visitor);
+	
+	
+	/**
 	 * the size of collection
 	 * @return the size
 	 * @since 1.1.2

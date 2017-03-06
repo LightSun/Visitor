@@ -16,7 +16,7 @@ import com.heaven7.java.visitor.anno.Nullable;
  */
 @Independence("all methods is independent in here.")
 public interface ListVisitService<T> extends CollectionVisitService<T>{
-
+	
 	/**
 	 * get a sub visit service by the target start index and count.
 	 * @param start the start index of list
