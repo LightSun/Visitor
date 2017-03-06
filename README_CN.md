@@ -76,7 +76,7 @@ public void testTransform0() {
 
 ```java
    dependencies {
-       compile 'com.heaven7.java.visitor:Visitor:1.1.3'
+       compile 'com.heaven7.java.visitor:Visitor:1.1.5'
    }
 ```
 
