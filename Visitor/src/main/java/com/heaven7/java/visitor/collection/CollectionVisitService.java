@@ -78,15 +78,14 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * </ul>
 	 * @param <R> the result element type
 	 * @param param the extra parameter
-	 * @param c the sort comparator, if you want the result of collection to be a sorted.
 	 * @param visitor the result visitor
 	 * @param observer the result observer
 	 * @return this.
 	 * @since 1.1.6
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
-	<R> CollectionVisitService<T> zipResult(@Nullable Object param, Comparator<? super R> c ,
-			ResultVisitor<T, R> visitor,  Observer<T, List<R>> observer);
+	<R> CollectionVisitService<T> zipResult(@Nullable Object param ,ResultVisitor<T, R> visitor, 
+			Observer<T, List<R>> observer);
 	
 	/**
 	 * fire the all element by target {@linkplain FireBatchVisitor} and etc.
@@ -603,6 +602,16 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitAll();
+	
+	/**
+	 * visit the all elements if possible.
+	 * @param param the extra parameter
+	 * @param visitor the visitor to visit all elements.
+	 * @return true if operate success.
+	 * @since 1.1.6
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	boolean visitAll(@Nullable Object param, IterateVisitor<? super T> visitor);
 
 	/**
 	 * visit the all elements until someone success.

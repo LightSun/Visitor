@@ -40,7 +40,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 	public void testZipResultThrowable(){
 		final String str = "testZipResultThrowable";
 		final int target = 2015;
-		mListService.zipResult(str, Comparators.<String>getDefaultComparator() ,
+		mListService.zipResult(str,
 				new ResultVisitor<Integer, String>() {
 			@Override
 			public String visit(Integer t, Object param) {
@@ -70,7 +70,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 	public void testZipResultFailed(){
 		final String str = "testZipResultFailed";
 		final int target = 2015;
-		mListService.zipResult(str, Comparators.<String>getDefaultComparator() ,
+		mListService.zipResult(str,
 				new ResultVisitor<Integer, String>() {
 			@Override
 			public String visit(Integer t, Object param) {
@@ -97,7 +97,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 	
 	public void testZipResultSuccess(){
 		final String str = "testZipResultSuccess";
-		mListService.zipResult(str, Comparators.<String>getDefaultComparator() ,
+		mListService.zipResult(str, 
 				new ResultVisitor<Integer, String>() {
 			@Override
 			public String visit(Integer t, Object param) {

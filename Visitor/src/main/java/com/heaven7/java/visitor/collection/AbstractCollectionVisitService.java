@@ -47,7 +47,8 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 			Observer<T, Void> observer) {
 		Throwables.checkNull(visitor);
 		Throwables.checkNull(observer);
-		WrappedObserveVisitor<T, Void> observeVisitor = new WrappedObserveVisitor<T, Void>(param, visitor, observer);
+		final WrappedObserveVisitor<T, Void> observeVisitor = new 
+				WrappedObserveVisitor<T, Void>(param, visitor, observer);
 		try {
 			if (visitUntilFailed(param, observeVisitor)) {
 				observeVisitor.onSuccess(null);
@@ -61,8 +62,8 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public <R> CollectionVisitService<T> zipResult(Object param, Comparator<? super R> c,
-			final ResultVisitor<T, R> visitor, Observer<T, List<R>> observer) {
+	public <R> CollectionVisitService<T> zipResult(Object param,final ResultVisitor<T, R> visitor,
+			Observer<T, List<R>> observer) {
 		Throwables.checkNull(visitor);
 		Throwables.checkNull(observer);
 
@@ -387,6 +388,12 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	@Override
 	public final boolean visitUntilFailed(IterateVisitor<? super T> breakVisitor) {
 		return visitUntilFailed(null, breakVisitor);
+	}
+	
+
+	@Override
+	public boolean visitAll(Object param, IterateVisitor<? super T> visitor) {
+		return visit(VISIT_RULE_ALL, param, visitor);
 	}
 
 	@Override
