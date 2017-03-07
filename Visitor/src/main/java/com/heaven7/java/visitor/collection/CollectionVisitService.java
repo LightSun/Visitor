@@ -53,7 +53,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * zip the all elements with target visitor .
 	 * <p>that is if 'case' then 'result'</p>
 	 * <ul> <h2>here is the left case with right result</h2>
-	 *    <li> if predicate visitor always visit success(true) ==>cause call {@linkplain Observer#onSucess(Object)}
+	 *    <li> if predicate visitor always visit success(true) ==>cause call {@linkplain Observer#onSucess(Object,Object)}
 	 *    <li> if predicate visitor sometime visit failed(false) ==>cause call {@linkplain Observer#onFailed(Object, Object)}
 	 *    <li> if occurs {@linkplain Throwable} during visit ==>cause call {@linkplain Observer#onThrowable(Object, Object, Throwable)}
 	 * </ul>
@@ -68,6 +68,22 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	CollectionVisitService<T> zip(@Nullable Object param, PredicateVisitor<T> visitor,
 			Observer<T, Void> observer);
 	
+	/**
+	 * zip the all elements with target visitor for results.
+	 * <p>that is if 'case' then 'result'</p>
+	 * <ul> <h2>here is the left case with right result</h2>
+	 *    <li> if result visitor always visit success(not null) ==>cause call {@linkplain Observer#onSucess(Object, Object)}
+	 *    <li> if result visitor sometime visit failed(null) ==>cause call {@linkplain Observer#onFailed(Object, Object)}
+	 *    <li> if occurs {@linkplain Throwable} during visit ==>cause call {@linkplain Observer#onThrowable(Object, Object, Throwable)}
+	 * </ul>
+	 * @param <R> the result element type
+	 * @param param the extra parameter
+	 * @param c the sort comparator, if you want the result of collection to be a sorted.
+	 * @param visitor the result visitor
+	 * @param observer the result observer
+	 * @return this.
+	 * @since 1.1.6
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> CollectionVisitService<T> zipResult(@Nullable Object param, Comparator<? super R> c ,
 			ResultVisitor<T, R> visitor,  Observer<T, List<R>> observer);
