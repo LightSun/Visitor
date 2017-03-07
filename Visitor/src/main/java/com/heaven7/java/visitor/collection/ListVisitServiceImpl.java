@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.InternalUtil;
+import com.heaven7.java.visitor.util.Collections2;
 
 /**
  * list visit service
@@ -43,9 +43,13 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 	public ListVisitService<T> asListService() throws UnsupportedOperationException {
 		return this;
 	}
+	@Override
+	protected Iterator<T> getIterator(Collection<T> coll) {
+		return Collections2.asList(coll).listIterator();
+	}
 	// ==============================================================
 
-	@Override
+	/*@Override
 	protected boolean visitImpl(Collection<T> collection, int rule, Object param,
 			CollectionOperateInterceptor<T> interceptor, IterateVisitor<? super T> breakVisitor,
 			final IterationInfo info) {
@@ -128,7 +132,7 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 			throw new RuntimeException("unsupport rule = " + rule);
 		}
 		return result;
-	}
+	}*/
 
 	@Override
 	protected boolean onHandleInsert(List<CollectionOperation<T>> inserts, Iterator<T> it, T t, Object param,

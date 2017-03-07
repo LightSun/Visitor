@@ -37,7 +37,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		implements CollectionVisitService<T> {
 
 	protected static final boolean DEBUG = true;
-	
+
 	private final Collection<T> mCollection;
 
 	/** the ordered operate */
@@ -63,8 +63,8 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	private IterationInfo mIterationInfo;
 
-	/** the flags of clean up, default is {@linkplain VisitService#FLAG_ALL}*/
-	private int mCleanUpFlags = FLAG_ALL ;
+	/** the flags of clean up, default is {@linkplain VisitService#FLAG_ALL} */
+	private int mCleanUpFlags = FLAG_ALL;
 
 	/* protected */ CollectionVisitServiceImpl(Collection<T> collection) {
 		super();
@@ -74,9 +74,9 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		// init default
 		mControl.begin().end();
 	}
-	
-	//===============================================================================
-	
+
+	// ===============================================================================
+
 	@Override
 	public int size() {
 		return mCollection.size();
@@ -137,12 +137,24 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		return result;
 	}
 
+	/**
+	 * get the iterator, list visit service should override this.
+	 * 
+	 * @param coll
+	 *            the collection.
+	 * @return the {@linkplain Iterator}
+	 */
+	protected Iterator<T> getIterator(Collection<T> coll) {
+		return coll.iterator();
+	}
+
 	@Override
 	protected boolean visit(int rule, @Nullable Object param, IterateVisitor<? super T> breakVisitor) {
+		final IterationInfo info = initAndGetIterationInfo();
 		if (mCollection.size() == 0) {
+			doLast(param);
 			return false;
 		}
-		final IterationInfo info = initAndGetIterationInfo();
 		mGroupInterceptor.begin();
 		boolean result = visitImpl(mCollection, rule, param, mGroupInterceptor, breakVisitor, info);
 		mGroupInterceptor.end();
@@ -150,42 +162,19 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		return result;
 	}
 
-	protected boolean visitImpl(Collection<T> collection, int rule, @Nullable Object param,
-			CollectionOperateInterceptor<T> interceptor, IterateVisitor<? super T> breakVisitor,
-			final IterationInfo info) {
-
-		final boolean hasExtra = hasExtraOperateInIteration();
-
-		if (hasExtra) {
-			final Iterator<T> it = collection.iterator();
-			T t;
-			for (; it.hasNext();) {
-				t = it.next();
-				if (interceptor.intercept(it, t, param, info)) {
-					continue;
-				}
-				// ignore break , there is no need to break. just for test.
-				/*
-				 * if(DEBUG){ breakVisitor.visit(t, param, info); }
-				 */
-			}
-		}
-		return true;
-	}
-	
-	protected void doLast(Object param){
+	protected void doLast(Object param) {
 		handleFinalInsert(param, mIterationInfo);
 		reset(mCleanUpFlags);
 		mCleanUpFlags = FLAG_ALL;
 	}
-	
-	protected List<T> asList(){
+
+	protected List<T> asList() {
 		return Collections2.asList(mCollection);
 	}
 
 	@Override
 	public CollectionVisitService<T> reset(int flags) {
-		if( (flags & FLAG_OPERATE_MANAGER) != 0 ){
+		if ((flags & FLAG_OPERATE_MANAGER) != 0) {
 			mDeleteOp = null;
 			mFilterOp = null;
 			if (mInsertOps != null) {
@@ -198,7 +187,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 				mFinalInsertOps.clear();
 			}
 		}
-		if( (flags & FLAG_OPERATE_ITERATE_CONTROL) != 0 ){
+		if ((flags & FLAG_OPERATE_ITERATE_CONTROL) != 0) {
 			mOrderOps.clear();
 			mInterceptOps.clear();
 			mControl.begin().end();
@@ -226,13 +215,14 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 		return false;
 	}
-	
+
 	/**
 	 * this is different with {@linkplain #hasExtraOperateInIteration} .
+	 * 
 	 * @return true if has operation .
 	 */
-	protected boolean hasOperation(){
-		if(mFinalInsertOps != null && mFinalInsertOps.size() > 0){
+	protected boolean hasOperation() {
+		if (mFinalInsertOps != null && mFinalInsertOps.size() > 0) {
 			return true;
 		}
 		return hasExtraOperateInIteration();
@@ -267,15 +257,14 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		if (mUpdates == null || mUpdates.size() == 0) {
 			return false;
 		}
-		final ListIterator<T> listIt = (lit != null && (lit instanceof ListIterator)) 
-				? (ListIterator<T>)lit : null;
+		final ListIterator<T> listIt = (lit != null && (lit instanceof ListIterator)) ? (ListIterator<T>) lit : null;
 		CollectionOperation<T> op;
 		try {
 			for (int i = 0, size = mUpdates.size(); i < size; i++) {
 				op = mUpdates.get(i);
 				if (op.update(listIt, t, param, info)) {
 					return true;
-				} 
+				}
 			}
 		} catch (UnsupportedOperationException e) {
 			System.err.println("update failed. caused by the list is fixed. "
@@ -352,18 +341,113 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	public OperateManager<T> beginOperateManager() {
 		return mOpManager != null ? mOpManager : (mOpManager = new OperateManagerImpl());
 	}
-	
+
 	@Override
 	public CollectionVisitService<T> subService(Object param, PredicateVisitor<T> visitor) {
 		checkNull(visitor);
 		final List<T> list = new ArrayList<T>();
-		for(T t : asList()){
-			if(isTrue(visitor.visit(t, param))){
+		for (T t : asList()) {
+			if (isTrue(visitor.visit(t, param))) {
 				list.add(t);
 			}
 		}
-		return VisitServices.from((Collection<T>)list);
+		return VisitServices.from((Collection<T>) list);
 	}
+
+	// ============================== start--> private and static
+	// ===========================
+
+	private boolean visitImpl(Collection<T> collection, int rule, @Nullable Object param,
+			CollectionOperateInterceptor<T> interceptor, IterateVisitor<? super T> breakVisitor,
+			final IterationInfo info) {
+		return executeVisit(rule, param, interceptor, breakVisitor, info, hasExtraOperateInIteration(),
+				getIterator(collection));
+	}
+
+	protected static <T> boolean executeVisit(int rule, Object param, CollectionOperateInterceptor<T> interceptor,
+			IterateVisitor<? super T> breakVisitor, IterationInfo info, boolean hasExtra, Iterator<T> it) {
+		T t;
+		boolean result = true;
+		switch (rule) {
+		case VISIT_RULE_ALL:
+			if (hasExtra) {
+				for (; it.hasNext();) {
+					t = it.next();
+					if (interceptor.intercept(it, t, param, info)) {
+						continue;
+					}
+					// visit all
+					if (breakVisitor != null) {
+						breakVisitor.visit(t, param, info);
+					}
+				}
+			} else {
+				if (breakVisitor != null) {
+					for (; it.hasNext();) {
+						// visit all
+						breakVisitor.visit(it.next(), param, info);
+					}
+				}
+			}
+			break;
+
+		case VISIT_RULE_UNTIL_FAILED:
+			if (hasExtra) {
+				for (; it.hasNext();) {
+					t = it.next();
+					if (interceptor.intercept(it, t, param, info)) {
+						continue;
+					}
+					// check failed
+					if (!isTrue(breakVisitor.visit(t, param, info))) {
+						result = false;
+						break;
+					}
+				}
+			} else {
+				for (; it.hasNext();) {
+					// check failed
+					if (!isTrue(breakVisitor.visit(it.next(), param, info))) {
+						result = false;
+						break;
+					}
+				}
+			}
+			break;
+
+		case VISIT_RULE_UNTIL_SUCCESS:
+			if (hasExtra) {
+				for (; it.hasNext();) {
+					t = it.next();
+					if (interceptor.intercept(it, t, param, info)) {
+						continue;
+					}
+					// check success
+					if (isTrue(breakVisitor.visit(t, param, info))) {
+						result = false;
+						break;
+					}
+				}
+			} else {
+				for (; it.hasNext();) {
+					// check success
+					if (isTrue(breakVisitor.visit(it.next(), param, info))) {
+						result = false;
+						break;
+					}
+				}
+			}
+
+			break;
+
+		default:
+			throw new RuntimeException("unsupport rule = " + rule);
+		}
+		return result;
+	}
+
+	// ============================== end --> private or static
+	// ===========================
 
 	private class GroupOperateInterceptor extends CollectionOperateInterceptor<T> {
 
@@ -554,9 +638,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 				throw new IllegalArgumentException("unsupport opertion");
 			}
 		}
+
 		@Override
 		public void applyCache() {
-			mCleanUpFlags &= ~ FLAG_OPERATE_ITERATE_CONTROL;
+			mCleanUpFlags &= ~FLAG_OPERATE_ITERATE_CONTROL;
 		}
 
 	}

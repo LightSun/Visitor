@@ -19,7 +19,9 @@ import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.Visitors;
+import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.InternalUtil;
+import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.Throwables;
 
 /**
@@ -38,6 +40,25 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 
 	protected AbstractCollectionVisitService() {
 		super();
+	}
+
+	@Override
+	public CollectionVisitService<T> zip(@Nullable Object param, PredicateVisitor<T> visitor, 
+			Observer<T> observer) {
+		Throwables.checkNull(visitor);
+		Throwables.checkNull(observer);
+		WrappedObserveVisitor<T> observeVisitor = new WrappedObserveVisitor<T>(param, 
+				visitor, observer);
+		try {
+			if (visitUntilFailed(param, observeVisitor)) {
+				observeVisitor.onSuccess();
+			} else {
+				observeVisitor.onFailed();
+			}
+		} catch (Throwable e) {
+			observeVisitor.onThrowable(e);
+		}
+		return this;
 	}
 
 	@Override
@@ -123,21 +144,21 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 		results.clear();
 		return this;
 	}
-	
+
 	@Override
 	public final <K> MapVisitService<K, List<T>> transformToMapByGroup(ResultVisitor<T, K> keyVisitor) {
 		return transformToMapByGroup(null, keyVisitor);
 	}
-	
+
 	@Override
 	public final <K> MapVisitService<K, List<T>> transformToMapByGroup(Comparator<? super K> comparator,
 			ResultVisitor<T, K> keyVisitor) {
 		return transformToMapByGroup(null, comparator, keyVisitor);
 	}
-	
+
 	@Override
-	public final <K> MapVisitService<K, List<T>> transformToMapByGroup(Object param, 
-			Comparator<? super K> comparator, ResultVisitor<T, K> keyVisitor) {
+	public final <K> MapVisitService<K, List<T>> transformToMapByGroup(Object param, Comparator<? super K> comparator,
+			ResultVisitor<T, K> keyVisitor) {
 		Throwables.checkNull(keyVisitor);
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
 		try {
@@ -158,21 +179,22 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 			list.clear();
 		}
 	}
-	
+
 	@Override
 	public final <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(ResultVisitor<T, K> keyVisitor,
 			ResultVisitor<T, V> valueVisitor) {
 		return transformToMapByGroupValue(null, keyVisitor, valueVisitor);
 	}
+
 	@Override
 	public final <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(Comparator<? super K> comparator,
 			ResultVisitor<T, K> keyVisitor, ResultVisitor<T, V> valueVisitor) {
-		return transformToMapByGroupValue(null , comparator, keyVisitor, valueVisitor);
+		return transformToMapByGroupValue(null, comparator, keyVisitor, valueVisitor);
 	}
 
 	@Override
-	public final <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(Object param, Comparator<? super K> comparator,
-			ResultVisitor<T, K> keyVisitor, ResultVisitor<T, V> valueVisitor) {
+	public final <K, V> MapVisitService<K, List<V>> transformToMapByGroupValue(Object param,
+			Comparator<? super K> comparator, ResultVisitor<T, K> keyVisitor, ResultVisitor<T, V> valueVisitor) {
 		Throwables.checkNull(keyVisitor);
 		Throwables.checkNull(valueVisitor);
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
@@ -201,7 +223,8 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public final <K> MapVisitService<K, T> transformToMapAsValues(Object param, ResultVisitor<? super T, K> keyVisitor) {
+	public final <K> MapVisitService<K, T> transformToMapAsValues(Object param,
+			ResultVisitor<? super T, K> keyVisitor) {
 		return transformToMapAsValues(param, null, keyVisitor);
 	}
 
@@ -224,7 +247,8 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public final <V> MapVisitService<T, V> transformToMapAsKeys(Object param, ResultVisitor<? super T, V> valueVisitor) {
+	public final <V> MapVisitService<T, V> transformToMapAsKeys(Object param,
+			ResultVisitor<? super T, V> valueVisitor) {
 		return transformToMapAsKeys(param, null, valueVisitor);
 	}
 
@@ -344,11 +368,13 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 
 	@Override
 	public final boolean visitUntilSuccess(Object param, IterateVisitor<? super T> breakVisitor) {
+		Throwables.checkNull(breakVisitor);
 		return visit(VISIT_RULE_UNTIL_SUCCESS, param, breakVisitor);
 	}
 
 	@Override
 	public final boolean visitUntilFailed(Object param, IterateVisitor<? super T> breakVisitor) {
+		Throwables.checkNull(breakVisitor);
 		return visit(VISIT_RULE_UNTIL_FAILED, param, breakVisitor);
 	}
 
@@ -374,7 +400,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	public ListVisitService<T> asListService() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
 	public final CollectionVisitService<T> subService(PredicateVisitor<T> visitor) {
 		return subService(null, visitor);
@@ -382,4 +408,39 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 
 	// ===================================================
 
+	//===================== start inner classes ====================================
+	
+	private static class WrappedObserveVisitor<T> implements IterateVisitor<T> {
+
+		private final PredicateVisitor<T> mPredicate;
+		private final Observer<T> mObserver;
+		private final Object mParam;
+		private T mLastT;
+
+		public WrappedObserveVisitor(Object param, PredicateVisitor<T> mPredicate, Observer<T> mObserver) {
+			super();
+			this.mParam = param;
+			this.mPredicate = mPredicate;
+			this.mObserver = mObserver;
+		}
+
+		@Override
+		public Boolean visit(T t, Object param, IterationInfo info) {
+			mLastT = t;
+			return mPredicate.visit(t, param);
+		}
+
+		public void onFailed() {
+			mObserver.onFailed(mParam, mLastT);
+		}
+
+		public void onSuccess() {
+			mObserver.onSucess(mParam);
+		}
+
+		public void onThrowable(Throwable e) {
+			mObserver.onThrowable(mParam, mLastT, e);
+		}
+	}
+	//====================== end inner classes ============================
 }

@@ -29,7 +29,8 @@ import com.heaven7.java.visitor.util.VisitException;
  */
 public final class InternalUtil {
 
-	public static void processThrowable(Throwable e, ThrowableVisitor tv) {
+
+	public static void processThrowable(Throwable e, ThrowableVisitor tv) throws VisitException {
 		if (tv != null) {
 			tv.visit(e);
 		} else {
@@ -110,15 +111,16 @@ public final class InternalUtil {
 	 * @return a unmodifiable collection
 	 */
 	public static <T> Collection<T> unmodifiable(Collection<T> collection) {
-		
+
 		if (collection instanceof List) {
 			return Collections.unmodifiableList((List<? extends T>) collection);
-		} 
-		/*else if (collection instanceof NavigableSet) {
-			if(JDKVersion.isJdK18()){ //jdk1.8
-			    return Collections.unmodifiableNavigableSet((NavigableSet<T>) collection);
-			}
-		} */
+		}
+		/*
+		 * else if (collection instanceof NavigableSet) {
+		 * if(JDKVersion.isJdK18()){ //jdk1.8 return
+		 * Collections.unmodifiableNavigableSet((NavigableSet<T>) collection); }
+		 * }
+		 */
 		else if (collection instanceof SortedSet) {
 			return Collections.unmodifiableSortedSet((SortedSet<T>) collection);
 		} else if (collection instanceof Set) {
@@ -128,10 +130,12 @@ public final class InternalUtil {
 	}
 
 	public static <K, V> Map<K, V> unmodifiable(Map<K, V> map) {
-		//jdk1.8
-		/*if (map instanceof NavigableMap) {
-			return Collections.unmodifiableNavigableMap((NavigableMap<K, ? extends V>) map);
-		} else*/ 
+		// jdk1.8
+		/*
+		 * if (map instanceof NavigableMap) { return
+		 * Collections.unmodifiableNavigableMap((NavigableMap<K, ? extends V>)
+		 * map); } else
+		 */
 		if (map instanceof SortedMap) {
 			return Collections.unmodifiableSortedMap((SortedMap<K, ? extends V>) map);
 		}

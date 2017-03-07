@@ -14,6 +14,7 @@ import com.heaven7.java.visitor.collection.CollectionVisitService;
 import com.heaven7.java.visitor.collection.ListVisitService;
 import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.util.Map;
+import com.heaven7.java.visitor.util.Observer;
 
 public class ListVisitServiceTest extends VisitServiceTest {
 
@@ -33,6 +34,85 @@ public class ListVisitServiceTest extends VisitServiceTest {
 		mList.add(5);
 		mList.add(100);
 		mListService = VisitServices.from(mList);
+	}
+	
+	public void testZipThrowable(){
+		final String str = "testZipThrowable";
+		final int target = 2015;
+		mListService.zip(str, new PredicateVisitor<Integer>() {
+			@Override
+			public Boolean visit(Integer t, Object param) {
+				assertEquals(str, param);
+				if(t == target){
+					throw new RuntimeException();
+				}
+				return true;
+			}
+		}, new Observer<Integer>() {
+			@Override
+			public void onSucess(Object param) {
+			}
+			@Override
+			public void onFailed(Object param, Integer t) {
+			}
+			@Override
+			public void onThrowable(Object param, Integer t, Throwable e) {
+				System.out.println(param);
+				assertEquals(str, param);
+				assertEquals(target, t.intValue());
+				assertTrue(RuntimeException.class.isAssignableFrom(e.getClass()));
+			}
+		});
+	}
+	
+	public void testZipFailed(){
+		final String str = "testZipFailed";
+		final int target = 2015;
+		mListService.zip(str, new PredicateVisitor<Integer>() {
+			@Override
+			public Boolean visit(Integer t, Object param) {
+				assertEquals(str, param);
+				return t != target;
+			}
+		}, new Observer<Integer>() {
+			@Override
+			public void onSucess(Object param) {
+			}
+			@Override
+			public void onFailed(Object param, Integer t) {
+				System.out.println(param);
+				assertEquals(str, param);
+				assertEquals(target, t.intValue());
+			}
+			@Override
+			public void onThrowable(Object param, Integer t, Throwable e) {
+				
+			}
+		});
+	}
+	
+	public void testZipSuccess(){
+		final String str = "testZipSuccess";
+		mListService.zip(str, new PredicateVisitor<Integer>() {
+			@Override
+			public Boolean visit(Integer t, Object param) {
+				assertEquals(str, param);
+				return true;
+			}
+		}, new Observer<Integer>() {
+			@Override
+			public void onSucess(Object param) {
+				assertEquals(str, param);
+			}
+			@Override
+			public void onFailed(Object param, Integer t) {
+				
+			}
+			@Override
+			public void onThrowable(Object param, Integer t, Throwable e) {
+				
+			}
+		});
 	}
 	
 	public void testSubserviceFromCollection(){

@@ -16,10 +16,10 @@ import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.anno.DependOn;
 import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
-import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
 import com.heaven7.java.visitor.internal.Cacheable;
 import com.heaven7.java.visitor.internal.Endable;
 import com.heaven7.java.visitor.internal.OperateInterceptor;
+import com.heaven7.java.visitor.util.Observer;
 
 /**
  * the super interface of collection 'Visit-Service'
@@ -48,6 +48,24 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	public static final int VISIT_RULE_UNTIL_FAILED = 13;
 	
+	/**
+	 * zip the all elements with target visitor .
+	 * <p>that is if 'case' then 'result'</p>
+	 * <ul> <h2>here is the left case with right result</h2>
+	 *    <li> if predicate visitor always visit success(true) ==>cause call {@linkplain Observer#onSucess(Object)}
+	 *    <li> if predicate visitor sometime visit failed(false) ==>cause call {@linkplain Observer#onFailed(Object, Object)}
+	 *    <li> if occurs {@linkplain Throwable} during visit ==>cause call {@linkplain Observer#onThrowable(Object, Object, Throwable)}
+	 * </ul>
+	 * 
+	 * @param param the extra parameter
+	 * @param visitor the predicate visitor
+	 * @param observer the result observer
+	 * @return this.
+	 * @since 1.1.6
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<T> zip(@Nullable Object param, PredicateVisitor<T> visitor,
+		  Observer<T> observer);
 	
 	/**
 	 * fire the all element by target {@linkplain FireBatchVisitor} and etc.
@@ -566,34 +584,34 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	boolean visitAll();
 
 	/**
-	 * visit the all elements until success. by default this is same with {@linkplain #visitAll(Object)}.
+	 * visit the all elements until someone success.
 	 * @param param the extra parameter.
 	 * @param breakVisitor the break visitor
-	 * @return true if operate success.
+	 * @return true if operate success(no break).
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitUntilSuccess(@Nullable Object param, IterateVisitor<? super T> breakVisitor);
 	
 	/**
-	 * visit the all elements until success, but carry no extra data. by default this is same with {@linkplain #visitAll(Object)}.
+	 * visit the all elements until someone success, but carry no extra data. 
 	 * @param breakVisitor the break visitor
-	 * @return true if operate success.
+	 * @return true if operate success(no break).
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitUntilSuccess(IterateVisitor<? super T> breakVisitor);
 
 	/**
-	 * visit the all elements until failed. by default this is same with {@linkplain #visitAll(Object)}.
+	 * visit the all elements until  someone failed.
 	 * @param param the extra parameter.
 	 * @param breakVisitor the break visitor
-	 * @return true if operate success.
+	 * @return true if operate success(no break).
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitUntilFailed(@Nullable Object param, IterateVisitor<? super T> breakVisitor);
 	/**
-	 * visit the all elements until failed, but carry no extra data. by default this is same with {@linkplain #visitAll(Object)}.
+	 * visit the all elements until someone  failed, but carry no extra data.
 	 * @param breakVisitor the break visitor
-	 * @return true if operate success.
+	 * @return true if operate success(no break).
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitUntilFailed(IterateVisitor<? super T> breakVisitor);
