@@ -143,5 +143,10 @@ public class SynchronizedMap<K, V> implements Map<K, V> {
 			mBase.startTravel(travelCallback);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return mBase.toString();
+	}
 
 }

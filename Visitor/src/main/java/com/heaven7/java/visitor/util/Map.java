@@ -61,6 +61,11 @@ public interface Map<K, V> {
 	 * @since 1.1.0
 	 */
 	boolean isSorted();
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	String toString();
 
 	// ==================================================//
 	/**
