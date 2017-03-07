@@ -43,15 +43,43 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 	}
 
 	@Override
-	public CollectionVisitService<T> zip(@Nullable Object param, PredicateVisitor<T> visitor, 
-			Observer<T> observer) {
+	public CollectionVisitService<T> zip(@Nullable Object param, PredicateVisitor<T> visitor,
+			Observer<T, Void> observer) {
 		Throwables.checkNull(visitor);
 		Throwables.checkNull(observer);
-		WrappedObserveVisitor<T> observeVisitor = new WrappedObserveVisitor<T>(param, 
-				visitor, observer);
+		WrappedObserveVisitor<T, Void> observeVisitor = new WrappedObserveVisitor<T, Void>(param, visitor, observer);
 		try {
 			if (visitUntilFailed(param, observeVisitor)) {
-				observeVisitor.onSuccess();
+				observeVisitor.onSuccess(null);
+			} else {
+				observeVisitor.onFailed();
+			}
+		} catch (Throwable e) {
+			observeVisitor.onThrowable(e);
+		}
+		return this;
+	}
+
+	@Override
+	public <R> CollectionVisitService<T> zipResult(Object param, Comparator<? super R> c,
+			final ResultVisitor<T, R> visitor, Observer<T, List<R>> observer) {
+		Throwables.checkNull(visitor);
+		Throwables.checkNull(observer);
+
+		final List<R> results = new ArrayList<R>();
+		final WrappedObserveVisitor<T, List<R>> observeVisitor = new 
+				WrappedObserveVisitor<T, List<R>>(param,
+				new PredicateVisitor<T>() {
+					@Override
+					public Boolean visit(T t, Object param) {
+						R r = visitor.visit(t, param);
+						results.add(r);
+						return r != null;
+					}
+				}, observer);
+		try {
+			if (visitUntilFailed(param, observeVisitor)) {
+				observeVisitor.onSuccess(results);
 			} else {
 				observeVisitor.onFailed();
 			}
@@ -408,16 +436,17 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 
 	// ===================================================
 
-	//===================== start inner classes ====================================
-	
-	private static class WrappedObserveVisitor<T> implements IterateVisitor<T> {
+	// ===================== start inner classes
+	// ====================================
+
+	private static class WrappedObserveVisitor<T, R> implements IterateVisitor<T> {
 
 		private final PredicateVisitor<T> mPredicate;
-		private final Observer<T> mObserver;
+		private final Observer<T, R> mObserver;
 		private final Object mParam;
 		private T mLastT;
 
-		public WrappedObserveVisitor(Object param, PredicateVisitor<T> mPredicate, Observer<T> mObserver) {
+		public WrappedObserveVisitor(Object param, PredicateVisitor<T> mPredicate, Observer<T, R> mObserver) {
 			super();
 			this.mParam = param;
 			this.mPredicate = mPredicate;
@@ -434,13 +463,13 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 			mObserver.onFailed(mParam, mLastT);
 		}
 
-		public void onSuccess() {
-			mObserver.onSucess(mParam);
+		public void onSuccess(R result) {
+			mObserver.onSucess(mParam, result);
 		}
 
 		public void onThrowable(Throwable e) {
 			mObserver.onThrowable(mParam, mLastT, e);
 		}
 	}
-	//====================== end inner classes ============================
+	// ====================== end inner classes ============================
 }

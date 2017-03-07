@@ -48,6 +48,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	public static final int VISIT_RULE_UNTIL_FAILED = 13;
 	
+	
 	/**
 	 * zip the all elements with target visitor .
 	 * <p>that is if 'case' then 'result'</p>
@@ -65,7 +66,11 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> zip(@Nullable Object param, PredicateVisitor<T> visitor,
-		  Observer<T> observer);
+			Observer<T, Void> observer);
+	
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<R> CollectionVisitService<T> zipResult(@Nullable Object param, Comparator<? super R> c ,
+			ResultVisitor<T, R> visitor,  Observer<T, List<R>> observer);
 	
 	/**
 	 * fire the all element by target {@linkplain FireBatchVisitor} and etc.

@@ -13,6 +13,7 @@ import com.heaven7.java.visitor.SaveVisitor;
 import com.heaven7.java.visitor.collection.CollectionVisitService;
 import com.heaven7.java.visitor.collection.ListVisitService;
 import com.heaven7.java.visitor.collection.VisitServices;
+import com.heaven7.java.visitor.util.Comparators;
 import com.heaven7.java.visitor.util.Map;
 import com.heaven7.java.visitor.util.Observer;
 
@@ -36,6 +37,90 @@ public class ListVisitServiceTest extends VisitServiceTest {
 		mListService = VisitServices.from(mList);
 	}
 	
+	public void testZipResultThrowable(){
+		final String str = "testZipResultThrowable";
+		final int target = 2015;
+		mListService.zipResult(str, Comparators.<String>getDefaultComparator() ,
+				new ResultVisitor<Integer, String>() {
+			@Override
+			public String visit(Integer t, Object param) {
+				assertEquals(str, param);
+				if(t == target){
+					throw new RuntimeException();
+				}
+				return t.toString();
+			}
+		},new Observer<Integer, List<String>>() {
+			@Override
+			public void onSucess(Object param, List<String> r) {
+			}
+			@Override
+			public void onFailed(Object param, Integer t) {
+			}
+			@Override
+			public void onThrowable(Object param, Integer t, Throwable e) {
+				System.out.println(param);
+				assertEquals(str, param);
+				assertEquals(target, t.intValue());
+				assertTrue(e instanceof RuntimeException);
+			}
+		});
+	}
+	
+	public void testZipResultFailed(){
+		final String str = "testZipResultFailed";
+		final int target = 2015;
+		mListService.zipResult(str, Comparators.<String>getDefaultComparator() ,
+				new ResultVisitor<Integer, String>() {
+			@Override
+			public String visit(Integer t, Object param) {
+				assertEquals(str, param);
+				return t == target ? null : t.toString();
+			}
+		},new Observer<Integer, List<String>>() {
+			@Override
+			public void onSucess(Object param, List<String> r) {
+			}
+			@Override
+			public void onFailed(Object param, Integer t) {
+				System.out.println(param);
+				assertEquals(str, param);
+				assertEquals(target, t.intValue());
+				
+			}
+			@Override
+			public void onThrowable(Object param, Integer t, Throwable e) {
+				
+			}
+		});
+	}
+	
+	public void testZipResultSuccess(){
+		final String str = "testZipResultSuccess";
+		mListService.zipResult(str, Comparators.<String>getDefaultComparator() ,
+				new ResultVisitor<Integer, String>() {
+			@Override
+			public String visit(Integer t, Object param) {
+				assertEquals(str, param);
+				return t.toString();
+			}
+		},new Observer<Integer, List<String>>() {
+			@Override
+			public void onSucess(Object param, List<String> r) {
+				assertEquals(str, param);
+				System.out.println(r);
+			}
+			@Override
+			public void onFailed(Object param, Integer t) {
+				
+			}
+			@Override
+			public void onThrowable(Object param, Integer t, Throwable e) {
+				
+			}
+		});
+	}
+	
 	public void testZipThrowable(){
 		final String str = "testZipThrowable";
 		final int target = 2015;
@@ -48,9 +133,9 @@ public class ListVisitServiceTest extends VisitServiceTest {
 				}
 				return true;
 			}
-		}, new Observer<Integer>() {
+		}, new Observer<Integer,Void>() {
 			@Override
-			public void onSucess(Object param) {
+			public void onSucess(Object param,Void r) {
 			}
 			@Override
 			public void onFailed(Object param, Integer t) {
@@ -74,9 +159,9 @@ public class ListVisitServiceTest extends VisitServiceTest {
 				assertEquals(str, param);
 				return t != target;
 			}
-		}, new Observer<Integer>() {
+		}, new Observer<Integer, Void>() {
 			@Override
-			public void onSucess(Object param) {
+			public void onSucess(Object param,Void r) {
 			}
 			@Override
 			public void onFailed(Object param, Integer t) {
@@ -99,9 +184,9 @@ public class ListVisitServiceTest extends VisitServiceTest {
 				assertEquals(str, param);
 				return true;
 			}
-		}, new Observer<Integer>() {
+		}, new Observer<Integer,Void>() {
 			@Override
-			public void onSucess(Object param) {
+			public void onSucess(Object param,Void r) {
 				assertEquals(str, param);
 			}
 			@Override

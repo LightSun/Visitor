@@ -19,6 +19,7 @@ import java.util.TreeMap;
 
 import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.collection.CollectionVisitService;
+import com.heaven7.java.visitor.collection.MapVisitService;
 import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.util.VisitException;
 
@@ -39,7 +40,7 @@ public final class InternalUtil {
 	}
 
 	/**
-	 * get the right {@linkplain CollectionVisitService}.
+	 * get the right {@linkplain CollectionVisitService}. often called by {@linkplain MapVisitService}.
 	 * 
 	 * @param <T>
 	 *            the element type
@@ -49,7 +50,8 @@ public final class InternalUtil {
 	 *            the sort Comparator, can be null.
 	 * @param sort
 	 *            represent should regard as sorted
-	 *            {@linkplain CollectionVisitService}.
+	 *            {@linkplain CollectionVisitService}. if false {@linkplain #getVisitService(List, Comparator)}
+	 *            will be called or else sort and return {@linkplain VisitServices#from(List)}
 	 * @return an instance of {@linkplain CollectionVisitService}.
 	 */
 	public static <T> CollectionVisitService<T> getVisitService(List<T> list, Comparator<? super T> c, boolean sort) {
