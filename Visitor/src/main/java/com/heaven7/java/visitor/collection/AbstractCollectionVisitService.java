@@ -74,8 +74,11 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 					@Override
 					public Boolean visit(T t, Object param) {
 						R r = visitor.visit(t, param);
-						results.add(r);
-						return r != null;
+						if(r != null){
+						   results.add(r);
+						   return true;
+						}
+						return false;
 					}
 				}, observer);
 		try {
