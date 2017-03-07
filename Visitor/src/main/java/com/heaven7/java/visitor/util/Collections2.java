@@ -9,7 +9,7 @@ import java.util.SortedSet;
  * @since 1.1.2
  */
 public class Collections2 {
-
+	
 	public static <T> List<T> asList(Collection<T> coll){
 		if(coll instanceof List){
 			return (List<T>) coll;
