@@ -1,14 +1,14 @@
 package com.heaven7.java.visitor.test;
 
+import java.util.ArrayList;
+
 import com.heaven7.java.visitor.FireVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ThrowableVisitor;
-import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
 import com.heaven7.java.visitor.collection.ListVisitService;
 import com.heaven7.java.visitor.collection.VisitServices;
-import junit.framework.TestCase;
 
-import java.util.ArrayList;
+import junit.framework.TestCase;
 
 /**
  * Created by heaven7 on 2017/3/9 0009.

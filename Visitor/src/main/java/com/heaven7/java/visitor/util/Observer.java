@@ -25,14 +25,14 @@ public interface Observer<T, R> {
 	/**
 	 * called on operate failed.
 	 * @param param the parameter.
-	 * @param t the element
+	 * @param t the element when failed.
 	 */
 	void onFailed(Object param, T t);
 
 	/**
 	 * called on throwable during visit operation.
 	 * @param param the parameter.
-	 * @param t the element
+	 * @param t the element when throwable during visit operation.
 	 * @param e the throwable.
 	 */
 	void onThrowable(Object param, T t, Throwable e);
