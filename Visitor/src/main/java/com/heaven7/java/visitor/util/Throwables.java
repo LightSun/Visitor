@@ -9,6 +9,22 @@ import java.util.Collection;
 public final class Throwables {
 	private Throwables(){}
 	
+	/**
+	 * throw exception if fatal.
+	 * @param e the throwable
+	 * @since 1.1.7
+	 */
+	public static void throwIfFatal(Throwable e) {
+		if (e instanceof Error) {
+			throw (Error) e;
+		} else if (e instanceof VisitException) {
+			throw (VisitException) e;
+		} else if (e instanceof RuntimeException) {
+			throw (RuntimeException) e;
+		} else {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public static void checkNull(Object obj) {
 		if (obj == null) {

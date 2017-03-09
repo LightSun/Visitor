@@ -256,7 +256,7 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 	}
 
 	//============
-
+	
 	@Override
 	public OperateManager<T> beginOperateManager() {
 		return new OperateManagerImpl(){
@@ -266,4 +266,18 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 			}
 		};
 	}
+
+	//for  OperateManagerImpl return the original OperateManager. even if you wapped.
+	// so this must cause bug of exception(UnsupportedOperationException)
+	/*
+	 * @Override
+	public OperateManager<T> beginOperateManager() {
+		return new WrappedOperateManager<T>(super.beginOperateManager()) {
+			@Override
+			public ListVisitService<T> endAsList() throws UnsupportedOperationException {
+				return ListVisitServiceImpl.this;
+			}
+		};
+	}*/
+	
 }

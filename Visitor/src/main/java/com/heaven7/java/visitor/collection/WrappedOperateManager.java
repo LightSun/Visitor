@@ -3,6 +3,7 @@ package com.heaven7.java.visitor.collection;
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
+import com.heaven7.java.visitor.collection.CollectionVisitService.OperateManager;
 
 import java.util.List;
 
@@ -68,5 +69,10 @@ import java.util.List;
     @Override
     public CollectionVisitService.OperateManager<T> insertFinallyIfNotExist(T newT) {
         return mOm.insertFinallyIfNotExist(newT);
+    }
+    
+    @Override
+    public OperateManager<T> deleteFinallyIfExist(T t) {
+    	return mOm.deleteFinallyIfExist(t);
     }
 }
