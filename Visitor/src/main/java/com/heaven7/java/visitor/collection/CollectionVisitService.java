@@ -1,18 +1,6 @@
 package com.heaven7.java.visitor.collection;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-import com.heaven7.java.visitor.FireBatchVisitor;
-import com.heaven7.java.visitor.FireVisitor;
-import com.heaven7.java.visitor.IterateVisitor;
-import com.heaven7.java.visitor.PredicateVisitor;
-import com.heaven7.java.visitor.ResultVisitor;
-import com.heaven7.java.visitor.SaveVisitor;
-import com.heaven7.java.visitor.ThrowableVisitor;
+import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.anno.DependOn;
 import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
@@ -20,6 +8,8 @@ import com.heaven7.java.visitor.internal.Cacheable;
 import com.heaven7.java.visitor.internal.Endable;
 import com.heaven7.java.visitor.internal.OperateInterceptor;
 import com.heaven7.java.visitor.util.Observer;
+
+import java.util.*;
 
 /**
  * the super interface of collection 'Visit-Service'
@@ -30,7 +20,6 @@ import com.heaven7.java.visitor.util.Observer;
  * @see CollectionVisitServiceImpl
  * @see ListVisitServiceImpl
  */
-//TODO need visitFirst/ visitLast / ?
 public interface CollectionVisitService<T> extends VisitService<CollectionVisitService<T>>{
 	
 	/**
@@ -89,9 +78,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	
 	/**
 	 * fire the all element by target {@linkplain FireBatchVisitor} and etc.
-	 * @param param the parameter , can be null
-	 * @param fireVisitor fire batch visitor 
-	 * @param throwVisitor the throwable visitor, can be null.
+	 * @param fireVisitor fire batch visitor
 	 * @return this
 	 * @since 1.1.1
 	 * @see {@linkplain #fireBatch(FireBatchVisitor, ThrowableVisitor)}
@@ -101,8 +88,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	CollectionVisitService<T> fireBatch(FireBatchVisitor<T> fireVisitor);
 	/**
 	 * fire the all element by target {@linkplain FireBatchVisitor} and etc.
-	 * @param param the parameter , can be null
-	 * @param fireVisitor fire batch visitor 
+	 * @param fireVisitor fire batch visitor
 	 * @param throwVisitor the throwable visitor, can be null.
 	 * @return this
 	 * @since 1.1.1
@@ -123,8 +109,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	
 	/**
 	 * fire the all element by target {@linkplain FireVisitor}.
-	 * @param param the parameter , can be null
-	 * @param fireVisitor fire visitor 
+	 * @param fireVisitor fire visitor
 	 * @return this
 	 * @since 1.1.1
 	 * @see [{@linkplain #fire(FireVisitor, ThrowableVisitor)}

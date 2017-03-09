@@ -1,18 +1,6 @@
 package com.heaven7.java.visitor.collection;
 
-import java.util.Comparator;
-import java.util.List;
-
-import com.heaven7.java.visitor.MapFireVisitor;
-import com.heaven7.java.visitor.MapFireBatchVisitor;
-import com.heaven7.java.visitor.MapIterateVisitor;
-import com.heaven7.java.visitor.MapPredicateVisitor;
-import com.heaven7.java.visitor.MapResultVisitor;
-import com.heaven7.java.visitor.MapSaveVisitor;
-import com.heaven7.java.visitor.MapTrimVisitor;
-import com.heaven7.java.visitor.SaveVisitor;
-import com.heaven7.java.visitor.ThrowableVisitor;
-import com.heaven7.java.visitor.TrimMapVisitor;
+import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.anno.DependOn;
 import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
@@ -21,6 +9,9 @@ import com.heaven7.java.visitor.internal.Cacheable;
 import com.heaven7.java.visitor.internal.Endable;
 import com.heaven7.java.visitor.internal.OperateInterceptor;
 import com.heaven7.java.visitor.util.Map;
+
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * visit service of common map . <br>
@@ -67,12 +58,8 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * fire the all key-value pair by target {@linkplain MapFireBatchVisitor}
 	 * and etc.
 	 * 
-	 * @param param
-	 *            the parameter , can be null
 	 * @param fireVisitor
 	 *            fire batch visitor
-	 * @param throwVisitor
-	 *            the throwable visitor, can be null.
 	 * @return this
 	 * @since 1.1.1
 	 * @see {@linkplain #fireBatch(MapFireBatchVisitor, ThrowableVisitor)}
@@ -85,8 +72,6 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * fire the all key-value pair by target {@linkplain MapFireBatchVisitor}
 	 * and etc.
 	 * 
-	 * @param param
-	 *            the parameter , can be null
 	 * @param fireVisitor
 	 *            fire batch visitor
 	 * @param throwVisitor
@@ -118,8 +103,6 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	/**
 	 * fire the all key-value pair by target {@linkplain MapFireVisitor}.
 	 * 
-	 * @param param
-	 *            the parameter , can be null
 	 * @param fireVisitor
 	 *            fire visitor
 	 * @return this
@@ -745,8 +728,8 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 		 * 
 		 * @param map
 		 *            the map
-		 * @param entry
-		 *            the entry
+		 * @param pair
+		 *            the key-value pair
 		 * @param param
 		 *            the parameter, may be null.
 		 * @param info
@@ -936,7 +919,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 		 * add a insert-finally operation , it means that this operate will
 		 * execute after iterate.
 		 * 
-		 * @param newPair
+		 * @param pair
 		 *            a new key-value to insert.
 		 * @param visitor
 		 *            the iterate visitor

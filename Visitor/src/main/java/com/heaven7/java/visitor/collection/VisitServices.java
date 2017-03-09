@@ -1,20 +1,18 @@
 package com.heaven7.java.visitor.collection;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-
 import com.heaven7.java.visitor.util.Map2Map;
 import com.heaven7.java.visitor.util.SparseArray;
 import com.heaven7.java.visitor.util.SparseArray2Map;
+
+import java.util.*;
 
 /**
  * like executors. we use all APIs start in here.
  * 
  * @author heaven7
- *
+ * @see CollectionVisitService
+ * @see ListVisitService
+ * @see MapVisitService
  */
 public final class VisitServices {
 
@@ -76,7 +74,6 @@ public final class VisitServices {
 	 * create an instance of {@linkplain MapVisitService} from target {@linkplain com.heaven7.java.visitor.util.Map}.
 	 * @param <K> the key type 
 	 * @param <V> the value type 
-	 * @param array the map (key is Integer, value is V)
 	 * @param map the map
 	 * @return an instance of {@linkplain MapVisitService}
 	 * @since 1.0.1

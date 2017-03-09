@@ -7,7 +7,18 @@ import com.heaven7.java.visitor.collection.KeyValuePair;
  * helper class help we fast get certain visitor.
  * 
  * @author heaven7
- *
+ * @see IterateVisitor
+ * @see PredicateVisitor
+ * @see ResultVisitor
+ * @see FireVisitor
+ * @see FireBatchVisitor
+ * @see SaveVisitor
+ * @see MapIterateVisitor
+ * @see MapPredicateVisitor
+ * @see MapResultVisitor
+ * @see MapFireVisitor
+ * @see MapFireBatchVisitor
+ * @see MapSaveVisitor
  */
 public final class Visitors {
 
