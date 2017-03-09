@@ -79,6 +79,20 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		return mCollection.size();
 	}
 
+	@Override
+	public CollectionVisitService<T> addIfNotExist(T newT) {
+		if(!mCollection.contains(newT)){
+			mCollection.add(newT);
+		}
+		return this;
+	}
+
+	@Override
+	public CollectionVisitService<T> removeIfExist(T newT) {
+		mCollection.remove(newT);
+		return this;
+	}
+
 	// =============================================================================//
 	@Override
 	public <R> R visitForResult(@Nullable Object param, PredicateVisitor<? super T> predicate,

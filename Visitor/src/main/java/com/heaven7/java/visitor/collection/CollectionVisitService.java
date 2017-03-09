@@ -630,6 +630,8 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	boolean visitUntilFailed(IterateVisitor<? super T> breakVisitor);
+
+	//================================= start independence methods ======================================
 	
 	/**
 	 * begin the iterate control , And then we can edit the order of operate in iteration.
@@ -682,7 +684,24 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	@Independence
 	int size();
-	
+
+	/**
+	 * add the target element if not exist directly(without iterate service).
+	 * @param newT the element
+	 * @return this.
+	 * @since  1.1.6
+	 */
+	@Independence
+	CollectionVisitService<T> addIfNotExist(T newT);
+
+	/**
+	 * remove the target element if exist directly (without iterate service).
+	 * @param newT the element
+	 * @return this.
+	 * @since  1.1.6
+	 */
+	@Independence
+	CollectionVisitService<T> removeIfExist(T newT);
 	//=======================================================================================
 	
 	/**
@@ -763,6 +782,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		 * add a filter operation. This means: 
 		 * pending filter element in the iteration({@linkplain Iterator} or {@linkplain ListIterator}) if possible.
 		 * that means if filter operate visit true, the element of collection will skip next visitors' visit.
+		 * <p><h1>note operation delete and filter only support one operation.</h1></p>
 		 * @param filter the predicate visitor for filter.
 		 * @return this.
 		 * @see {@linkplain OperateManager#filter(Object, PredicateVisitor)}
@@ -774,6 +794,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		/**
 		 * add a delete operation. This means: 
 		 * pending remove/delete element in the iteration({@linkplain Iterator} or {@linkplain ListIterator}) if possible.
+		 * <p><h1>note operation delete and filter only support one operation.</h1></p>
 		 * @param delete the predicate visitor for delete/remove.
 		 * @return this.
 		 * @see {@linkplain #delete(Object, PredicateVisitor)}.
@@ -849,6 +870,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		/**
 		 * add a filter operation. This means: 
 		 * pending filter element in the iteration({@linkplain Iterator} or {@linkplain ListIterator}) if possible.
+		 *  <p><h1>note operation delete and filter only support one .</h1></p>
 		 * @param param the extra parameter
 		 * @param filter the predicate visitor for filter.
 		 * @return this.
@@ -856,8 +878,9 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		public abstract OperateManager<T> filter(@Nullable Object param, PredicateVisitor<? super T> filter);
 
 		/**
-		 * add a delete operation. This means: 
+		 * add a delete operation. This means:
 		 * pending remove/delete element in the iteration({@linkplain Iterator} or {@linkplain ListIterator}) if possible.
+		 *<p><h1>note operation delete and filter only support one operation.</h1></p>
 		 * @param param the extra parameter
 		 * @param delete the predicate visitor for delete/remove.
 		 * @return this.

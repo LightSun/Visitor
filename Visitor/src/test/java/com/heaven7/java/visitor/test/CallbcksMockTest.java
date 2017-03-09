@@ -48,11 +48,8 @@ public class CallbcksMockTest extends TestCase{
             this.mService = VisitServices.from(new ArrayList<Callback>());
         }
 
-        public void register(Callback cl) {
-            mService.beginOperateManager()
-                    .insertFinallyIfNotExist(cl)
-                    .endAsList()
-                    .visitAll();
+        public void register(Callback cl){
+            mService.addIfNotExist(cl);
         }
 
         public int getSize(){
@@ -60,19 +57,7 @@ public class CallbcksMockTest extends TestCase{
         }
 
         public void unregister(Callback cl) {
-            mService.beginOperateManager()
-                    .deleteFinallyIfExist(cl)
-                    .endAsList()
-                    .visitAll();
-
-        }
-        public void unregister2(Callback cl) {
-            mService.beginOperateManager().delete(cl, new PredicateVisitor<Callback>() {
-                @Override
-                public Boolean visit(Callback callback, Object param) {
-                    return callback == param;
-                }
-            }).endAsList().visitAll();
+            mService.removeIfExist(cl);
         }
 
         public void dispatchCallback(String msg) {
@@ -91,6 +76,22 @@ public class CallbcksMockTest extends TestCase{
                 }
             });
         }
+        public void unregister2(Callback cl) {
+            mService.beginOperateManager().delete(cl, new PredicateVisitor<Callback>() {
+                @Override
+                public Boolean visit(Callback callback, Object param) {
+                    return callback == param;
+                }
+            }).endAsList().visitAll();
+        }
+        public void register2(Callback cl) {
+            mService.beginOperateManager()
+                    .insertFinallyIfNotExist(cl)
+                    .endAsList()
+                    .visitAll();
+        }
+
+
     }
 
     public interface Callback {
