@@ -1,5 +1,19 @@
 package com.heaven7.java.visitor.collection;
 
+import static com.heaven7.java.visitor.collection.Operation.OP_DELETE;
+import static com.heaven7.java.visitor.collection.Operation.OP_FILTER;
+import static com.heaven7.java.visitor.collection.Operation.OP_INSERT;
+import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
+import static com.heaven7.java.visitor.util.Predicates.isTrue;
+import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
+import static com.heaven7.java.visitor.util.Throwables.checkNull;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
@@ -7,14 +21,8 @@ import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.IterateControl.Callback;
 import com.heaven7.java.visitor.internal.state.IterateState;
 import com.heaven7.java.visitor.util.Collections2;
+import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.SparseArray;
-
-import java.util.*;
-
-import static com.heaven7.java.visitor.collection.Operation.*;
-import static com.heaven7.java.visitor.util.Predicates.isTrue;
-import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
-import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
 /**
  *
@@ -80,8 +88,22 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	}
 
 	@Override
+	public CollectionVisitService<T> addIfNotExist(T newT, Observer<T, Void> observer) {
+		try {
+			if (!mCollection.contains(newT) && mCollection.add(newT)) {
+				observer.onSucess(null, null);
+			} else {
+				observer.onFailed(null, newT);
+			}
+		} catch (Exception e) {
+			observer.onThrowable(null, newT, e);
+		}
+		return this;
+	}
+
+	@Override
 	public CollectionVisitService<T> addIfNotExist(T newT) {
-		if(!mCollection.contains(newT)){
+		if (!mCollection.contains(newT)) {
 			mCollection.add(newT);
 		}
 		return this;
@@ -90,6 +112,20 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	@Override
 	public CollectionVisitService<T> removeIfExist(T newT) {
 		mCollection.remove(newT);
+		return this;
+	}
+
+	@Override
+	public CollectionVisitService<T> removeIfExist(T newT, Observer<T, Void> observer) {
+		try {
+			if (mCollection.remove(newT)) {
+				observer.onSucess(null, null);
+			} else {
+				observer.onFailed(null, newT);
+			}
+		} catch (Exception e) {
+			observer.onThrowable(null, newT, e);
+		}
 		return this;
 	}
 
@@ -238,7 +274,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		if (mFinalInsertOps != null && mFinalInsertOps.size() > 0) {
 			return true;
 		}
-		if(mInsertIfNotExistOp != null || mDeleteIfExistOp !=null){
+		if (mInsertIfNotExistOp != null || mDeleteIfExistOp != null) {
 			return true;
 		}
 		return hasExtraOperateInIteration();
@@ -266,10 +302,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 				return;
 			}
 		}
-		if(mInsertIfNotExistOp != null){
+		if (mInsertIfNotExistOp != null) {
 			mInsertIfNotExistOp.insertIfNotExist(mCollection);
 		}
-		if(mDeleteIfExistOp != null){
+		if (mDeleteIfExistOp != null) {
 			mDeleteIfExistOp.deleteIfExist(mCollection);
 		}
 	}
@@ -373,8 +409,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 				list.add(t);
 			}
 		}
-		return (this instanceof ListVisitService) ? VisitServices.from(list)
-				: VisitServices.from((Collection<T>) list);
+		return (this instanceof ListVisitService) ? VisitServices.from(list) : VisitServices.from((Collection<T>) list);
 	}
 
 	// ============================== start--> private and static

@@ -693,6 +693,16 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	@Independence
 	CollectionVisitService<T> addIfNotExist(T newT);
+	
+	/**
+	 * add the target element if not exist directly(without iterate service).
+	 * @param newT the element
+	 * @param observer observe add if success or failed or throwable.
+	 * @return this.
+	 * @since  1.1.7
+	 */
+	@Independence
+	CollectionVisitService<T> addIfNotExist(T newT, Observer<T, Void> observer);
 
 	/**
 	 * remove the target element if exist directly (without iterate service).
@@ -702,6 +712,17 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	@Independence
 	CollectionVisitService<T> removeIfExist(T newT);
+	
+	/**
+	 * remove the target element if exist directly (without iterate service).
+	 * @param newT the element
+	 * @param observer observe remove if success or failed or throwable.
+	 * @return this.
+	 * @since  1.1.7
+	 */
+	@Independence
+	CollectionVisitService<T> removeIfExist(T newT, Observer<T, Void> observer);
+	
 	//=======================================================================================
 	
 	/**

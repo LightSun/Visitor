@@ -33,7 +33,7 @@ public interface Observer<T, R> {
 	 * called on throwable during visit operation.
 	 * @param param the parameter.
 	 * @param t the element
-	 * @param e the throwable.eveJAVA
+	 * @param e the throwable.
 	 */
 	void onThrowable(Object param, T t, Throwable e);
 

@@ -47,7 +47,7 @@ publish {
     userOrg = 'lightsun' //bintray user name
     groupId = 'com.heaven7.java.visitor'
     artifactId = 'Visitor'
-    publishVersion = '1.1.6'
+    publishVersion = '1.1.7'
     desc = 'this is a lib of visit mode such as, vist list , set ,map and something like rxjava. '
     website = 'https://github.com/LightSun/Visitor'
 }

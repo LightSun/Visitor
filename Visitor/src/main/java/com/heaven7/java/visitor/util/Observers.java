@@ -1,5 +1,6 @@
 package com.heaven7.java.visitor.util;
 
+import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 /**
  * help for observer
@@ -35,17 +36,17 @@ public final class Observers {
 	}
 
 	/**
-	 * construct a {@linkplain Observer} from target runnables(success,failed and throwable).
+	 * construct a {@linkplain Observer} from target callbacks(success,failed and throwable).
 	 * @param <T> the element type
 	 * @param success the success runnable.
 	 * @param failed the failed runnable
-	 * @param exception the throwable runnable.
+	 * @param exception the throwable visitor.
 	 * @return a {@linkplain Observer}
 	 * @see Observer
 	 * @since 1.1.7
 	 */
 	public static <T> Observer<T, Void> from(Runnable success,@Nullable Runnable failed,
-			@Nullable Runnable exception) {
+			@Nullable ThrowableVisitor exception) {
 		Throwables.checkNull(success);
 		return new ObserverAdapter<T, Void>() {
 			@Override
@@ -63,7 +64,7 @@ public final class Observers {
 			@Override
 			public void onThrowable(Object param, T t, Throwable e) {
 				if (exception != null) {
-					exception.run();
+					exception.visit(e);
 				} else {
 					super.onThrowable(param, t, e);
 				}
