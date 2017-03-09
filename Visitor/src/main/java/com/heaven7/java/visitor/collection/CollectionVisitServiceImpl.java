@@ -351,7 +351,8 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 				list.add(t);
 			}
 		}
-		return VisitServices.from((Collection<T>) list);
+		return (this instanceof ListVisitService) ? VisitServices.from(list)
+				: VisitServices.from((Collection<T>) list);
 	}
 
 	// ============================== start--> private and static

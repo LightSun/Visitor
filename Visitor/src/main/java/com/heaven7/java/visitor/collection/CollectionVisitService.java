@@ -673,12 +673,12 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	/**
 	 * get a sub visit service by target visitor and parameter.
 	 * @param param the extra parameter which will be visit by visitor.
-	 * @param visitor the predicate visitor, if visit success means contains the element.
+	 * @param filter the predicate filter visitor, if visit success means contains the element.
 	 * @return a sub {@linkplain CollectionVisitService}
 	 * @since 1.1.5
 	 */
 	@Independence
-	CollectionVisitService<T> subService(@Nullable Object param, PredicateVisitor<T> visitor);
+	CollectionVisitService<T> subService(@Nullable Object param, PredicateVisitor<T> filter);
 	
 	/**
 	 * get a sub visit service by target visitor.

@@ -11,7 +11,7 @@ import com.heaven7.java.visitor.util.SparseArray;
 import com.heaven7.java.visitor.util.SparseArray2Map;
 
 /**
- * like executors. we use all api start in here.
+ * like executors. we use all APIs start in here.
  * 
  * @author heaven7
  *
@@ -53,7 +53,7 @@ public final class VisitServices {
 	 * @param <V> the value type
 	 * @param map the map
 	 * @return an instance of {@linkplain MapVisitService}
-	 * 	 * @see {@linkplain SortedMap}
+	 * @see {@linkplain SortedMap}
 	 * @see {@linkplain #from(com.heaven7.java.visitor.util.Map)}
 	 * @see {@linkplain #from(SparseArray)}
 	 */
