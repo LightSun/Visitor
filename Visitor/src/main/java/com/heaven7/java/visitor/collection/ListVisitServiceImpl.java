@@ -1,23 +1,16 @@
 package com.heaven7.java.visitor.collection;
 
-import static com.heaven7.java.visitor.util.Predicates.isTrue;
-import static com.heaven7.java.visitor.util.Throwables.checkNull;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Collections2;
+
+import java.util.*;
+
+import static com.heaven7.java.visitor.util.Predicates.isTrue;
+import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
 /**
  * list visit service
@@ -348,4 +341,15 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 		return VisitServices.from(totalList);
 	}
 
+	//============
+
+	@Override
+	public OperateManager<T> beginOperateManager() {
+		return new OperateManagerImpl(){
+			@Override
+			public ListVisitService<T> endAsList() throws UnsupportedOperationException {
+				return ListVisitServiceImpl.this;
+			}
+		};
+	}
 }

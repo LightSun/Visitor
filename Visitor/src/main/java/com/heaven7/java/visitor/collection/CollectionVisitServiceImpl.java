@@ -1,19 +1,5 @@
 package com.heaven7.java.visitor.collection;
 
-import static com.heaven7.java.visitor.collection.Operation.OP_DELETE;
-import static com.heaven7.java.visitor.collection.Operation.OP_FILTER;
-import static com.heaven7.java.visitor.collection.Operation.OP_INSERT;
-import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
-import static com.heaven7.java.visitor.util.Predicates.isTrue;
-import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
-import static com.heaven7.java.visitor.util.Throwables.checkNull;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
@@ -23,10 +9,17 @@ import com.heaven7.java.visitor.internal.state.IterateState;
 import com.heaven7.java.visitor.util.Collections2;
 import com.heaven7.java.visitor.util.SparseArray;
 
+import java.util.*;
+
+import static com.heaven7.java.visitor.collection.Operation.*;
+import static com.heaven7.java.visitor.util.Predicates.isTrue;
+import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
+import static com.heaven7.java.visitor.util.Throwables.checkNull;
+
 /**
- * 
+ *
  * priority: delete > filter > update > insert.
- * 
+ *
  * @author heaven7
  *
  * @param <T>
@@ -60,6 +53,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	private CollectionOperation<T> mFilterOp;
 	/** the Operation/operate of delete or remove. */
 	private CollectionOperation<T> mDeleteOp;
+	/** the operate of insert if not exist. */
+	private CollectionOperation<T> mInsertIfNotExistOp;
+	/** the operate of delete if exist. */
+	private CollectionOperation<T> mDeleteIfExistOp;
 
 	private IterationInfo mIterationInfo;
 
@@ -139,7 +136,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	/**
 	 * get the iterator, list visit service should override this.
-	 * 
+	 *
 	 * @param coll
 	 *            the collection.
 	 * @return the {@linkplain Iterator}
@@ -163,7 +160,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	}
 
 	protected void doLast(Object param) {
-		handleFinalInsert(param, mIterationInfo);
+		handleFinal(param, mIterationInfo);
 		reset(mCleanUpFlags);
 		mCleanUpFlags = FLAG_ALL;
 	}
@@ -186,6 +183,8 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			if (mFinalInsertOps != null) {
 				mFinalInsertOps.clear();
 			}
+			mInsertIfNotExistOp = null;
+			mDeleteIfExistOp = null;
 		}
 		if ((flags & FLAG_OPERATE_ITERATE_CONTROL) != 0) {
 			mOrderOps.clear();
@@ -197,7 +196,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	/**
 	 * handle the all operations of insert.
-	 * 
+	 *
 	 * @param inserts
 	 *            the insert operations.
 	 * @param it
@@ -218,11 +217,14 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	/**
 	 * this is different with {@linkplain #hasExtraOperateInIteration} .
-	 * 
+	 *
 	 * @return true if has operation .
 	 */
 	protected boolean hasOperation() {
 		if (mFinalInsertOps != null && mFinalInsertOps.size() > 0) {
+			return true;
+		}
+		if(mInsertIfNotExistOp != null || mDeleteIfExistOp !=null){
 			return true;
 		}
 		return hasExtraOperateInIteration();
@@ -232,7 +234,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		return mInsertOps != null && onHandleInsert(mInsertOps, it, t, param, info);
 	}
 
-	private void handleFinalInsert(Object param, final IterationInfo info) {
+	private void handleFinal(Object param, final IterationInfo info) {
 		info.setCurrentSize(mCollection.size());
 		if (mFinalInsertOps != null) {
 			// final boolean hasInfo = info != null;
@@ -249,6 +251,12 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 						+ "so can't modified. are your list comes from 'Arrays.asList(...)' ? ");
 				return;
 			}
+		}
+		if(mInsertIfNotExistOp != null){
+			mInsertIfNotExistOp.insertIfNotExist(mCollection);
+		}
+		if(mDeleteIfExistOp != null){
+			mDeleteIfExistOp.deleteIfExist(mCollection);
 		}
 	}
 
@@ -549,7 +557,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	}
 
-	private class OperateManagerImpl extends OperateManager<T> {
+	protected class OperateManagerImpl extends OperateManager<T> {
 
 		@Override
 		public CollectionVisitService<T> end() {
@@ -559,9 +567,6 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		@Override
 		public OperateManager<T> filter(@Nullable Object param, PredicateVisitor<? super T> filter) {
 			checkNull(filter);
-			if (mFilterOp != null) {
-				throw new IllegalArgumentException("filter can only set once");
-			}
 			mFilterOp = CollectionOperation.createFilter(param, filter);
 			return this;
 		}
@@ -569,9 +574,6 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		@Override
 		public OperateManager<T> delete(@Nullable Object param, PredicateVisitor<? super T> delete) {
 			checkNull(delete);
-			if (mDeleteOp != null) {
-				throw new IllegalArgumentException("deleteOn can only set once");
-			}
 			mDeleteOp = CollectionOperation.createDelete(param, delete);
 			return this;
 		}
@@ -614,6 +616,18 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			checkEmpty(list);
 			ensureFinalInserts();
 			mFinalInsertOps.add(CollectionOperation.createInsert(list, param, insert));
+			return this;
+		}
+
+		@Override
+		public OperateManager<T> insertFinallyIfNotExist(T newT) {
+			mInsertIfNotExistOp = CollectionOperation.createInsertIfNotExist(newT);
+			return this;
+		}
+
+		@Override
+		public OperateManager<T> deleteFinallyIfExist(T t) {
+			mDeleteIfExistOp = CollectionOperation.createDeleteIfExist(t);
 			return this;
 		}
 

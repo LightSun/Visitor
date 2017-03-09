@@ -1,16 +1,16 @@
 package com.heaven7.java.visitor.collection;
 
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.util.Predicates;
 import com.heaven7.java.visitor.util.Updatable;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 /**
  * the collection operation
  * @author heaven7
@@ -36,7 +36,7 @@ public class CollectionOperation<T> extends Operation{
 
 	public static <T> CollectionOperation<T> createFilter(Object param, PredicateVisitor<? super T> visitor) {
 		CollectionOperation<T> operation = new CollectionOperation<T>();
-		operation.mOp = OP_FILTER;
+		operation.setOperate(OP_FILTER);
 		operation.mParam = param;
 		operation.mVisitor = visitor;
 		return operation;
@@ -44,7 +44,7 @@ public class CollectionOperation<T> extends Operation{
 
 	public static <T> CollectionOperation<T> createUpdate(T newT, Object param, PredicateVisitor<? super T> visitor) {
 		CollectionOperation<T> operation = new CollectionOperation<T>();
-		operation.mOp = OP_UPDATE;
+		operation.setOperate(OP_UPDATE);
 		operation.mNewElement = newT;
 		operation.mParam = param;
 		operation.mVisitor = visitor;
@@ -53,7 +53,7 @@ public class CollectionOperation<T> extends Operation{
 
 	public static <T> CollectionOperation<T> createDelete(Object param, PredicateVisitor<? super T> visitor) {
 		CollectionOperation<T> operation = new CollectionOperation<T>();
-		operation.mOp = OP_DELETE;
+		operation.setOperate(OP_DELETE);
 		operation.mParam = param;
 		operation.mVisitor = visitor;
 		return operation;
@@ -61,7 +61,7 @@ public class CollectionOperation<T> extends Operation{
 
 	public static <T> CollectionOperation<T> createInsert(T newT, Object param, IterateVisitor<? super T> insertVisitor) {
 		CollectionOperation<T> operation = new CollectionOperation<T>();
-		operation.mOp = OP_INSERT;
+		operation.setOperate(OP_INSERT);
 		operation.mNewElement = newT;
 		operation.mParam = param;
 		operation.mIteratorVisitor = insertVisitor;
@@ -70,10 +70,26 @@ public class CollectionOperation<T> extends Operation{
 
 	public static <T> CollectionOperation<T> createInsert(List<T> list, Object param, IterateVisitor<? super T> insertVisitor) {
 		CollectionOperation<T> operation = new CollectionOperation<T>();
-		operation.mOp = OP_INSERT;
+		operation.setOperate(OP_INSERT);
 		operation.mNewElements = list;
 		operation.mParam = param;
 		operation.mIteratorVisitor = insertVisitor;
+		return operation;
+	}
+
+	public static <T> CollectionOperation<T> createInsertIfNotExist(T newT) {
+		CollectionOperation<T> operation = new CollectionOperation<T>();
+		operation.setOperate(OP_INSERT);
+		operation.addFlags(FLAG_CASE_IF_NOT_EXIST);
+		operation.mNewElement = newT;
+		return operation;
+	}
+
+	public static <T> CollectionOperation<T> createDeleteIfExist(T t) {
+		CollectionOperation<T> operation = new CollectionOperation<T>();
+		operation.setOperate(OP_DELETE);
+		operation.addFlags(FLAG_CASE_IF_EXIST);
+		operation.mNewElement = t;
 		return operation;
 	}
 	
@@ -122,7 +138,7 @@ public class CollectionOperation<T> extends Operation{
 	}
 
 	private boolean shouldFilter(T t, Object defaultParam) {
-		if (mOp == OP_FILTER && mVisitor != null) {
+		if (getOperate() == OP_FILTER && mVisitor != null) {
 			Boolean result = mVisitor.visit(t, mParam != null ? mParam : defaultParam);
 			return Predicates.isTrue(result);
 		}
@@ -130,7 +146,7 @@ public class CollectionOperation<T> extends Operation{
 	}
 	
 	private boolean shouldUpdate(T t, Object defaultParam) {
-		if (mOp == OP_UPDATE && mVisitor != null) {
+		if (getOperate() == OP_UPDATE && mVisitor != null) {
 			Boolean result = mVisitor.visit(t, mParam != null ? mParam : defaultParam);
 			return Predicates.isTrue(result);
 		}
@@ -138,7 +154,7 @@ public class CollectionOperation<T> extends Operation{
 	}
 
 	private boolean shouldDelete(T t, Object defaultParam) {
-		if (mOp == OP_DELETE && mVisitor != null) {
+		if (getOperate() == OP_DELETE && mVisitor != null) {
 			Boolean result = mVisitor.visit(t, mParam != null ? mParam : defaultParam);
 			return Predicates.isTrue(result);
 		}
@@ -153,7 +169,7 @@ public class CollectionOperation<T> extends Operation{
 	 * @return true if should insert.
 	 */
 	private boolean shouldInsert(T t, Object defaultParam, IterationInfo info) {
-		if (mOp == OP_INSERT && mIteratorVisitor != null) {
+		if (getOperate() == OP_INSERT && mIteratorVisitor != null) {
 			Boolean result = mIteratorVisitor.visit(t, mParam != null ? mParam : defaultParam, info);
 			return Predicates.isTrue(result);
 		}
@@ -169,6 +185,26 @@ public class CollectionOperation<T> extends Operation{
 			}
 			info.incrementInsert();
 			return collection.add(mNewElement);
+		}
+		return false;
+	}
+
+	public boolean insertIfNotExist(Collection<T> collection){
+		if(getOperate() == OP_INSERT && hasFlags(FLAG_CASE_IF_NOT_EXIST)){
+			if(!collection.contains(mNewElement)) {
+				collection.add(mNewElement);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean deleteIfExist(Collection<T> collection){
+		if(getOperate() == OP_DELETE && hasFlags(FLAG_CASE_IF_EXIST)){
+			if(collection.contains(mNewElement)) {
+				collection.remove(mNewElement);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -190,5 +226,7 @@ public class CollectionOperation<T> extends Operation{
 		}
 		return false;
 	}
+
+
 
 }

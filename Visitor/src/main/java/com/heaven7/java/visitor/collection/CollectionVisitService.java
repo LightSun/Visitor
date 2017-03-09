@@ -749,6 +749,15 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		 */
 		public abstract CollectionVisitService<T> end() ;
 
+		/**
+		 * end the operate and return the target object as ListVisitService.
+		 * @return the original object
+		 * @throws UnsupportedOperationException if the visit service isn't ListVisitService.
+		 * @since  1.1.6
+		 */
+		public ListVisitService<T> endAsList() throws UnsupportedOperationException{
+			throw new UnsupportedOperationException("only ListVisitService support.");
+		}
 
 		/**
 		 * add a filter operation. This means: 
@@ -758,7 +767,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		 * @return this.
 		 * @see {@linkplain OperateManager#filter(Object, PredicateVisitor)}
 		 */
-		public OperateManager<T> filter(PredicateVisitor<? super T> filter) {
+		public final OperateManager<T> filter(PredicateVisitor<? super T> filter) {
 			return filter(null, filter);
 		}
 		
@@ -769,7 +778,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		 * @return this.
 		 * @see {@linkplain #delete(Object, PredicateVisitor)}.
 		 */
-		public OperateManager<T> delete(PredicateVisitor<? super T> delete) {
+		public final OperateManager<T> delete(PredicateVisitor<? super T> delete) {
 			return delete(null, delete);
 		}
 
@@ -781,7 +790,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		 * @return this.
 		 * @see {@linkplain #update(Object, Object, PredicateVisitor)}
 		 */
-		public OperateManager<T> update(T newT, PredicateVisitor<? super T> update) {
+		public final OperateManager<T> update(T newT, PredicateVisitor<? super T> update) {
 			return update(newT, null, update);
 		}
 
@@ -794,7 +803,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		 * @return this.
 		 * @see {@linkplain #insert(List, Object, IterateVisitor)}
 		 */
-		public OperateManager<T> insert(List<T> list,  IterateVisitor<? super T> insert) {
+		public final OperateManager<T> insert(List<T> list,  IterateVisitor<? super T> insert) {
 			return insert(list, null, insert);
 		}
 
@@ -807,7 +816,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		 * @return this.
 		 * @see {@linkplain #insert(Object, Object, IterateVisitor)}
 		 */
-		public OperateManager<T> insert(T newT, IterateVisitor<? super T> insert) {
+		public final OperateManager<T> insert(T newT, IterateVisitor<? super T> insert) {
 			return insert(newT, null, insert);
 		}
 
@@ -819,7 +828,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		 * @return this.
 		 * @see {@linkplain #insertFinally(Object, Object, IterateVisitor)}
 		 */
-		public OperateManager<T> insertFinally( T newT, IterateVisitor<? super T> insert) {
+		public final OperateManager<T> insertFinally( T newT, IterateVisitor<? super T> insert) {
 			return insertFinally(newT, null, insert);
 		}
 
@@ -830,7 +839,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		 * @return this.
 		 * @see {@linkplain #insertFinally(List, Object, IterateVisitor)}
 		 */
-		public OperateManager<T> insertFinally(List<T> list,IterateVisitor<? super T> insert) {
+		public final OperateManager<T> insertFinally(List<T> list,IterateVisitor<? super T> insert) {
 			return insertFinally(list, null, insert);
 		}
 		
@@ -906,6 +915,22 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		 * @return this.
 		 */
 		public abstract OperateManager<T> insertFinally(List<T> list,@Nullable Object param, IterateVisitor<? super T> insert);
+
+		/**
+		 * add a final insert operation if the target element isn't exist. this is applied after iteration.
+		 * @param newT the new element
+		 * @return this.
+		 * @since  1.1.6
+		 */
+		public abstract OperateManager<T> insertFinallyIfNotExist(T newT);
+
+		/**
+		 * delete the element if exist.
+		 * @param t the target element
+		 * @return  this
+		 * @since 1.1.6
+		 */
+		public abstract OperateManager<T> deleteFinallyIfExist(T t);
 
 	}
  

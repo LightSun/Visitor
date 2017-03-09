@@ -1,13 +1,13 @@
 package com.heaven7.java.visitor.collection;
 
 
-import java.util.List;
-
 import com.heaven7.java.visitor.MapIterateVisitor;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
 import com.heaven7.java.visitor.util.Map;
 import com.heaven7.java.visitor.util.Updatable;
+
+import java.util.List;
 /**
  * the operation of operate map.
  * @author heaven7
@@ -27,7 +27,7 @@ public class MapOperation<K, V> extends Operation {
 
 	public static <K, V> MapOperation<K, V> createFilter(Object param, MapPredicateVisitor<K, V> predicate) {
 		MapOperation<K, V> operation = new MapOperation<K, V>();
-		operation.mOp = OP_FILTER;
+		operation.setOperate(OP_FILTER);
 		operation.mParam = param;
 		operation.mPredicateVisitor = predicate;
 		return operation;
@@ -35,7 +35,7 @@ public class MapOperation<K, V> extends Operation {
 
 	public static <K, V> MapOperation<K, V> createUpdate(V value, Object param, MapPredicateVisitor<K, V> predicate) {
 		MapOperation<K, V> operation = new MapOperation<K, V>();
-		operation.mOp = OP_UPDATE;
+		operation.setOperate(OP_UPDATE);
 		operation.mValue = value;
 		operation.mParam = param;
 		operation.mPredicateVisitor = predicate;
@@ -44,7 +44,7 @@ public class MapOperation<K, V> extends Operation {
 
 	public static <K, V> MapOperation<K, V> createDelete(Object param, MapPredicateVisitor<K, V> predicate) {
 		MapOperation<K, V> operation = new MapOperation<K, V>();
-		operation.mOp = OP_DELETE;
+		operation.setOperate(OP_DELETE);
 		operation.mParam = param;
 		operation.mPredicateVisitor = predicate;
 		return operation;
@@ -53,7 +53,7 @@ public class MapOperation<K, V> extends Operation {
 	public static <K, V> MapOperation<K, V> createInsert(List<KeyValuePair<K, V>> mPairs, Object param,
 			MapIterateVisitor<K, V> iterateVisitor) {
 		MapOperation<K, V> operation = new MapOperation<K, V>();
-		operation.mOp = OP_INSERT;
+		operation.setOperate(OP_INSERT);
 		operation.mPairs = mPairs;
 		operation.mParam = param;
 		operation.mIterateVisitor = iterateVisitor;
@@ -63,7 +63,7 @@ public class MapOperation<K, V> extends Operation {
 	public static <K, V> MapOperation<K, V> createInsert(KeyValuePair<K, V> pair, Object param,
 			MapIterateVisitor<K, V> iterateVisitor) {
 		MapOperation<K, V> operation = new MapOperation<K, V>();
-		operation.mOp = OP_INSERT;
+		operation.setOperate(OP_INSERT);
 		operation.mPair = pair;
 		operation.mParam = param;
 		operation.mIterateVisitor = iterateVisitor;
@@ -71,7 +71,7 @@ public class MapOperation<K, V> extends Operation {
 	}
 	public static <K, V> MapOperation<K, V> createTrim(Object param,  TrimMapVisitor<K, V> trim) {
 		MapOperation<K, V> operation = new MapOperation<K, V>();
-		operation.mOp = OP_TRIM;
+		operation.setOperate(OP_TRIM);
 		operation.mParam = param;
 		operation.mTrimVisitor = trim;
 		return operation;
@@ -89,7 +89,7 @@ public class MapOperation<K, V> extends Operation {
 	}
 
 	private boolean shouldFilter(KeyValuePair<K, V> pair, Object param) {
-		if (mOp == OP_FILTER && mPredicateVisitor != null) {
+		if (getOperate() == OP_FILTER && mPredicateVisitor != null) {
 			Boolean result = mPredicateVisitor.visit(pair, mParam != null ? mParam : param);
 			return result != null && result;
 		}
@@ -97,7 +97,7 @@ public class MapOperation<K, V> extends Operation {
 	}
 
 	private boolean shouldDelete(KeyValuePair<K, V> pair, Object param) {
-		if (mOp == OP_DELETE && mPredicateVisitor != null) {
+		if (getOperate()  == OP_DELETE && mPredicateVisitor != null) {
 			Boolean result = mPredicateVisitor.visit(pair, mParam != null ? mParam : param);
 			return result != null && result;
 		}
@@ -105,7 +105,7 @@ public class MapOperation<K, V> extends Operation {
 	}
 
 	private boolean shouldUpdate(KeyValuePair<K, V> pair, Object param) {
-		if (mOp == OP_UPDATE && mPredicateVisitor != null) {
+		if (getOperate()  == OP_UPDATE && mPredicateVisitor != null) {
 			Boolean result = mPredicateVisitor.visit(pair, mParam != null ? mParam : param);
 			return result != null && result;
 		}
@@ -113,7 +113,7 @@ public class MapOperation<K, V> extends Operation {
 	}
 
 	private boolean shouldInsert(KeyValuePair<K, V> pair, Object param, IterationInfo info) {
-		if (mOp == OP_INSERT && mIterateVisitor != null) {
+		if (getOperate()  == OP_INSERT && mIterateVisitor != null) {
 			Boolean result = mIterateVisitor.visit(pair, mParam != null ? mParam : param, info);
 			return result != null && result;
 		}
@@ -178,7 +178,7 @@ public class MapOperation<K, V> extends Operation {
 	}
 	
 	public boolean trim(Map<K, V> map, Object param, IterationInfo info){
-		if (mOp == OP_TRIM && mTrimVisitor != null) {
+		if (getOperate()  == OP_TRIM && mTrimVisitor != null) {
 			Boolean result = mTrimVisitor.visit(map, mParam != null ? mParam : param, info);
 			info.setCurrentSize(map.size());
 			return result != null && result;
