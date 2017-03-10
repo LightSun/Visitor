@@ -60,9 +60,9 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 	private final Callback mCallback;
 	
 	/** the ordered operate */
-	private final ArrayList<Integer> mOrderOps = new ArrayList<>();
+	private final ArrayList<Integer> mOrderOps = new ArrayList<Integer>();
 	/** the intercept operate */
-	private final ArrayList<Integer> mInterceptOps = new ArrayList<>();
+	private final ArrayList<Integer> mInterceptOps = new ArrayList<Integer>();
 
 	private IterateControl(T t , Callback mCallback) {
 		this.t = t;

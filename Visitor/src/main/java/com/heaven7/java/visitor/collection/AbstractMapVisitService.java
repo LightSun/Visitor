@@ -1,35 +1,19 @@
 package com.heaven7.java.visitor.collection;
 
-import static com.heaven7.java.visitor.collection.Operation.OP_DELETE;
-import static com.heaven7.java.visitor.collection.Operation.OP_FILTER;
-import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
-import static com.heaven7.java.visitor.internal.InternalUtil.getVisitService;
-import static com.heaven7.java.visitor.internal.InternalUtil.newMap;
-import static com.heaven7.java.visitor.internal.InternalUtil.processThrowable;
-import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
-import static com.heaven7.java.visitor.util.Throwables.checkNull;
+import com.heaven7.java.visitor.*;
+import com.heaven7.java.visitor.anno.Nullable;
+import com.heaven7.java.visitor.collection.IterateControl.Callback;
+import com.heaven7.java.visitor.util.*;
+import com.heaven7.java.visitor.util.Map.MapTravelCallback;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import com.heaven7.java.visitor.MapFireBatchVisitor;
-import com.heaven7.java.visitor.MapFireVisitor;
-import com.heaven7.java.visitor.MapIterateVisitor;
-import com.heaven7.java.visitor.MapPredicateVisitor;
-import com.heaven7.java.visitor.MapResultVisitor;
-import com.heaven7.java.visitor.MapSaveVisitor;
-import com.heaven7.java.visitor.ThrowableVisitor;
-import com.heaven7.java.visitor.TrimMapVisitor;
-import com.heaven7.java.visitor.Visitors;
-import com.heaven7.java.visitor.anno.Nullable;
-import com.heaven7.java.visitor.collection.IterateControl.Callback;
-import com.heaven7.java.visitor.util.Map;
-import com.heaven7.java.visitor.util.Map.MapTravelCallback;
-import com.heaven7.java.visitor.util.Predicates;
-import com.heaven7.java.visitor.util.SparseArray;
-import com.heaven7.java.visitor.util.Throwables;
-import com.heaven7.java.visitor.util.UnmodifiableMap;
+import static com.heaven7.java.visitor.collection.Operation.*;
+import static com.heaven7.java.visitor.internal.InternalUtil.*;
+import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
+import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
 /**
  * a base impl of {@linkplain MapVisitService}.
@@ -110,13 +94,13 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 	private void ensureFinalInsertOperation() {
 		if (mFinalInsertOps == null) {
-			mFinalInsertOps = new ArrayList<>();
+			mFinalInsertOps = new ArrayList<MapOperation<K, V>>();
 		}
 	}
 
 	private void ensureUpdateOperation() {
 		if (mUpdateOps == null) {
-			mUpdateOps = new ArrayList<>();
+			mUpdateOps = new ArrayList<MapOperation<K, V>>();
 		}
 	}
 	// ==========================================================
@@ -490,6 +474,12 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 
 	@Override
+	public MapVisitService<K, V> clear() {
+		mMap.clear();
+		return this;
+	}
+
+	@Override
 	public MapVisitService<K, V> subService(MapPredicateVisitor<K, V> predicate) {
 		return subService(null, predicate);
 	}
@@ -500,7 +490,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	}
 
 	@Override
-	public MapVisitService<K, V> subService(Object param, MapPredicateVisitor<K, V> predicate,
+	public MapVisitService<K, V> subService(final Object param, final MapPredicateVisitor<K, V> predicate,
 			Comparator<? super K> c) {
 		checkNull(predicate);
 		

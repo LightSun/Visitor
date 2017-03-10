@@ -60,17 +60,16 @@ public class CallbcksMockTest extends TestCase {
 			mService.removeIfExist(cl);
 		}
 
-		public void dispatchCallback(String msg) {
+		public void dispatchCallback(final String msg) {
 			mService.fire(new FireVisitor<Callback>() {
 				@Override
 				public Boolean visit(Callback callback, Object param) {
-					assertEquals(param, sMsg);
-					callback.callback(param.toString());
+					callback.callback(msg);
 					return null;
 				}
 			});
 			/*mService.fire((callback, param) -> {
-				callback.callback(param.toString());
+				callback.callback(msg);
 				return null;
 			});*/
 		}

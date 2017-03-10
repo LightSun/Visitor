@@ -17,6 +17,27 @@ import java.util.*;
 public final class VisitServices {
 
 	/**
+	 * create MapVisitService with empty capacity.
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @return an instance of {@linkplain MapVisitService}
+	 * @since  1.1.8
+	 */
+	public static <K,V> MapVisitService<K,V> newMapService() {
+		return from(new HashMap<K,V>());
+	}
+
+	/**
+	 * create ListVisitService with empty capacity.
+	 * @param <T> the element type
+	 * @return an instance of {@linkplain ListVisitService}
+	 * @since  1.1.8
+	 */
+	public static <T> ListVisitService<T> newListService() {
+          return from(new ArrayList<T>());
+	}
+
+	/**
 	 * create {@linkplain CollectionVisitService} from the target
 	 * collection. <br>
 	 * <b>Note: don't use {@linkplain Arrays#asList(Object...)} in here. </b>

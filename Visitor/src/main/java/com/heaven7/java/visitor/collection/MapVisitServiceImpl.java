@@ -1,13 +1,13 @@
 package com.heaven7.java.visitor.collection;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.MapResultVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.state.MapIterateState;
 import com.heaven7.java.visitor.util.Map;
+
+import java.util.ArrayList;
+import java.util.List;
 /**
  * an impl of MapVisitService.
  * @author heaven7
@@ -29,7 +29,7 @@ import com.heaven7.java.visitor.util.Map;
 	public <R> List<R> visitForResultList(Object param, MapPredicateVisitor<K, V> predicate,
 			MapResultVisitor<K, V, R> resultVisitor, @Nullable List<R> out) {
 		if (out == null) {
-			out = new ArrayList<>();
+			out = new ArrayList<R>();
 		}
 		final IterationInfo info = initAndGetIterationInfo();
 		MapIterateState.<K, V>multipleState().visitForResult(mMap, hasExtraOperationInIteration(), 
@@ -53,7 +53,7 @@ import com.heaven7.java.visitor.util.Map;
 	public List<KeyValuePair<K, V>> visitForQueryList(Object param, MapPredicateVisitor<K, V> predicate,
 			@Nullable List<KeyValuePair<K, V>> out) {
 		if (out == null) {
-			out = new ArrayList<>();
+			out = new ArrayList<KeyValuePair<K, V>>();
 		}
 		final IterationInfo info = initAndGetIterationInfo();
 		MapIterateState.<K, V>multipleState().visit(mMap, hasExtraOperationInIteration(), getOperateInterceptor(), info, param,

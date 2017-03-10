@@ -1,12 +1,12 @@
 package com.heaven7.java.visitor.util;
 
+import com.heaven7.java.visitor.collection.KeyValuePair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.heaven7.java.visitor.collection.KeyValuePair;
 
 public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 
@@ -48,7 +48,7 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 	@Override
 	public List<KeyValuePair<Integer, E>> getKeyValues() {
 		if (mTempPairs == null) {
-			mTempPairs = new ArrayList<>();
+			mTempPairs = new ArrayList<KeyValuePair<Integer, E>>();
 		} else {
 			mTempPairs.clear();
 		}
@@ -64,7 +64,7 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 	@Override
 	public List<Integer> keys() {
 		if (mKeys == null) {
-			mKeys = new ArrayList<>();
+			mKeys = new ArrayList<Integer>();
 		} else {
 			mKeys.clear();
 		}

@@ -15,7 +15,7 @@ public final class Predicates {
 		return (a == b) || (a != null && a.equals(b));
 	}
 	public static boolean isTrue(Boolean value) {
-		return value != null && value.booleanValue();
+		return value != null && value;
 	}
 	public static <E> boolean isEmpty(List<E> list) {
 		return list == null || list.size() == 0;

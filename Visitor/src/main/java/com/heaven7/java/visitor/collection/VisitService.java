@@ -31,14 +31,24 @@ public interface VisitService<T extends VisitService<T>> {
 	/**
 	 * reset current visit service by target flags.
 	 * @param flags {@linkplain #FLAG_OPERATE_MANAGER} or {@linkplain #FLAG_OPERATE_ITERATE_CONTROL}.
+	 * @return this.
 	 */
 	@Independence
 	T reset(int flags);
 	
 	/**
 	 * reset all operations. a convenient method for call {@linkplain #reset(int)} that use all flags.
+	 * @return this.
 	 */
 	@Independence
 	T resetAll();
+
+	/**
+	 * clear the collection or map without any other operation.
+	 * @return this.
+	 * @since 1.1.8
+	 */
+	@Independence
+	T clear();
 
 }

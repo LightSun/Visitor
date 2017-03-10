@@ -1,11 +1,11 @@
 package com.heaven7.java.visitor.util;
 
+import com.heaven7.java.visitor.collection.KeyValuePair;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.heaven7.java.visitor.collection.KeyValuePair;
 
 /**
  * an instance of {@linkplain com.heaven7.java.visitor.util.Map}. convert
@@ -58,7 +58,7 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 	@Override
 	public List<KeyValuePair<K, V>> getKeyValues() {
 		if (mList == null) {
-			mList = new ArrayList<>();
+			mList = new ArrayList<KeyValuePair<K, V>>();
 		} else {
 			mList.clear();
 		}
@@ -72,7 +72,7 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 	@Override
 	public List<K> keys() {
 		if (mKeys == null) {
-			mKeys = new ArrayList<>();
+			mKeys = new ArrayList<K>();
 		} else {
 			mKeys.clear();
 		}

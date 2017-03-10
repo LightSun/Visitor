@@ -82,6 +82,12 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	}
 
 	@Override
+	public CollectionVisitService<T> clear() {
+		mCollection.clear();
+		return this;
+	}
+
+	@Override
 	public CollectionVisitService<T> addIfNotExist(T newT, Observer<T, Void> observer) {
 		try {
 			if (!mCollection.contains(newT) && mCollection.add(newT)) {
@@ -368,19 +374,19 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	private void ensureInserts() {
 		if (mInsertOps == null) {
-			mInsertOps = new ArrayList<>();
+			mInsertOps = new ArrayList<CollectionOperation<T>>();
 		}
 	}
 
 	private void ensureFinalInserts() {
 		if (mFinalInsertOps == null) {
-			mFinalInsertOps = new ArrayList<>();
+			mFinalInsertOps = new ArrayList<CollectionOperation<T>>();
 		}
 	}
 
 	private void ensureUpdates() {
 		if (mUpdateOps == null) {
-			mUpdateOps = new ArrayList<>();
+			mUpdateOps = new ArrayList<CollectionOperation<T>>();
 		}
 	}
 
