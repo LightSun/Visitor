@@ -1,11 +1,11 @@
 package com.heaven7.java.visitor.collection;
 
-import java.util.Comparator;
-import java.util.List;
-
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
+
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * list visit service 
@@ -78,7 +78,6 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	
 	/**
 	 * shuffle the collection.
-	 * @param shuffleOriginlist shuffle the origin list or not.
 	 * @return this
 	 * @since 1.1.2
 	 */
@@ -89,7 +88,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * sort the collection.
 	 * @param c the comparator used to sort.
 	 * @return this
-	 * @see {@linkplain #sortService(Comparator, boolean)}
+	 * @see #sortService(Comparator, boolean)
 	 * @since 1.1.2
 	 */
 	@Independence
@@ -100,7 +99,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @param c the comparator used to sort.
 	 * @param sortOriginList sort the origin list or not.
 	 * @return this or new {@linkplain ListVisitService}
-	 * @see {@linkplain #sortService(Comparator)}
+	 * @see #sortService(Comparator)
 	 * @since 1.1.2
 	 */
 	@Independence
@@ -111,8 +110,8 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @param <K> the key type
 	 * @param keyVisitor the key visitor.
 	 * @return {@linkplain MapVisitService}
-	 * @see {@linkplain #groupService(Object, ResultVisitor, ResultVisitor)}
-	 * @see {@linkplain #groupService(ResultVisitor, ResultVisitor)}
+	 * @see #groupService(Object, ResultVisitor, ResultVisitor)
+	 * @see #groupService(ResultVisitor)
 	 * @since 1.1.2
 	 */
 	@Independence
@@ -124,8 +123,8 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @param param the parameter which is used to visitor.
 	 * @param keyVisitor the key visitor.
 	 * @return {@linkplain MapVisitService}
-	 * @see {@linkplain #groupService(Object, ResultVisitor, ResultVisitor)}
-	 * @see {@linkplain #groupService(ResultVisitor)}
+	 * @see #groupService(Object, ResultVisitor, ResultVisitor)
+	 * @see #groupService(ResultVisitor)
 	 * @since 1.1.2
 	 */
 	@Independence
@@ -139,8 +138,8 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @param keyVisitor the key visitor.
 	 * @param valueVisitor the value visitor.
 	 * @return {@linkplain MapVisitService}
-	 * @see {@linkplain #groupService(Object, ResultVisitor, ResultVisitor)}
-	 * @see {@linkplain #groupService(ResultVisitor)}
+	 * @see #groupService(Object, ResultVisitor, ResultVisitor)
+	 * @see #groupService(ResultVisitor)
 	 * @since 1.1.2
 	 */
 	@Independence
