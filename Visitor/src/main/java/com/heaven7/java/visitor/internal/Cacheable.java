@@ -15,4 +15,11 @@ public interface Cacheable<T> {
 	 * @since 1.1.2
 	 */
 	T cache();
+
+	/**
+	 * no cache means clear cache.
+	 * @return the original object
+	 * @since  1.1.8
+	 */
+	T noCache();
 }

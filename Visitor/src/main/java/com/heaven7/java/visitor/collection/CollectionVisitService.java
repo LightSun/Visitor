@@ -798,12 +798,21 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 		}
 		
 		/**
-		 * cache the all operate which is set by the {@linkplain OperateManager}.
+		 * cache the all operations which is set by the {@linkplain OperateManager}.
 		 * @return the original object
 		 * @since 1.1.2
 		 */
+		@Override
 		public abstract OperateManager<T> cache() ;
-		
+
+		/**
+		 * clear the all operations which is set by the {@linkplain OperateManager}.
+		 * @return the original object
+		 * @since 1.1.8
+		 */
+		@Override
+		public abstract OperateManager<T> noCache();
+
 		/**
 		 * end the operate and return the target object
 		 * @return the original object

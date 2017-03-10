@@ -231,7 +231,13 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 		mCallback.applyCache();
 		return this;
 	}
-	
+
+	@Override
+	public IterateControl<T> noCache() {
+		mCallback.applyNoCache();
+		return this;
+	}
+
 	/**
 	 * the callback of iterate control
 	 * @author heaven7
@@ -271,6 +277,14 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 		}
 
 		/**
+		 * apply no cache
+		 * @since 1.1.8
+		 */
+		public void applyNoCache() {
+
+		}
+
+		/**
 		 * check the target operate
 		 * @param op {@linkplain Operation#OP_DELETE} and etc.
 		 */
@@ -284,6 +298,7 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 		 * @param interceptOps  the intercept ops(opertion)
 		 */
 		public abstract void saveState(List<Integer> orderOps, List<Integer> interceptOps);
+
 	}
 
 }

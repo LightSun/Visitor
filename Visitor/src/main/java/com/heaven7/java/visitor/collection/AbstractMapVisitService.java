@@ -3,6 +3,7 @@ package com.heaven7.java.visitor.collection;
 import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.IterateControl.Callback;
+import com.heaven7.java.visitor.internal.OperationPools;
 import com.heaven7.java.visitor.util.*;
 import com.heaven7.java.visitor.util.Map.MapTravelCallback;
 
@@ -145,7 +146,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 			mTrimOp.trim(map, param, info);
 		}
 		reset(mCleanUpFlags);
-		mCleanUpFlags = FLAG_ALL;
+		//mCleanUpFlags = FLAG_ALL;
 	}
 
 	// ==================================================================//
@@ -201,13 +202,18 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	@Override
 	public MapVisitService<K, V> reset(int flags) {
 		if ((flags & FLAG_OPERATE_MANAGER) != 0) {
+			OperationPools.recycle(mDeleteOp);
 			mDeleteOp = null;
+			OperationPools.recycle(mFilterOp);
 			mFilterOp = null;
+			OperationPools.recycle(mTrimOp);
 			mTrimOp = null;
 			if (mFinalInsertOps != null) {
+				OperationPools.recycleAllMapOperation(mFinalInsertOps);
 				mFinalInsertOps.clear();
 			}
 			if (mUpdateOps != null) {
+				OperationPools.recycleAllMapOperation(mUpdateOps);
 				mUpdateOps.clear();
 			}
 		}
@@ -643,6 +649,11 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		}
 
 		@Override
+		public void applyNoCache() {
+			mCleanUpFlags |=  FLAG_OPERATE_ITERATE_CONTROL;
+		}
+
+		@Override
 		public void saveState(List<Integer> orderOps, List<Integer> interceptOps) {
 			mInterceptOps = interceptOps;
 			mOrderOps = orderOps;
@@ -678,6 +689,12 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 		@Override
 		public MapOperateManager<K, V> cache() {
 			mCleanUpFlags &= ~FLAG_OPERATE_MANAGER;
+			return this;
+		}
+
+		@Override
+		public MapOperateManager<K, V> noCache() {
+			mCleanUpFlags |= FLAG_OPERATE_MANAGER;
 			return this;
 		}
 

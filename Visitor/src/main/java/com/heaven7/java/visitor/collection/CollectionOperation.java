@@ -4,6 +4,7 @@ package com.heaven7.java.visitor.collection;
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
+import com.heaven7.java.visitor.internal.OperationPools;
 import com.heaven7.java.visitor.util.Predicates;
 import com.heaven7.java.visitor.util.Updatable;
 
@@ -39,7 +40,8 @@ public class CollectionOperation<T> extends Operation {
     }
 
     public static <T> CollectionOperation<T> createFilter(Object param, PredicateVisitor<? super T> visitor) {
-        CollectionOperation<T> operation = new CollectionOperation<T>();
+       // CollectionOperation<T> operation = new CollectionOperation<T>();
+        CollectionOperation<T> operation = OperationPools.obtainCollectionOperation();
         operation.setOperate(OP_FILTER);
         operation.mParam = param;
         operation.mVisitor = visitor;
@@ -47,7 +49,8 @@ public class CollectionOperation<T> extends Operation {
     }
 
     public static <T> CollectionOperation<T> createUpdate(T newT, Object param, PredicateVisitor<? super T> visitor) {
-        CollectionOperation<T> operation = new CollectionOperation<T>();
+       // CollectionOperation<T> operation = new CollectionOperation<T>();
+        CollectionOperation<T> operation = OperationPools.obtainCollectionOperation();
         operation.setOperate(OP_UPDATE);
         operation.mNewElement = newT;
         operation.mParam = param;
@@ -56,7 +59,8 @@ public class CollectionOperation<T> extends Operation {
     }
 
     public static <T> CollectionOperation<T> createDelete(Object param, PredicateVisitor<? super T> visitor) {
-        CollectionOperation<T> operation = new CollectionOperation<T>();
+       // CollectionOperation<T> operation = new CollectionOperation<T>();
+        CollectionOperation<T> operation = OperationPools.obtainCollectionOperation();
         operation.setOperate(OP_DELETE);
         operation.mParam = param;
         operation.mVisitor = visitor;
@@ -64,7 +68,8 @@ public class CollectionOperation<T> extends Operation {
     }
 
     public static <T> CollectionOperation<T> createInsert(T newT, Object param, IterateVisitor<? super T> insertVisitor) {
-        CollectionOperation<T> operation = new CollectionOperation<T>();
+       // CollectionOperation<T> operation = new CollectionOperation<T>();
+        CollectionOperation<T> operation = OperationPools.obtainCollectionOperation();
         operation.setOperate(OP_INSERT);
         operation.mNewElement = newT;
         operation.mParam = param;
@@ -73,7 +78,8 @@ public class CollectionOperation<T> extends Operation {
     }
 
     public static <T> CollectionOperation<T> createInsert(List<T> list, Object param, IterateVisitor<? super T> insertVisitor) {
-        CollectionOperation<T> operation = new CollectionOperation<T>();
+       // CollectionOperation<T> operation = new CollectionOperation<T>();
+        CollectionOperation<T> operation = OperationPools.obtainCollectionOperation();
         operation.setOperate(OP_INSERT);
         operation.mNewElements = list;
         operation.mParam = param;
@@ -82,7 +88,8 @@ public class CollectionOperation<T> extends Operation {
     }
 
     public static <T> CollectionOperation<T> createInsertIfNotExist(T newT) {
-        CollectionOperation<T> operation = new CollectionOperation<T>();
+      //  CollectionOperation<T> operation = new CollectionOperation<T>();
+        CollectionOperation<T> operation = OperationPools.obtainCollectionOperation();
         operation.setOperate(OP_INSERT);
         operation.addFlags(FLAG_CASE_IF_NOT_EXIST);
         operation.mNewElement = newT;
@@ -90,7 +97,8 @@ public class CollectionOperation<T> extends Operation {
     }
 
     public static <T> CollectionOperation<T> createDeleteIfExist(T t) {
-        CollectionOperation<T> operation = new CollectionOperation<T>();
+        //CollectionOperation<T> operation = new CollectionOperation<T>();
+        CollectionOperation<T> operation = OperationPools.obtainCollectionOperation();
         operation.setOperate(OP_DELETE);
         operation.addFlags(FLAG_CASE_IF_EXIST);
         operation.mNewElement = t;

@@ -6,6 +6,7 @@ import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.IterateControl.Callback;
 import com.heaven7.java.visitor.internal.InternalUtil;
+import com.heaven7.java.visitor.internal.OperationPools;
 import com.heaven7.java.visitor.internal.state.IterateState;
 import com.heaven7.java.visitor.util.Collections2;
 import com.heaven7.java.visitor.util.Observer;
@@ -212,7 +213,8 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	protected void doLast(Object param) {
 		handleFinal(param, mIterationInfo);
 		reset(mCleanUpFlags);
-		mCleanUpFlags = FLAG_ALL;
+		//next op will clear all. fix?
+		//mCleanUpFlags = FLAG_ALL;
 	}
 
 	protected List<T> asList() {
@@ -222,19 +224,26 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	@Override
 	public CollectionVisitService<T> reset(int flags) {
 		if ((flags & FLAG_OPERATE_MANAGER) != 0) {
+			OperationPools.recycle(mDeleteOp);
 			mDeleteOp = null;
+			OperationPools.recycle(mFilterOp);
 			mFilterOp = null;
+			OperationPools.recycle(mInsertIfNotExistOp);
+			mInsertIfNotExistOp = null;
+			OperationPools.recycle(mDeleteIfExistOp);
+			mDeleteIfExistOp = null;
 			if (mInsertOps != null) {
+				OperationPools.recycleAllCollectionOperation(mInsertOps);
 				mInsertOps.clear();
 			}
 			if (mUpdateOps != null) {
+				OperationPools.recycleAllCollectionOperation(mUpdateOps);
 				mUpdateOps.clear();
 			}
 			if (mFinalInsertOps != null) {
+				OperationPools.recycleAllCollectionOperation(mFinalInsertOps);
 				mFinalInsertOps.clear();
 			}
-			mInsertIfNotExistOp = null;
-			mDeleteIfExistOp = null;
 		}
 		if ((flags & FLAG_OPERATE_ITERATE_CONTROL) != 0) {
 			mOrderOps.clear();
@@ -715,7 +724,11 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			mCleanUpFlags &= ~FLAG_OPERATE_MANAGER;
 			return this;
 		}
-
+		@Override
+		public OperateManager<T> noCache() {
+			mCleanUpFlags |= FLAG_OPERATE_MANAGER;
+			return this;
+		}
 	}
 
 	private class ControlCallbackImpl extends Callback {
@@ -738,6 +751,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			mCleanUpFlags &= ~FLAG_OPERATE_ITERATE_CONTROL;
 		}
 
+		@Override
+		public void applyNoCache() {
+			mCleanUpFlags |=  FLAG_OPERATE_ITERATE_CONTROL;
+		}
 	}
 
 }
