@@ -15,4 +15,5 @@ public interface FireVisitor<T> extends Visitor1<T, Object, Boolean>{
 	 * @param param the extra parameter.
 	 */
 	Boolean visit(T t, Object param);
+
 }
