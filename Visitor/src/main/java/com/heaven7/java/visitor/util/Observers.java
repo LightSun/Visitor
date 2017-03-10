@@ -45,8 +45,8 @@ public final class Observers {
 	 * @see Observer
 	 * @since 1.1.7
 	 */
-	public static <T> Observer<T, Void> from(Runnable success,@Nullable Runnable failed,
-			@Nullable ThrowableVisitor exception) {
+	public static <T> Observer<T, Void> from(final Runnable success,@Nullable final Runnable failed,
+											 final @Nullable ThrowableVisitor exception) {
 		Throwables.checkNull(success);
 		return new ObserverAdapter<T, Void>() {
 			@Override

@@ -20,7 +20,7 @@ public class TestUtil{
 	}
 	
 	public static List<Student> createStudent(String prefix, int count){
-		List<Student> list = new ArrayList<>();
+		List<Student> list = new ArrayList<Student>();
 		for(int i = 0  ;i<count ; i++){
 			list.add(new Student(prefix + "__" + i));
 		}
@@ -32,7 +32,7 @@ public class TestUtil{
 	}
 	
 	public static List<Student2> createStudent2(String prefix , int count){
-		List<Student2> list = new ArrayList<>();
+		List<Student2> list = new ArrayList<Student2>();
 		for(int i = 0  ;i<count ; i++){
 			list.add(new Student2(prefix + "__" + i));
 		}

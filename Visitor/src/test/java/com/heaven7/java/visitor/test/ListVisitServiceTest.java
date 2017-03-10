@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ListVisitServiceTest extends VisitServiceTest {
 
-	private final List<Integer> mList = new ArrayList<>();
+	private final List<Integer> mList = new ArrayList<Integer>();
 	private ListVisitService<Integer> mListService;
 
 	@Override
@@ -219,7 +219,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 	}
 	
 	public void testGroupService3(){
-		int groupSize = 3;
+		final int groupSize = 3;
 		mListService.groupService(groupSize).save(new SaveVisitor<List<Integer>>() {
 			@Override
 			public void visit(Collection<List<Integer>> collection) {

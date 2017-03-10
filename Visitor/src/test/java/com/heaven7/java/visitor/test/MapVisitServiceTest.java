@@ -1,21 +1,6 @@
 package com.heaven7.java.visitor.test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
-import com.heaven7.java.visitor.MapFireBatchVisitor;
-import com.heaven7.java.visitor.MapFireVisitor;
-import com.heaven7.java.visitor.MapPredicateVisitor;
-import com.heaven7.java.visitor.MapResultVisitor;
-import com.heaven7.java.visitor.MapSaveVisitor;
-import com.heaven7.java.visitor.MapTrimVisitor;
-import com.heaven7.java.visitor.SaveVisitor;
-import com.heaven7.java.visitor.ThrowableVisitor;
-import com.heaven7.java.visitor.Visitors;
+import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.collection.IterationInfo;
 import com.heaven7.java.visitor.collection.KeyValuePair;
 import com.heaven7.java.visitor.collection.MapVisitService;
@@ -23,8 +8,10 @@ import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.test.help.Student;
 import com.heaven7.java.visitor.util.Comparators;
 import com.heaven7.java.visitor.util.Map;
-
 import junit.framework.TestCase;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class MapVisitServiceTest extends TestCase {
 
@@ -241,7 +228,7 @@ public class MapVisitServiceTest extends TestCase {
 			// map.remove(en.getKey()); // in common， after entry can't remove.
 		}
 
-		List<Entry<String, Integer>> list = new ArrayList<>(map.entrySet());
+		List<Entry<String, Integer>> list = new ArrayList<Entry<String, Integer>>(map.entrySet());
 		for (Entry<String, Integer> en : list) {
 			// map.remove(en.getKey()); //ok
 			// en.setValue(1); //ok

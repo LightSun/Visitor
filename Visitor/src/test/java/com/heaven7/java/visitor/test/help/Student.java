@@ -33,7 +33,7 @@ public class Student {
 	}
 
 	protected List<Course> genterateTestCourse() {
-		List<Course> courses = new ArrayList<>();
+		List<Course> courses = new ArrayList<Course>();
 		courses.add(new Course(name + "__Course1"));
 		courses.add(new Course(name + "__Course2"));
 		courses.add(new Course(name + "__Course3"));

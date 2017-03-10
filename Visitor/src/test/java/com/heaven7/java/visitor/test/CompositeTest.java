@@ -1,24 +1,15 @@
 package com.heaven7.java.visitor.test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map.Entry;
-import java.util.concurrent.locks.LockSupport;
-
-import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.collection.CollectionVisitService;
-import com.heaven7.java.visitor.collection.KeyValuePair;
 import com.heaven7.java.visitor.collection.MapVisitService;
 import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.test.help.Student;
 import com.heaven7.java.visitor.test.help.Student2;
-import com.heaven7.java.visitor.util.Map;
+
+import java.util.*;
 
 /**
  * composite test : from collection -> map -> collection ..... mutual transform
@@ -204,7 +195,7 @@ public class CompositeTest extends VisitServiceTest {
 		}
 		
 		//why here use new ArrayList? that is if not, here will thrown concurrent exception.
-		for(Integer val : new ArrayList<>(map.keySet())){
+		for(Integer val : new ArrayList<Integer>(map.keySet())){
 			if(val == 5){
 				map.remove(val);
 			}
@@ -215,10 +206,10 @@ public class CompositeTest extends VisitServiceTest {
 	}
 
 	protected <T> int getSize(CollectionVisitService<T> service) {
-		return service.visitForQueryList(Visitors.truePredicateVisitor(), null).size();
+		return service.visitForQueryList(Visitors.<T>truePredicateVisitor(), null).size();
 	}
 
 	protected <K, V> int getSize(MapVisitService<K, V> service) {
-		return service.visitForQueryList(Visitors.trueMapPredicateVisitor(), null).size();
+		return service.visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), null).size();
 	}
 }
