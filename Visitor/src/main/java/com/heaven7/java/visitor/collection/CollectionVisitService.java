@@ -731,7 +731,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 *
 	 * @param <T> the type
 	 */
-	public static abstract class CollectionOperateInterceptor<T> extends OperateInterceptor {
+	abstract class CollectionOperateInterceptor<T> extends OperateInterceptor {
 
 		/**
 		 * intercept the current iteration.
@@ -769,7 +769,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param <R> the return type for {@link #end()}
 	 * @param <T> the parametric type of most method
 	 */
-	public static abstract class OperateManager<T> implements Cacheable<OperateManager<T>>,
+	abstract class OperateManager<T> implements Cacheable<OperateManager<T>>,
 	         Endable<CollectionVisitService<T>>{
 
 		OperateManager() {

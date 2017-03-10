@@ -48,8 +48,8 @@ import java.util.List;
  *            the key type
  * @param <V>
  *            the value type.
- * @see {@linkplain AbstractMapVisitService}
- * @see {@linkplain MapVisitServiceImpl}
+ * @see AbstractMapVisitService
+ * @see MapVisitServiceImpl
  */
 @SuppressWarnings("deprecation")
 public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V>> {
