@@ -1,20 +1,16 @@
 package com.heaven7.java.visitor.test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-
-import com.heaven7.java.visitor.FireVisitor;
-import com.heaven7.java.visitor.MapSaveVisitor;
-import com.heaven7.java.visitor.PredicateVisitor;
-import com.heaven7.java.visitor.ResultVisitor;
-import com.heaven7.java.visitor.SaveVisitor;
+import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.collection.CollectionVisitService;
 import com.heaven7.java.visitor.collection.ListVisitService;
 import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.util.Map;
 import com.heaven7.java.visitor.util.Observer;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 public class ListVisitServiceTest extends VisitServiceTest {
 
@@ -51,7 +47,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 			}
 		},new Observer<Integer, List<String>>() {
 			@Override
-			public void onSucess(Object param, List<String> r) {
+			public void onSuccess(Object param, List<String> r) {
 			}
 			@Override
 			public void onFailed(Object param, Integer t) {
@@ -78,7 +74,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 			}
 		},new Observer<Integer, List<String>>() {
 			@Override
-			public void onSucess(Object param, List<String> r) {
+			public void onSuccess(Object param, List<String> r) {
 			}
 			@Override
 			public void onFailed(Object param, Integer t) {
@@ -105,7 +101,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 			}
 		},new Observer<Integer, List<String>>() {
 			@Override
-			public void onSucess(Object param, List<String> r) {
+			public void onSuccess(Object param, List<String> r) {
 				assertEquals(str, param);
 				System.out.println(r);
 			}
@@ -134,7 +130,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 			}
 		}, new Observer<Integer,Void>() {
 			@Override
-			public void onSucess(Object param,Void r) {
+			public void onSuccess(Object param, Void r) {
 			}
 			@Override
 			public void onFailed(Object param, Integer t) {
@@ -160,7 +156,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 			}
 		}, new Observer<Integer, Void>() {
 			@Override
-			public void onSucess(Object param,Void r) {
+			public void onSuccess(Object param, Void r) {
 			}
 			@Override
 			public void onFailed(Object param, Integer t) {
@@ -185,7 +181,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 			}
 		}, new Observer<Integer,Void>() {
 			@Override
-			public void onSucess(Object param,Void r) {
+			public void onSuccess(Object param, Void r) {
 				assertEquals(str, param);
 			}
 			@Override

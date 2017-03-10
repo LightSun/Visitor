@@ -5,10 +5,12 @@ import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.IterateControl.Callback;
+import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.internal.state.IterateState;
 import com.heaven7.java.visitor.util.Collections2;
 import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.SparseArray;
+import com.heaven7.java.visitor.util.Throwables;
 
 import java.util.*;
 
@@ -83,7 +85,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	public CollectionVisitService<T> addIfNotExist(T newT, Observer<T, Void> observer) {
 		try {
 			if (!mCollection.contains(newT) && mCollection.add(newT)) {
-				observer.onSucess(null, null);
+				observer.onSuccess(null, null);
 			} else {
 				observer.onFailed(null, newT);
 			}
@@ -111,7 +113,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	public CollectionVisitService<T> removeIfExist(T newT, Observer<T, Void> observer) {
 		try {
 			if (mCollection.remove(newT)) {
-				observer.onSucess(null, null);
+				observer.onSuccess(null, null);
 			} else {
 				observer.onFailed(null, newT);
 			}
@@ -402,6 +404,36 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			}
 		}
 		return (this instanceof ListVisitService) ? VisitServices.from(list) : VisitServices.from((Collection<T>) list);
+	}
+
+	@Override
+	public <R> CollectionVisitService<R> zipService(@Nullable Object param, ResultVisitor<T, R> resultVisitor, Observer<T, List<R>> observer) {
+		Throwables.checkNull(resultVisitor);
+		Throwables.checkNull(observer);
+		final List<R> results = new ArrayList<R>();
+		CollectionVisitService<R> service =  InternalUtil.getVisitService(results, null, this instanceof ListVisitService);
+		R r;
+		T failedT = null;
+		T curr = null ;
+		try {
+			for (T t : mCollection) {
+				r = resultVisitor.visit((curr = t), param);
+				if (r == null) {
+					failedT = t;
+					break;
+				}
+				results.add(r);
+			}
+		}catch (Throwable e){
+			observer.onThrowable(param, curr, e);
+			return service;
+		}
+		if(failedT != null){
+			observer.onFailed(param, failedT);
+		}else{
+			observer.onSuccess(param, results);
+		}
+		return service;
 	}
 
 	// ============================== start--> private and static

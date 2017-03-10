@@ -42,7 +42,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * zip the all elements with target visitor .
 	 * <p>that is if 'case' then 'result'</p>
 	 * <ul> <h2>here is the left case with right result</h2>
-	 *    <li> if predicate visitor always visit success(true) ==>cause call {@linkplain Observer#onSucess(Object,Object)}
+	 *    <li> if predicate visitor always visit success(true) ==>cause call {@linkplain Observer#onSuccess(Object,Object)}
 	 *    <li> if predicate visitor sometime visit failed(false) ==>cause call {@linkplain Observer#onFailed(Object, Object)}
 	 *    <li> if occurs {@linkplain Throwable} during visit ==>cause call {@linkplain Observer#onThrowable(Object, Object, Throwable)}
 	 * </ul>
@@ -61,7 +61,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * zip the all elements with target visitor for results.
 	 * <p>that is if 'case' then 'result'</p>
 	 * <ul> <h2>here is the left case with right result</h2>
-	 *    <li> if result visitor always visit success(not null) ==>cause call {@linkplain Observer#onSucess(Object, Object)}
+	 *    <li> if result visitor always visit success(not null) ==>cause call {@linkplain Observer#onSuccess(Object, Object)}
 	 *    <li> if result visitor sometime visit failed(null) ==>cause call {@linkplain Observer#onFailed(Object, Object)}
 	 *    <li> if occurs {@linkplain Throwable} during visit ==>cause call {@linkplain Observer#onThrowable(Object, Object, Throwable)}
 	 * </ul>
@@ -722,7 +722,28 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	@Independence
 	CollectionVisitService<T> removeIfExist(T newT, Observer<T, Void> observer);
-	
+
+	/**
+	 * zip service directly( without extra iterate service).
+	 * @param param the parameter
+	 * @param resultVisitor the result visitor
+	 * @param <R> the result type
+	 * @return the result visit service.
+	 * @since 1.1.7
+	 */
+	@Independence
+	<R> CollectionVisitService<R> zipService(@Nullable Object param, ResultVisitor<T, R> resultVisitor, Observer<T, List<R>> observer);
+
+	/**
+	 * zip service directly( without extra iterate service).
+	 * @param resultVisitor the result visitor
+	 * @param <R> the result type
+	 * @return the result visit service.
+	 * @since 1.1.7
+	 */
+	@Independence
+	<R> CollectionVisitService<R> zipService(ResultVisitor<T, R> resultVisitor, Observer<T, List<R>> observer);
+
 	//=======================================================================================
 	
 	/**

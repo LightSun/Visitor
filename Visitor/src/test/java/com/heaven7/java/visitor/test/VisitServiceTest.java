@@ -1,29 +1,20 @@
 package com.heaven7.java.visitor.test;
 
-import static com.heaven7.java.visitor.collection.Operation.OP_DELETE;
-import static com.heaven7.java.visitor.collection.Operation.OP_FILTER;
-import static com.heaven7.java.visitor.collection.Operation.OP_INSERT;
-import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
-import static com.heaven7.java.visitor.test.help.TestUtil.createStudent;
-import static com.heaven7.java.visitor.test.help.TestUtil.createStudent2;
-import static com.heaven7.java.visitor.test.help.TestUtil.syso;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import com.heaven7.java.visitor.SaveVisitor;
-import com.heaven7.java.visitor.IterateVisitor;
-import com.heaven7.java.visitor.PredicateVisitor;
-import com.heaven7.java.visitor.ResultVisitor;
-import com.heaven7.java.visitor.Visitors;
+import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.collection.CollectionVisitService;
 import com.heaven7.java.visitor.collection.IterationInfo;
 import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.test.help.Student;
 import com.heaven7.java.visitor.test.help.Student2;
-
+import com.heaven7.java.visitor.util.Observers;
 import junit.framework.TestCase;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static com.heaven7.java.visitor.collection.Operation.*;
+import static com.heaven7.java.visitor.test.help.TestUtil.*;
 
 /**
  * here just for list test.
@@ -49,6 +40,74 @@ public class VisitServiceTest extends TestCase {
 
 	protected int getStudentSize() {
 		return mStus.size();
+	}
+
+
+	//================================================
+
+	public void testZipServiceThrowable(){
+		final String str = "testZipServiceFiled";
+		final int targetId = 2;
+		int size = mService.zipService(str, new ResultVisitor<Student, Student2>() {
+			@Override
+			public Student2 visit(Student s, Object param) {
+				assertEquals(str, param);
+				if(s .getId() == targetId){
+					throw new IllegalStateException();
+				}
+				return new Student2(s);
+			}
+		}, new Observers.ObserverAdapter<Student, List<Student2>>() {
+			@Override
+			public void onThrowable(Object param, Student student, Throwable e) {
+				syso("onThrowable");
+				assertEquals(param, str);
+				assertEquals(student.getId(), targetId);
+				assertTrue(e instanceof IllegalStateException);
+			}
+		}).size();
+		assertEquals(size , 1); // when 2 is breaked. so only 1
+	}
+
+	public void testZipServiceFiled(){
+		final String str = "testZipServiceFiled";
+		final int targetId = 2;
+		int size = mService.zipService(str, new ResultVisitor<Student, Student2>() {
+			@Override
+			public Student2 visit(Student s, Object param) {
+				assertEquals(str, param);
+				if(s .getId() == targetId){
+					return null;
+				}
+				return new Student2(s);
+			}
+		}, new Observers.ObserverAdapter<Student, List<Student2>>() {
+			@Override
+			public void onFailed(Object param, Student student) {
+				syso("onFailed");
+				assertEquals(param, str);
+				assertEquals(student.getId(), targetId);
+			}
+		}).size();
+		assertEquals(size , 1); // when 2 is breaked. so only 1
+	}
+
+	public void testZipServiceSuccess(){
+		final String str = "testZipService";
+		int size = mService.zipService(str, new ResultVisitor<Student, Student2>() {
+			@Override
+			public Student2 visit(Student s, Object param) {
+				return new Student2(s);
+			}
+		}, new Observers.ObserverAdapter<Student, List<Student2>>() {
+			@Override
+			public void onSuccess(Object param, List<Student2> student2s) {
+				syso("onSuccess");
+				assertEquals(student2s.size() , mService.size());
+				assertEquals(param, str);
+			}
+		}).size();
+		assertEquals(size , mService.size());
 	}
 	
 	public void testCacheIterateControl(){

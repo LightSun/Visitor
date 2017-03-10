@@ -9,7 +9,7 @@ import com.heaven7.java.visitor.util.Map;
  *
  * @param <K>
  *            the key type
- * @param <K>
+ * @param <V>
  *            the value type
  */
 public interface MapSaveVisitor<K, V>{

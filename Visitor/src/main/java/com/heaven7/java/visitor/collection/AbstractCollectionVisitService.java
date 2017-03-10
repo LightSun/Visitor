@@ -1,28 +1,14 @@
 package com.heaven7.java.visitor.collection;
 
-import static com.heaven7.java.visitor.internal.InternalUtil.getVisitService;
-import static com.heaven7.java.visitor.internal.InternalUtil.newMap;
-import static com.heaven7.java.visitor.internal.InternalUtil.processThrowable;
-import static com.heaven7.java.visitor.internal.InternalUtil.unmodifiable;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
-import com.heaven7.java.visitor.FireBatchVisitor;
-import com.heaven7.java.visitor.FireVisitor;
-import com.heaven7.java.visitor.IterateVisitor;
-import com.heaven7.java.visitor.PredicateVisitor;
-import com.heaven7.java.visitor.ResultVisitor;
-import com.heaven7.java.visitor.SaveVisitor;
-import com.heaven7.java.visitor.ThrowableVisitor;
-import com.heaven7.java.visitor.Visitors;
+import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.Throwables;
+
+import java.util.*;
+
+import static com.heaven7.java.visitor.internal.InternalUtil.*;
 
 /**
  * the abstract visit service
@@ -40,6 +26,11 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 
 	protected AbstractCollectionVisitService() {
 		super();
+	}
+
+	@Override
+	public final <R> CollectionVisitService<R> zipService(ResultVisitor<T, R> resultVisitor, Observer<T, List<R>> observer) {
+		return zipService(null, resultVisitor, observer);
 	}
 
 	@Override
@@ -474,7 +465,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 		}
 
 		public void onSuccess(R result) {
-			mObserver.onSucess(mParam, result);
+			mObserver.onSuccess(mParam, result);
 		}
 
 		public void onThrowable(Throwable e) {

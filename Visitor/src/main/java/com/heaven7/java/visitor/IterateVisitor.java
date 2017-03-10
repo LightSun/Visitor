@@ -1,6 +1,5 @@
 package com.heaven7.java.visitor;
 
-import com.heaven7.java.visitor.Visitor2;
 import com.heaven7.java.visitor.collection.IterationInfo;
 
 /**
@@ -14,8 +13,8 @@ public interface IterateVisitor<T> extends Visitor2<T, Object, IterationInfo, Bo
 	/**
 	 * visit for Boolean result
 	 * @param t the element 
-	 * @param p1 the extra parameter
-	 * @param p2 the IterationInfo of current iterate
+	 * @param param the extra parameter
+	 * @param info the IterationInfo of current iterate
 	 * @return the Boolean result of this visit
 	 */
 	Boolean visit(T t, Object param, IterationInfo info);

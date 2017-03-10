@@ -20,7 +20,7 @@ public interface Observer<T, R> {
 	 * @param param the extra parameter
 	 * @param r the result when success.
 	 */
-	void onSucess(Object param, R r);
+	void onSuccess(Object param, R r);
 
 	/**
 	 * called on operate failed.

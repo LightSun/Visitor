@@ -13,7 +13,7 @@ public interface MapFireVisitor<K, V> extends FireVisitor<KeyValuePair<K, V>>{
 
 	/**
 	 * fire the  key-value pair with target parameter .
-	 * @param t the key-value pair
+	 * @param pair the key-value pair
 	 * @param param the extra parameter.
 	 */
 	Boolean visit(KeyValuePair<K, V> pair, Object param);

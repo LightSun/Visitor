@@ -50,7 +50,7 @@ public final class Observers {
 		Throwables.checkNull(success);
 		return new ObserverAdapter<T, Void>() {
 			@Override
-			public void onSucess(Object param, Void r) {
+			public void onSuccess(Object param, Void r) {
 				success.run();
 			}
 
@@ -84,7 +84,7 @@ public final class Observers {
 	public static abstract class ObserverAdapter<T, R> implements Observer<T, R> {
 
 		@Override
-		public void onSucess(Object param, R r) {
+		public void onSuccess(Object param, R r) {
 
 		}
 

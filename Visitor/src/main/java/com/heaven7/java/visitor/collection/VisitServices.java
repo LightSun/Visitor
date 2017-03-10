@@ -51,9 +51,9 @@ public final class VisitServices {
 	 * @param <V> the value type
 	 * @param map the map
 	 * @return an instance of {@linkplain MapVisitService}
-	 * @see {@linkplain SortedMap}
-	 * @see {@linkplain #from(com.heaven7.java.visitor.util.Map)}
-	 * @see {@linkplain #from(SparseArray)}
+	 * @see SortedMap
+	 * @see #from(com.heaven7.java.visitor.util.Map)
+	 * @see #from(SparseArray)
 	 */
 	public static <K, V> MapVisitService<K, V> from(Map<K, V> map) {
 		return new MapVisitServiceImpl<K, V>(new Map2Map<K, V>(map));
