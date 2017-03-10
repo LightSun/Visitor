@@ -41,7 +41,8 @@ public abstract class Operation {
 	private static final int MASK_FLAG             = 0xffffff00;
 
 	/** you should not use member directly. use {@linkplain #setOperate(int)}, {@linkplain #getOperate()},
-	 * {@linkplain #addFlags(int)} */
+	 * {@linkplain #addFlags(int)} {@linkplain #deleteFlags(int)} instead.
+	 * <h1>this will be private in v2.x .</h1>*/
 	protected int mOp;
 	/** the extra param for current operation. */
 	protected Object mParam;
