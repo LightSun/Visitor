@@ -1,19 +1,5 @@
 package com.heaven7.java.visitor.collection;
 
-import static com.heaven7.java.visitor.collection.Operation.OP_DELETE;
-import static com.heaven7.java.visitor.collection.Operation.OP_FILTER;
-import static com.heaven7.java.visitor.collection.Operation.OP_INSERT;
-import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
-import static com.heaven7.java.visitor.util.Predicates.isTrue;
-import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
-import static com.heaven7.java.visitor.util.Throwables.checkNull;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
@@ -23,6 +9,13 @@ import com.heaven7.java.visitor.internal.state.IterateState;
 import com.heaven7.java.visitor.util.Collections2;
 import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.SparseArray;
+
+import java.util.*;
+
+import static com.heaven7.java.visitor.collection.Operation.*;
+import static com.heaven7.java.visitor.util.Predicates.isTrue;
+import static com.heaven7.java.visitor.util.Throwables.checkEmpty;
+import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
 /**
  *
@@ -49,7 +42,6 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	private final IterateControl<CollectionVisitService<T>> mControl;
 	/** the operate interceptor */
 	private final GroupOperateInterceptor mGroupInterceptor = new GroupOperateInterceptor();
-	private OperateManager<T> mOpManager;
 
 	/** the all Operation/operate of insert in iteration */
 	private List<CollectionOperation<T>> mInsertOps;
@@ -397,7 +389,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	@Override
 	public OperateManager<T> beginOperateManager() {
-		return mOpManager != null ? mOpManager : (mOpManager = new OperateManagerImpl());
+		return new OperateManagerImpl();
 	}
 
 	@Override

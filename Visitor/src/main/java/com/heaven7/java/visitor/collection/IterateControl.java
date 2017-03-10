@@ -1,27 +1,24 @@
 package com.heaven7.java.visitor.collection;
 
-import static com.heaven7.java.visitor.collection.Operation.OP_DELETE;
-import static com.heaven7.java.visitor.collection.Operation.OP_FILTER;
-import static com.heaven7.java.visitor.collection.Operation.OP_INSERT;
-import static com.heaven7.java.visitor.collection.Operation.OP_UPDATE;
-import static com.heaven7.java.visitor.internal.InternalUtil.op2String;
+import com.heaven7.java.visitor.internal.Cacheable;
+import com.heaven7.java.visitor.internal.Endable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.heaven7.java.visitor.internal.Cacheable;
-import com.heaven7.java.visitor.internal.Endable;
+import static com.heaven7.java.visitor.collection.Operation.*;
+import static com.heaven7.java.visitor.internal.InternalUtil.op2String;
 
 /**
  * the iterate control used to control the order of all operate (
- * {@linkplain VisitService#OP_FILTER}} and etc.). But
- * {@linkplain VisitService#OP_INSERT} only used for List.
+ * {@linkplain Operation#OP_FILTER}} and etc.). But
+ * {@linkplain Operation#OP_INSERT} only used for List.
  * <p>
  * the default order of iterate is :<br>
- * first({@linkplain VisitService#OP_DELETE} ).<br>
- * second({@linkplain VisitService#OP_FILTER} ).<br>
- * then({@linkplain VisitService#OP_UPDATE} ).<br>
- * last({@linkplain VisitService#OP_INSERT} ).<br>
+ * first({@linkplain Operation#OP_DELETE} ).<br>
+ * second({@linkplain Operation#OP_FILTER} ).<br>
+ * then({@linkplain Operation#OP_UPDATE} ).<br>
+ * last({@linkplain Operation#OP_INSERT} ).<br>
  * </p>
  * 
  * <pre>
@@ -50,10 +47,10 @@ import com.heaven7.java.visitor.internal.Endable;
  *
  * @param <T>
  *            the type
- * @see {@linkplain VisitService#OP_DELETE}
- * @see {@linkplain VisitService#OP_FILTER}
- * @see {@linkplain VisitService#OP_UPDATE}
- * @see {@linkplain VisitService#OP_INSERT}
+ * @see  Operation#OP_DELETE
+ * @see  Operation#OP_FILTER
+ * @see  Operation#OP_UPDATE
+ * @see  Operation#OP_INSERT
  */
 public final class IterateControl<T> implements Endable<T>, Cacheable<IterateControl<T>>{
 	
@@ -110,7 +107,7 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 	 * 
 	 * @param operate
 	 *            the operate. see
-	 *            {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
+	 *            {@linkplain Operation#OP_DELETE}} and etc.
 	 * @return this.
 	 * @see {@linkplain #cancelIntercept(int)}
 	 */
@@ -127,7 +124,7 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 	 *  no matter the visitor visit success or not.
 	 * @param operate
 	 *             the operate. see
-	 *            {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
+	 *            {@linkplain Operation#OP_DELETE}} and etc.
 	 * @return this.
 	 * @since 1.1.0
 	 * @see {@linkplain #interceptIfSuccess(int)}
@@ -147,7 +144,7 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 	 * 
 	 * @param operate
 	 *            the operate. see
-	 *            {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
+	 *            {@linkplain Operation#OP_DELETE}} and etc.
 	 * @return this.
 	 */
 	public IterateControl<T> first(int operate){
@@ -166,7 +163,7 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 	 * 
 	 * @param operate
 	 *            the operate. see
-	 *            {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
+	 *            {@linkplain Operation#OP_DELETE}} and etc.
 	 * @return this.
 	 */
 	public IterateControl<T> second(int operate){
@@ -188,7 +185,7 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 	 * 
 	 * @param operate
 	 *            the operate. see
-	 *            {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
+	 *            {@linkplain Operation#OP_DELETE}} and etc.
 	 * @return this.
 	 */
 	public IterateControl<T> then(int operate){
@@ -212,7 +209,7 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 	 * 
 	 * @param operate
 	 *            the operate. see
-	 *            {@linkplain CollectionVisitServiceImpl#OP_DELETE}} and etc.
+	 *            {@linkplain Operation#OP_DELETE}} and etc.
 	 * @return this.
 	 */
 	public IterateControl<T> last(int operate){

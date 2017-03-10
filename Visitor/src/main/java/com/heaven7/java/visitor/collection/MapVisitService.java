@@ -62,8 +62,8 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 *            fire batch visitor
 	 * @return this
 	 * @since 1.1.1
-	 * @see {@linkplain #fireBatch(MapFireBatchVisitor, ThrowableVisitor)}
-	 * @see {@linkplain #fireBatch(Object,MapFireBatchVisitor, ThrowableVisitor)}
+	 * @see #fireBatch(MapFireBatchVisitor, ThrowableVisitor)
+	 * @see #fireBatch(Object,MapFireBatchVisitor, ThrowableVisitor)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	MapVisitService<K, V> fireBatch(MapFireBatchVisitor<K, V> fireVisitor);
@@ -78,7 +78,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 *            the throwable visitor, can be null.
 	 * @return this
 	 * @since 1.1.1
-	 * @see {@linkplain #fireBatch(Object,MapFireBatchVisitor, ThrowableVisitor)}
+	 * @see #fireBatch(Object,MapFireBatchVisitor, ThrowableVisitor)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	MapVisitService<K, V> fireBatch(MapFireBatchVisitor<K, V> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
@@ -240,7 +240,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @since 1.1.0
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
-	CollectionVisitService<K> transformToCollectionByKeys(Comparator<? super K> comparator);
+	CollectionVisitService<K> transformToCollectionByKeys(@Nullable  Comparator<? super K> comparator);
 
 	/**
 	 * transform to {@linkplain CollectionVisitService} by values .
@@ -260,7 +260,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @since 1.1.0
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
-	CollectionVisitService<V> transformToCollectionByValues(Comparator<? super V> comparator);
+	CollectionVisitService<V> transformToCollectionByValues(@Nullable  Comparator<? super V> comparator);
 
 	/**
 	 * transform to {@linkplain CollectionVisitService} by target result
@@ -291,7 +291,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 *            the result visitor
 	 * @return a {@linkplain CollectionVisitService}.
 	 * @since 1.0.2
-	 * @see {@linkplain #transformToCollection(Object, MapResultVisitor)}
+	 * @see #transformToCollection(Object, MapResultVisitor)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	<R> CollectionVisitService<R> transformToCollection(MapResultVisitor<K, V, R> resultVisitor);
@@ -328,7 +328,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @since 1.1.0
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
-	<K2> MapVisitService<K2, V> transformToMapAsValues(@Nullable Object param, Comparator<? super K2> comparator,
+	<K2> MapVisitService<K2, V> transformToMapAsValues(@Nullable Object param,@Nullable Comparator<? super K2> comparator,
 			MapResultVisitor<K, V, K2> keyVisitor);
 
 	/**
@@ -355,7 +355,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 *            the key visitor
 	 * @return a {@linkplain MapVisitService}.
 	 * @since 1.0.2
-	 * @see {@linkplain #transformToMapAsValues(Object, MapResultVisitor)}
+	 * @see #transformToMapAsValues(Object, MapResultVisitor)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	<K2> MapVisitService<K2, V> transformToMapAsValues(MapResultVisitor<K, V, K2> keyVisitor);
@@ -375,7 +375,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @since 1.1.0
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
-	<V2> MapVisitService<K, V2> transformToMapAsKeys(@Nullable Object param, Comparator<? super K> comparator,
+	<V2> MapVisitService<K, V2> transformToMapAsKeys(@Nullable Object param, @Nullable Comparator<? super K> comparator,
 			MapResultVisitor<K, V, V2> valueVisitor);
 
 	/**
@@ -402,7 +402,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 *            the value visitor
 	 * @return a {@linkplain MapVisitService}.
 	 * @since 1.0.2
-	 * @see {@linkplain #transformToMapAsKeys(Object, MapResultVisitor)}
+	 * @see {#transformToMapAsKeys(Object, MapResultVisitor)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	<V2> MapVisitService<K, V2> transformToMapAsKeys(MapResultVisitor<K, V, V2> valueVisitor);
@@ -425,7 +425,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @since 1.1.0
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
-	MapVisitService<V, K> transformToMapBySwap(Comparator<? super V> comparator);
+	MapVisitService<V, K> transformToMapBySwap(@Nullable  Comparator<? super V> comparator);
 
 	/**
 	 * transform to new {@linkplain MapVisitService}.
@@ -439,7 +439,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param valueVisitor
 	 *            the value visitor
 	 * @return a {@linkplain MapVisitService}.
-	 * @see {@linkplain #transformToMap(Object, MapResultVisitor, MapResultVisitor)}
+	 * @see #transformToMap(Object, MapResultVisitor, MapResultVisitor)
 	 * @since 1.0.2
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
@@ -522,7 +522,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param out
 	 *            the out list of all result, can be null.
 	 * @return result list
-	 * @see {@linkplain #visitForResultList(Object, MapPredicateVisitor, MapResultVisitor, List)}
+	 * @see #visitForResultList(Object, MapPredicateVisitor, MapResultVisitor, List)
 	 * @since 1.0.1
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
@@ -540,7 +540,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param out
 	 *            the out list of all result, can be null.
 	 * @return result list
-	 * @see {@linkplain #visitForResultList(Object, MapPredicateVisitor, MapResultVisitor, List)}
+	 * @see #visitForResultList(Object, MapPredicateVisitor, MapResultVisitor, List)
 	 * @since 1.0.1
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
@@ -558,7 +558,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param out
 	 *            the out list of all result, can be null.
 	 * @return the result list
-	 * @see {@linkplain #visitForResultList(Object, MapPredicateVisitor, MapResultVisitor, List)}
+	 * @see #visitForResultList(Object, MapPredicateVisitor, MapResultVisitor, List)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	<R> List<R> visitForResultList(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K, V, R> resultVisitor,
@@ -591,7 +591,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param resultVisitor
 	 *            the result visitor.
 	 * @return the result
-	 * @see {@linkplain #visitForResult(MapPredicateVisitor, MapResultVisitor)}
+	 * @see #visitForResult(MapPredicateVisitor, MapResultVisitor)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	<R> R visitForResult(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K, V, R> resultVisitor);
@@ -619,7 +619,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param out
 	 *            the out list. can be null.
 	 * @return the query result list
-	 * @see {@linkplain MapVisitService#visitForQueryList(Object, MapPredicateVisitor, List)}
+	 * @see MapVisitService#visitForQueryList(Object, MapPredicateVisitor, List)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	List<KeyValuePair<K, V>> visitForQueryList(MapPredicateVisitor<K, V> predicate,
@@ -643,7 +643,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param predicate
 	 *            the predicate visitor
 	 * @return the query result
-	 * @see {@linkplain #visitForQuery(Object, MapPredicateVisitor)}
+	 * @see #visitForQuery(Object, MapPredicateVisitor)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	KeyValuePair<K, V> visitForQuery(MapPredicateVisitor<K, V> predicate);
@@ -681,8 +681,8 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param c the Comparator , can be null. if you don't care about the sort.
 	 * @return  a sub map visit service
 	 * @since 1.1.5
-	 * @see {@linkplain #subService(MapPredicateVisitor)}
-	 * @see {@linkplain #subService(Object, MapPredicateVisitor)}
+	 * @see #subService(MapPredicateVisitor)
+	 * @see #subService(Object, MapPredicateVisitor)
 	 */
 	@Independence
 	MapVisitService<K, V> subService(@Nullable Object param, MapPredicateVisitor<K, V> predicate, 
@@ -694,8 +694,8 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param predicate the predicate visitor.
 	 * @return  a sub map visit service
 	 * @since 1.1.5
-	 * @see {@linkplain #subService(Object, MapPredicateVisitor, Comparator)}
-	 * @see {@linkplain #subService(MapPredicateVisitor)}
+	 * @see #subService(Object, MapPredicateVisitor, Comparator)
+	 * @see #subService(MapPredicateVisitor)
 	 */
 	@Independence
 	MapVisitService<K, V> subService(@Nullable Object param, MapPredicateVisitor<K, V> predicate);
@@ -705,8 +705,8 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param predicate the predicate visitor.
 	 * @return  a sub map visit service
 	 * @since 1.1.5
-	 * @see {@linkplain #subService(Object, MapPredicateVisitor)}
-	 * @see {@linkplain #subService(Object, MapPredicateVisitor, Comparator)}
+	 * @see #subService(Object, MapPredicateVisitor)
+	 * @see #subService(Object, MapPredicateVisitor, Comparator)
 	 */
 	@Independence
 	MapVisitService<K, V> subService(MapPredicateVisitor<K, V> predicate);
@@ -721,7 +721,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param <V>
 	 *            the value type
 	 */
-	public static abstract class MapOperateInterceptor<K, V> extends OperateInterceptor {
+	abstract class MapOperateInterceptor<K, V> extends OperateInterceptor {
 
 		/**
 		 * intercept the current iteration.
@@ -751,7 +751,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @param <V>
 	 *            the value type.
 	 */
-	public static abstract class MapOperateManager<K, V> implements Endable<MapVisitService<K, V>>,
+	abstract class MapOperateManager<K, V> implements Endable<MapVisitService<K, V>>,
 	         Cacheable<MapOperateManager<K, V>> {
 
 		/**
@@ -845,7 +845,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 		 * @param visitor
 		 *            the trim visitor
 		 * @return this.
-		 * @see {@linkplain #trim(Object, MapTrimVisitor)}
+		 * @see #trim(Object, MapTrimVisitor)
 		 */
 		@Deprecated
 		public abstract MapOperateManager<K, V> trim(@Nullable Object param, TrimMapVisitor<K, V> visitor);
@@ -877,8 +877,8 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 		 * @param visitor
 		 *            the trim visitor
 		 * @return this.
-		 * @see {@linkplain #trim(Object, TrimMapVisitor)}.
-		 * @see {@linkplain #trim(MapTrimVisitor)}
+		 * @see #trim(Object, TrimMapVisitor)
+		 * @see #trim(MapTrimVisitor)
 		 */
 		@Deprecated
 		public final MapOperateManager<K, V> trim(TrimMapVisitor<K, V> visitor) {
@@ -893,7 +893,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 		 *            the trim visitor
 		 * @return this.
 		 * @since 1.0.3
-		 * @see {@linkplain #trim(Object, MapTrimVisitor)}.
+		 * @see #trim(Object, MapTrimVisitor)
 		 */
 		public final MapOperateManager<K, V> trim(MapTrimVisitor<K, V> visitor) {
 			return trim(null, visitor);
@@ -908,7 +908,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 		 * @param visitor
 		 *            the iterate visitor
 		 * @return this.
-		 * @see {@linkplain #insertFinally(List, Object, MapIterateVisitor)}
+		 * @see  #insertFinally(List, Object, MapIterateVisitor)
 		 */
 		public final MapOperateManager<K, V> insertFinally(List<KeyValuePair<K, V>> newPairs,
 				MapIterateVisitor<K, V> visitor) {
@@ -924,7 +924,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 		 * @param visitor
 		 *            the iterate visitor
 		 * @return this.
-		 * @see {@linkplain #insertFinally(KeyValuePair, Object, MapIterateVisitor)}
+		 * @see #insertFinally(KeyValuePair, Object, MapIterateVisitor)
 		 */
 		public final MapOperateManager<K, V> insertFinally(KeyValuePair<K, V> pair, MapIterateVisitor<K, V> visitor) {
 			return insertFinally(pair, null, visitor);
@@ -938,7 +938,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 		 * @param visitor
 		 *            the predicate visitor
 		 * @return this.
-		 * @see {@linkplain #update(Object, Object, MapPredicateVisitor)}
+		 * @see #update(Object, Object, MapPredicateVisitor)
 		 */
 		public final MapOperateManager<K, V> update(V value, MapPredicateVisitor<K, V> visitor) {
 			return update(value, null, visitor);
@@ -961,7 +961,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 		 * @param visitor
 		 *            the predicate visitor
 		 * @return this.
-		 * @see {@linkplain #delete(Object, MapPredicateVisitor)}
+		 * @see #delete(Object, MapPredicateVisitor)
 		 */
 		public final MapOperateManager<K, V> delete(MapPredicateVisitor<K, V> visitor) {
 			return delete(null, visitor);
