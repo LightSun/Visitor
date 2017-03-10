@@ -1,7 +1,14 @@
 # Visitor
 这是一个快速访问集合（collection和map）并支持在迭代过程中进行增删改查的 java库。同时访问服务VisitService可以快速相互转化（collection和map之间）.
 
-
+## 特点   
+* 1， 快速迭代collection 和 map集合(同时支持crud and fiter ,不管迭代过程多复杂). 
+* 2,  支持打包zip操作。
+* 3,  支持集合排序(sort), 连接(join),分组（group）, 倒转(reverse)等。
+* 4,  支持Collection集合 and  Map集合之间相互转换。
+* 5,  可快速开发 callback管理器。
+* 6,  链式编程。
+  
 ## 此框架的目的/作用.
 * 需求： 
      - 将一个Int类型的数组 元素作为key 转化成一个map, 然后得到map的value集合. 条件是迭代过程中需要将某些元素过滤或者删除。(ps: 过滤意思是该元素不放入map中，删除意思是从原集合上删除该元素)
@@ -70,13 +77,52 @@ public void testTransform0() {
 	}
 ```
     - 看出来了吧，没错。这个框架就是采用链式编程结构 快速操作 collection和map. 并在之间可以相互转化。
-     并且添加一些groovy的特性.
+     并且添加一些groovy的特性
+ * callback manager ? so easy.
+ ```java
+ private static class CallbackManager {
+		final ListVisitService<Callback> mService;
+
+		public CallbackManager() {
+			this.mService = VisitServices.from(new ArrayList<Callback>());
+		}
+
+		public void register(Callback cl) {
+			mService.addIfNotExist(cl);
+		}
+
+		public int getSize() {
+			return mService.size();
+		}
+
+		public void unregister(Callback cl) {
+			mService.removeIfExist(cl);
+		}
+
+		public void dispatchCallback(String msg) {
+			mService.fire(msg, new FireVisitor<Callback>() {
+				@Override
+				public Boolean visit(Callback callback, Object param) {
+					assertEquals(param, sMsg);
+					callback.callback(param.toString());
+					return null;
+				}
+			}, new ThrowableVisitor() {
+				@Override
+				public Void visit(Throwable t) {
+					System.err.println(t.toString());
+					return null;
+				}
+			});
+		}
+
+ ```
      
 ## Gradle config
 
 ```java
    dependencies {
-       compile 'com.heaven7.java.visitor:Visitor:1.1.5'
+       compile 'com.heaven7.java.visitor:Visitor:1.1.7'
    }
 ```
 
