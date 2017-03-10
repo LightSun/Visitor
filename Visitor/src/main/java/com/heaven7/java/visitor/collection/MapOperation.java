@@ -4,6 +4,7 @@ package com.heaven7.java.visitor.collection;
 import com.heaven7.java.visitor.MapIterateVisitor;
 import com.heaven7.java.visitor.MapPredicateVisitor;
 import com.heaven7.java.visitor.TrimMapVisitor;
+import com.heaven7.java.visitor.internal.OperationPools;
 import com.heaven7.java.visitor.util.Map;
 import com.heaven7.java.visitor.util.Updatable;
 
@@ -26,7 +27,8 @@ public class MapOperation<K, V> extends Operation {
 	private TrimMapVisitor<K, V> mTrimVisitor;
 
 	public static <K, V> MapOperation<K, V> createFilter(Object param, MapPredicateVisitor<K, V> predicate) {
-		MapOperation<K, V> operation = new MapOperation<K, V>();
+		//MapOperation<K, V> operation = new MapOperation<K, V>();
+		MapOperation<K, V> operation = OperationPools.obtainMapOperation();
 		operation.setOperate(OP_FILTER);
 		operation.mParam = param;
 		operation.mPredicateVisitor = predicate;
@@ -34,7 +36,8 @@ public class MapOperation<K, V> extends Operation {
 	}
 
 	public static <K, V> MapOperation<K, V> createUpdate(V value, Object param, MapPredicateVisitor<K, V> predicate) {
-		MapOperation<K, V> operation = new MapOperation<K, V>();
+		//MapOperation<K, V> operation = new MapOperation<K, V>();
+		MapOperation<K, V> operation = OperationPools.obtainMapOperation();
 		operation.setOperate(OP_UPDATE);
 		operation.mValue = value;
 		operation.mParam = param;
@@ -43,7 +46,8 @@ public class MapOperation<K, V> extends Operation {
 	}
 
 	public static <K, V> MapOperation<K, V> createDelete(Object param, MapPredicateVisitor<K, V> predicate) {
-		MapOperation<K, V> operation = new MapOperation<K, V>();
+		//MapOperation<K, V> operation = new MapOperation<K, V>();
+		MapOperation<K, V> operation = OperationPools.obtainMapOperation();
 		operation.setOperate(OP_DELETE);
 		operation.mParam = param;
 		operation.mPredicateVisitor = predicate;
@@ -52,7 +56,8 @@ public class MapOperation<K, V> extends Operation {
 
 	public static <K, V> MapOperation<K, V> createInsert(List<KeyValuePair<K, V>> mPairs, Object param,
 			MapIterateVisitor<K, V> iterateVisitor) {
-		MapOperation<K, V> operation = new MapOperation<K, V>();
+		//MapOperation<K, V> operation = new MapOperation<K, V>();
+		MapOperation<K, V> operation = OperationPools.obtainMapOperation();
 		operation.setOperate(OP_INSERT);
 		operation.mPairs = mPairs;
 		operation.mParam = param;
@@ -62,7 +67,8 @@ public class MapOperation<K, V> extends Operation {
 
 	public static <K, V> MapOperation<K, V> createInsert(KeyValuePair<K, V> pair, Object param,
 			MapIterateVisitor<K, V> iterateVisitor) {
-		MapOperation<K, V> operation = new MapOperation<K, V>();
+		//MapOperation<K, V> operation = new MapOperation<K, V>();
+		MapOperation<K, V> operation = OperationPools.obtainMapOperation();
 		operation.setOperate(OP_INSERT);
 		operation.mPair = pair;
 		operation.mParam = param;
@@ -70,7 +76,8 @@ public class MapOperation<K, V> extends Operation {
 		return operation;
 	}
 	public static <K, V> MapOperation<K, V> createTrim(Object param,  TrimMapVisitor<K, V> trim) {
-		MapOperation<K, V> operation = new MapOperation<K, V>();
+		//MapOperation<K, V> operation = new MapOperation<K, V>();
+		MapOperation<K, V> operation = OperationPools.obtainMapOperation();
 		operation.setOperate(OP_TRIM);
 		operation.mParam = param;
 		operation.mTrimVisitor = trim;

@@ -173,9 +173,11 @@ public class VisitServiceTest extends TestCase {
 		list.clear();
 		
 		//last called cache.  so the operateManager's op is cached.
+		syso("at last ..1");
 		mService.visitForQueryList(Visitors.truePredicateVisitor(), list);
 		assertEquals(size - 1, list.size());
 		list.clear();
+		syso("at last ..2");
 	}
 	
 	public void testSave3(){

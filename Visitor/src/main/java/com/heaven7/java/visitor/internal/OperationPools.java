@@ -63,7 +63,7 @@ public final class OperationPools {
             synchronized (sLOCK_MAP) {
                 if (sPOOL_SIZE_MOP < MAX_POOL_SIZE) {
                     sPOOL_MAP.offerLast(mop);
-                    sPOOL_SIZE_COP++;
+                    sPOOL_SIZE_MOP++;
                 }
             }
             System.out.println("MapOperation: after recycle() pool size = " + sPOOL_SIZE_MOP);
