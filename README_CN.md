@@ -100,17 +100,11 @@ public void testTransform0() {
 		}
 
 		public void dispatchCallback(String msg) {
-			mService.fire(msg, new FireVisitor<Callback>() {
+			mService.fire(new FireVisitor<Callback>() {
 				@Override
 				public Boolean visit(Callback callback, Object param) {
 					assertEquals(param, sMsg);
 					callback.callback(param.toString());
-					return null;
-				}
-			}, new ThrowableVisitor() {
-				@Override
-				public Void visit(Throwable t) {
-					System.err.println(t.toString());
 					return null;
 				}
 			});
