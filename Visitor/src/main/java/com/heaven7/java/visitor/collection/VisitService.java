@@ -30,7 +30,7 @@ public interface VisitService<T extends VisitService<T>> {
 	
 	/**
 	 * reset the setting current visit service by target flags.
-	 * @param flags {@linkplain #FLAG_OPERATE_MANAGER} or {@linkplain #FLAG_OPERATE_ITERATE_CONTROL}.
+	 * @param flags eg: {@linkplain #FLAG_OPERATE_MANAGER} or {@linkplain #FLAG_OPERATE_ITERATE_CONTROL}.
 	 * @return this.
 	 */
 	@Independence

@@ -10,7 +10,7 @@ import com.heaven7.java.visitor.collection.CollectionVisitService;
  * @param <T>
  *            the element type
  * @param <R>
- *            the result type of operate
+ *            the result type of operate, when success.
  * @since 1.1.6
  */
 public interface Observer<T, R> {

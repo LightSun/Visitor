@@ -224,6 +224,8 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 	
 	/**
 	 * cache the setting of current {@linkplain IterateControl}.
+	 * after call this , it will cached until you call 
+	 * {@linkplain CollectionVisitService#reset(int)} / {@linkplain CollectionVisitService#resetAll()} to clear cache.
 	 * @since 1.1.2
 	 */
 	@Override
