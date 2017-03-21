@@ -1,9 +1,9 @@
 package com.heaven7.java.visitor.util;
 
+import com.heaven7.java.visitor.collection.KeyValuePair;
+
 import java.util.ConcurrentModificationException;
 import java.util.List;
-
-import com.heaven7.java.visitor.collection.KeyValuePair;
 
 /**
  * like traditional map({@linkplain java.util.Map}). but add some useful
@@ -84,7 +84,7 @@ public interface Map<K, V> {
 	 * @param <V> the value type.
 	 * @since 1.1.3
 	 */
-	public interface MapTravelCallback<K, V> {
+	interface MapTravelCallback<K, V> {
 		/**
 		 * called when travel the target key-value.
 		 * @param key the key
