@@ -2,12 +2,13 @@ package com.heaven7.java.visitor.util;
 
 /**
  * called when catch throwable.
+ * 
  * @author heaven7
  * @since 1.1.1
  */
 public class VisitException extends RuntimeException {
 
-	 static final long serialVersionUID = 1l;
+	private static final long serialVersionUID = 1l;
 
 	public VisitException() {
 		super();
@@ -24,7 +25,5 @@ public class VisitException extends RuntimeException {
 	public VisitException(Throwable cause) {
 		super(cause);
 	}
-	 
-	 
-	
+
 }

@@ -1,6 +1,18 @@
 package com.heaven7.java.visitor.collection;
 
-import com.heaven7.java.visitor.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+import com.heaven7.java.visitor.FireBatchVisitor;
+import com.heaven7.java.visitor.FireVisitor;
+import com.heaven7.java.visitor.IterateVisitor;
+import com.heaven7.java.visitor.PredicateVisitor;
+import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.SaveVisitor;
+import com.heaven7.java.visitor.ThrowableVisitor;
 import com.heaven7.java.visitor.anno.DependOn;
 import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
@@ -8,8 +20,6 @@ import com.heaven7.java.visitor.internal.Cacheable;
 import com.heaven7.java.visitor.internal.Endable;
 import com.heaven7.java.visitor.internal.OperateInterceptor;
 import com.heaven7.java.visitor.util.Observer;
-
-import java.util.*;
 
 /**
  * the super interface of collection 'Visit-Service'.
