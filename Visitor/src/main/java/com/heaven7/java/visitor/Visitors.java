@@ -7,6 +7,7 @@ import com.heaven7.java.visitor.collection.KeyValuePair;
  * helper class help we fast get certain visitor.
  * 
  * @author heaven7
+ * @since 1.0
  * @see IterateVisitor
  * @see PredicateVisitor
  * @see ResultVisitor

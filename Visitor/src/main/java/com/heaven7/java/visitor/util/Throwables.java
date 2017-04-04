@@ -31,6 +31,20 @@ public final class Throwables {
 			throw new NullPointerException();
 		}
 	}
+	/**
+	 * check the array if is empty.
+	 * @param <T> the component tye of array.
+	 * @param ts the array
+	 * @since 2.0.0
+	 */
+	public static <T> void checkEmpty(T[] ts) {
+		if (ts == null) {
+			throw new NullPointerException();
+		}
+		if (ts.length == 0) {
+			throw new IllegalArgumentException();
+		}
+	}
 
 	public static <T> void checkEmpty(Collection<T> collection) {
 		if (collection == null) {

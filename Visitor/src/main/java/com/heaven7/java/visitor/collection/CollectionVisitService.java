@@ -33,6 +33,7 @@ import com.heaven7.java.visitor.util.Observer;
  * @param <T> the type of element
  * @see AbstractCollectionVisitService
  * @see CollectionVisitServiceImpl
+ * @see ListVisitService
  * @see ListVisitServiceImpl
  */
 public interface CollectionVisitService<T> extends VisitService<CollectionVisitService<T>>{
@@ -127,8 +128,8 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param fireVisitor fire visitor
 	 * @return this
 	 * @since 1.1.1
-	 * @see [{@linkplain #fire(FireVisitor, ThrowableVisitor)}
-	 * @see [{@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
+	 * @see {@linkplain #fire(FireVisitor, ThrowableVisitor)}
+	 * @see {@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fire(FireVisitor<T> fireVisitor);
@@ -138,7 +139,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param throwVisitor the throwable visitor, can be null.
 	 * @return this
 	 * @since 1.1.1
-	 * @see [{@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
+	 * @see {@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fire(FireVisitor<T> fireVisitor,@Nullable ThrowableVisitor throwVisitor);
