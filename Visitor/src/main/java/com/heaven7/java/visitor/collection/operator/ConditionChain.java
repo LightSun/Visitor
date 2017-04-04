@@ -42,7 +42,13 @@ public class ConditionChain<T> implements CollectionCondition<T> {
 		mCurrent.add(cc2);
 		return this;
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public ConditionChain<T> with(CollectionCondition<T> cc1, CollectionCondition<T> cc2, 
+			CollectionCondition<T> cc3) {
+		return with(new CollectionCondition[]{cc1,cc2,cc3});
+	}
+	
 	public ConditionChain<T> with(CollectionCondition<T>[] cs) {
 		mCurrent.addAll(cs);
 		return this;
@@ -56,6 +62,12 @@ public class ConditionChain<T> implements CollectionCondition<T> {
 	@SuppressWarnings("unchecked")
 	public ConditionChain<T> after(CollectionCondition<T> cc1, CollectionCondition<T> cc2) {
 		return after(new CollectionCondition[] { cc1, cc2 });
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ConditionChain<T> after(CollectionCondition<T> cc1, CollectionCondition<T> cc2 ,
+			CollectionCondition<T> cc3) {
+		return after(new CollectionCondition[] { cc1, cc2 , cc3});
 	}
 
 	public ConditionChain<T> after(CollectionCondition<T>[] ccs) {
