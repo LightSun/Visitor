@@ -7,25 +7,29 @@ import java.util.List;
 import java.util.Map;
 
 import com.heaven7.java.visitor.util.Throwables;
-
+/**
+ * 
+ * @author heaven7
+ * @param <T> the element type
+ */
 public class ConditionChain<T> implements CollectionCondition<T> {
 
-	private final Map<CollectionCondition<T>, GroupCollectionCondition<T>> mMap;
-	private final ArrayList<GroupCollectionCondition<T>> mGroups; //in order 
-	private GroupCollectionCondition<T> mCurrent;
+	private final Map<CollectionCondition<T>, GroupCollectionCondition> mMap;
+	private final ArrayList<GroupCollectionCondition> mGroups; //in order 
+	private GroupCollectionCondition mCurrent;
 
 	public ConditionChain() {
-		this.mMap = new HashMap<CollectionCondition<T>, GroupCollectionCondition<T>>();
-		this.mGroups = new ArrayList<GroupCollectionCondition<T>>();
-		this.mCurrent = new GroupCollectionCondition<T>();
+		this.mMap = new HashMap<CollectionCondition<T>, GroupCollectionCondition>();
+		this.mGroups = new ArrayList<GroupCollectionCondition>();
+		this.mCurrent = new GroupCollectionCondition();
 		mGroups.add(mCurrent);
 	}
 
 	public ConditionChain<T> anchor(CollectionCondition<T> anchor) {
 		Throwables.checkNull(anchor);
-		GroupCollectionCondition<T> group = mMap.get(anchor);
+		GroupCollectionCondition group = mMap.get(anchor);
 		if (group == null) {
-			group = new GroupCollectionCondition<T>();
+			group = new GroupCollectionCondition();
 			mMap.put(anchor, group);
 		}
 		this.mCurrent = group;
@@ -72,9 +76,9 @@ public class ConditionChain<T> implements CollectionCondition<T> {
 
 	public ConditionChain<T> after(CollectionCondition<T>[] ccs) {
 		Throwables.checkEmpty(ccs);
-		GroupCollectionCondition<T> next = getNext();
+		GroupCollectionCondition next = getNext();
 		if (next == null) {
-			next = new GroupCollectionCondition<T>();
+			next = new GroupCollectionCondition();
 			mGroups.add(next);
 		}
 		next.addAll(ccs);
@@ -82,11 +86,38 @@ public class ConditionChain<T> implements CollectionCondition<T> {
 		this.mCurrent = next;
 		return this;
 	}
+	@SuppressWarnings("unchecked")
+	public ConditionChain<T> before(CollectionCondition<T> c1){
+		return before(new CollectionCondition[]{c1});
+	}
+	@SuppressWarnings("unchecked")
+	public ConditionChain<T> before(CollectionCondition<T> c1, CollectionCondition<T> c2){
+		return before(new CollectionCondition[]{c1, c2, });
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ConditionChain<T> before(CollectionCondition<T> c1, CollectionCondition<T> c2, 
+			CollectionCondition<T> c3){
+		return before(new CollectionCondition[]{c1, c2, c3});
+	}
+	
+	public ConditionChain<T> before(CollectionCondition<T>[] ccs) {
+		Throwables.checkEmpty(ccs);
+		GroupCollectionCondition pre = getBefore();
+		if (pre == null) {
+			pre = new GroupCollectionCondition();
+			mGroups.add(0, pre);
+		}
+		pre.addAll(ccs);
+		// anchor current to next
+		this.mCurrent = pre;
+		return this;
+	}
 
-	private GroupCollectionCondition<T> getNext() {
+	private GroupCollectionCondition getNext() {
 		int nextIndex = -1;
 		for (int size = mGroups.size(), i = size - 1; i >= 0; i--) {
-			GroupCollectionCondition<T> condition = mGroups.get(i);
+			GroupCollectionCondition condition = mGroups.get(i);
 			if (mCurrent == condition) {
 				// have next ?
 				if (i < size - 1) {
@@ -97,10 +128,26 @@ public class ConditionChain<T> implements CollectionCondition<T> {
 		}
 		return nextIndex != -1 ? mGroups.get(nextIndex) : null;
 	}
+	
+	private GroupCollectionCondition getBefore() {
+		int preIndex = -1;
+		for (int size = mGroups.size(), i = size - 1; i >= 0; i--) {
+			GroupCollectionCondition condition = mGroups.get(i);
+			if (mCurrent == condition) {
+				// have next ?
+				if (i >= 1) {
+					preIndex = i - 1;
+				}
+				break;
+			}
+		}
+		return preIndex != -1 ? mGroups.get(preIndex) : null;
+	}
+
 
 	@Override
 	public boolean apply(Collection<T> src) {
-		for (GroupCollectionCondition<T> gcc : mGroups) {
+		for (GroupCollectionCondition gcc : mGroups) {
 			if (!gcc.apply(src)) {
 				return false;
 			}
@@ -108,26 +155,22 @@ public class ConditionChain<T> implements CollectionCondition<T> {
 		return true;
 	}
 
-	private static class GroupCollectionCondition<T> implements CollectionCondition<T> {
+	private class GroupCollectionCondition implements CollectionCondition<T> {
 
-		private final List<CollectionCondition<T>> mConditions = new ArrayList<CollectionCondition<T>>();
+		final List<CollectionCondition<T>> mConditions = new ArrayList<CollectionCondition<T>>();
 
-		public GroupCollectionCondition<T> add(CollectionCondition<T> cc) {
+		public GroupCollectionCondition add(CollectionCondition<T> cc) {
 			Throwables.checkNull(cc);
 			mConditions.add(cc);
+			mMap.put(cc, this);
 			return this;
 		}
 
-		public GroupCollectionCondition<T> addAll(List<CollectionCondition<T>> cs) {
-			Throwables.checkEmpty(cs);
-			mConditions.addAll(cs);
-			return this;
-		}
-
-		public GroupCollectionCondition<T> addAll(CollectionCondition<T>[] cs) {
+		public GroupCollectionCondition addAll(CollectionCondition<T>[] cs) {
 			Throwables.checkEmpty(cs);
 			for (CollectionCondition<T> c : cs) {
 				mConditions.add(c);
+				mMap.put(c, this);
 			}
 			return this;
 		}

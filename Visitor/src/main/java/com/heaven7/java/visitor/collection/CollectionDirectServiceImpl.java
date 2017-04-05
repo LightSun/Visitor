@@ -2,7 +2,12 @@ package com.heaven7.java.visitor.collection;
 
 import java.util.Collection;
 
+import com.heaven7.java.visitor.PredicateVisitor;
+import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.operator.CollectionCondition;
+import com.heaven7.java.visitor.collection.operator.OperateConditions;
+import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.Throwables;
 
 //TODO
@@ -14,10 +19,57 @@ public class CollectionDirectServiceImpl<T> {
 		super();
 		this.mCollection = mCollection;
 	}
+	
+	public CollectionDirectServiceImpl<T> clear(){
+		return apply(OperateConditions.ofClear(null));
+	}
+	
+	public CollectionDirectServiceImpl<T> replaceAll(ResultVisitor<? super T, T> result) {
+		return replaceAll(null, result, null);
+	}
 
-	public void apply(CollectionCondition<T> condition) {
+	public CollectionDirectServiceImpl<T> replaceAll(@Nullable Object param, ResultVisitor<? super T, T> result) {
+		return replaceAll(param, result, null);
+	}
+
+	public CollectionDirectServiceImpl<T> replaceAll(@Nullable Object param, ResultVisitor<? super T, T> result,
+			Observer<T, Boolean> observer) {
+		return apply(OperateConditions.ofReplaceAll(param, result, observer));
+	}
+
+	public CollectionDirectServiceImpl<T> removeIf(PredicateVisitor<T> predicate) {
+		return removeIf(null, predicate, null);
+	}
+
+	public CollectionDirectServiceImpl<T> removeIf(Object param, PredicateVisitor<T> predicate) {
+		return removeIf(param, predicate, null);
+	}
+
+	public CollectionDirectServiceImpl<T> removeIf(Object param, PredicateVisitor<T> predicate,
+			Observer<T, Boolean> observer) {
+		return apply(OperateConditions.ofRemoveIf(param, predicate, observer));
+	}
+
+	public CollectionDirectServiceImpl<T> retainAll(Collection<? extends T> c) {
+		return retainAll(c, null);
+	}
+
+	public CollectionDirectServiceImpl<T> retainAll(Collection<? extends T> c, Observer<T, Boolean> observer) {
+		return apply(OperateConditions.ofRetainAll(c, observer));
+	}
+
+	public CollectionDirectServiceImpl<T> removeAll(Collection<? extends T> c) {
+		return removeAll(c, null);
+	}
+
+	public CollectionDirectServiceImpl<T> removeAll(Collection<? extends T> c, Observer<T, Boolean> observer) {
+		return apply(OperateConditions.ofRemoveAll(c, observer));
+	}
+
+	public CollectionDirectServiceImpl<T> apply(CollectionCondition<T> condition) {
 		Throwables.checkNull(condition);
 		condition.apply(mCollection);
+		return this;
 	}
 
 	/*

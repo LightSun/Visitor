@@ -9,6 +9,12 @@ import com.heaven7.java.visitor.util.Observer;
 
 public class OperateConditions {
 
+	//clear
+	public static <T> OperateCondition<T, Boolean> ofClear(Observer<T, Boolean> observer) {
+		return new OperateCondition<T, Boolean>()
+				.observer(observer)
+				.operator(Operators.ofClear());
+	}
 	// removeAll(Collection<?> c);
 	public static <T> OperateCondition<T, Boolean> ofRemoveAll(Collection<? extends T> c,
 			Observer<T, Boolean> observer) {
@@ -56,6 +62,13 @@ public class OperateConditions {
 				.focus(t)
 				.observer(observer)
 				.operator(Operators.ofContains());
+	}
+	
+	public static <T> OperateCondition<T, Boolean> ofContainsReverse(T t, Observer<T, Boolean> observer) {
+		return new OperateCondition<T, Boolean>()
+				.focus(t)
+				.observer(observer)
+				.operator(Operators.ofContains(true));
 	}
 
 	// size();

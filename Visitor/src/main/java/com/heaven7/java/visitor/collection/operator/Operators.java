@@ -201,12 +201,17 @@ public final class Operators {
 			}
 		};
 	}
-
+	
 	public static <T> Operator<T, Boolean> ofContains() {
+		return ofContains(false);
+	}
+
+	public static <T> Operator<T, Boolean> ofContains(final boolean reverse) {
 		return new BooleanOperator<T>() {
 			@Override
 			protected Boolean executeOperator(Collection<T> src, OperateCondition<T, Boolean> condition) {
-				return src.contains(condition.getElement());
+				boolean result = src.contains(condition.getElement());
+				return reverse ? !result : result;
 			}
 
 			@Override

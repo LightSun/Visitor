@@ -39,14 +39,14 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 
 	private Operator<T, R> mOperator;
 
-	private Collection<T> mTempTarget;
+	//private Collection<T> mTempTarget;
 
 	protected OperateCondition() {
 	}
 
 	// =============================== static method =========================
 
-	public OperateCondition<T, R> after(final CollectionCondition<T> post) {
+	/*public OperateCondition<T, R> after(final CollectionCondition<T> post) {
 		Observer<? super T, R> observer = getObserver();
 		observer(new Observers.WrappedObserver<T, R>(observer){
 			@Override
@@ -56,7 +56,7 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 			}
 		});
 		return this;
-	}
+	}*/
 	// ============================ start dynamic method
 
 	public OperateCondition<T, R> observer(Observer<? super T, R> observer) {
@@ -200,10 +200,13 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 	@Override
 	public boolean apply(Collection<T> src) {
 		checkArguments();
-		mTempTarget = src;
+		/*mTempTarget = src;
 		boolean result = mOperator.apply(src, this);
 		mTempTarget = null;
-		return result;
+		return result;*/
+		final Operator<T, R> operator = getOperator();
+		mOperator = null;
+		return operator.apply(src, this);
 	}
 
 }
