@@ -9,7 +9,7 @@ import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.Observers;
 
 /**
- * the operate condition.
+ * the common operate condition.
  * 
  * @author heaven7
  *
@@ -17,14 +17,32 @@ import com.heaven7.java.visitor.util.Observers;
  *            the element type.
  * @param <R>
  *            the result type.
+ * @since 2.0.0
  */
 public class OperateCondition<T, R> implements CollectionCondition<T> {
 
-	public static final int FLAG_RESULT = 0x0001;
-	public static final int FLAG_PREDICATE = 0x0002;
+	/**
+	 * the require flag:which indicate the {@linkplain ResultVisitor}.
+	 * @see #result(ResultVisitor)
+	 */
+	public static final int FLAG_RESULT         = 0x0001;
+	/**
+	 * the require flag:which indicate the {@linkplain PredicateVisitor}.
+	 * @see #predicate(PredicateVisitor)
+	 */
+	public static final int FLAG_PREDICATE      = 0x0002;
+	/**
+	 * the require flag:which indicate the single element.
+	 * @see #focus(Object)
+	 */
 	public static final int FLAG_SINGLE_ELEMENT = 0x0004;
-	public static final int FLAG_COLLECTION = 0x0008;
+	/**
+	 * the require flag:which indicate another collection.
+	 * @see #focus(Collection)
+	 */
+	public static final int FLAG_COLLECTION     = 0x0008;
 
+	/** the flags which is already set. */
 	private int mSettingFlags;
 
 	private Observer<? super T, R> mObserver = Observers.defaultObserver();

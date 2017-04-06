@@ -7,7 +7,12 @@ import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.util.Observer;
 
-public class OperateConditions {
+/**
+ * this class help we fast get the all common operate conditions.
+ * @author heaven7
+ * @since 2.0.0
+ */
+public final class OperateConditions {
 
 	//clear
 	public static <T> OperateCondition<T, Boolean> ofClear(Observer<T, Boolean> observer) {

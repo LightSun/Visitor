@@ -5,10 +5,26 @@ import java.util.Collection;
 import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.Predicates;
 
+/**
+ * the operator of condition.
+ * @author heaven7
+ *
+ * @param <T> the element type of collection
+ * @param <R> the result type of {@linkplain Observer}
+ * @since 2.0.0
+ */
 public abstract class Operator<T, R> {
 
 	private T mCurrent;
 
+	/**
+	 * get the required arguments flags. which will used by {@linkplain OperateCondition} to check arguments.
+	 * @return the required arguments flags. default is 0(means require nothing).
+	 * @see OperateCondition#FLAG_COLLECTION
+	 * @see OperateCondition#FLAG_SINGLE_ELEMENT
+	 * @see OperateCondition#FLAG_RESULT
+	 * @see OperateCondition#FLAG_PREDICATE
+	 */
 	public int getRequireArgsFlags() {
 		return 0;
 	}

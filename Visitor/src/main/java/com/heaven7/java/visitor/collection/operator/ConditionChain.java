@@ -8,9 +8,15 @@ import java.util.Map;
 
 import com.heaven7.java.visitor.util.Throwables;
 /**
- * 
+ * the condition chain. that can run many groups of {@linkplain CollectionCondition}.
+ * and we can make some conditions run 'in-orders' or 'in-groups'.
+ * <ul>
+ * <li> 'in-orders' means only previous condition run success. the after can run. false otherwise.
+ * <li> 'in-groups' means the all conditions in a group must be run.whenever the previous success or not.
+ * </ul>
  * @author heaven7
  * @param <T> the element type
+ * @since 2.0.0
  */
 public class ConditionChain<T> implements CollectionCondition<T> {
 
