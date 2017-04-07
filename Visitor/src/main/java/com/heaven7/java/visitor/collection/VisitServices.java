@@ -17,6 +17,27 @@ import java.util.*;
 public final class VisitServices {
 
 	/**
+	 * create an obserable collection service.
+	 * @param <T> the element type of collection.
+	 * @return ObservableCollectionService.
+	 * @see ObservableCollectionService
+	 * @since 2.0.0
+	 */
+	public static <T> ObservableCollectionService<T> newObserableService() {
+		return newObserableService(new ArrayList<T>());
+	}
+	/**
+	 * create an obserable collection service.
+	 * @param <T> the element type of collection.
+	 * @param co the source collection
+	 * @return ObservableCollectionService.
+	 * @see ObservableCollectionService
+	 * @since 2.0.0
+	 */
+	public static <T> ObservableCollectionService<T> newObserableService(Collection<T> co) {
+		return new ObservableCollectionService<T>(co);
+	}
+	/**
 	 * create MapVisitService with empty capacity.
 	 * @param <K> the key type
 	 * @param <V> the value type

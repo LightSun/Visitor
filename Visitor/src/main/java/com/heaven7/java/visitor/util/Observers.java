@@ -1,6 +1,8 @@
 package com.heaven7.java.visitor.util;
 
 import com.heaven7.java.visitor.ThrowableVisitor;
+import com.heaven7.java.visitor.Visitor;
+import com.heaven7.java.visitor.Visitor1;
 import com.heaven7.java.visitor.anno.Nullable;
 
 /**
@@ -114,6 +116,56 @@ public final class Observers {
 				}
 			}
 		};
+	}
+	/**
+	 * a observer that wrapped some visitor(success,failed, exception).
+	 * @author heaven7
+	 *
+	 * @param <T> the element type of observer
+	 * @param <R> the result type of observer.
+	 * @since 2.0.0
+	 */
+	public static class Observer2<T, R> extends ObserverAdapter<T, R>{
+		
+		private final Visitor<R, Void> mSuccess;
+		private final Visitor<T, Void> mFailed;
+		private final Visitor1<T, Throwable, Void> mException;
+		
+		public Observer2(Visitor<R, Void> mSuccess, Visitor<T, Void> mFailed, 
+				Visitor1<T, Throwable, Void> mException) {
+			super();
+			Throwables.checkNull(mSuccess);
+			this.mSuccess = mSuccess;
+			this.mFailed = mFailed;
+			this.mException = mException;
+		}
+		public Observer2(Visitor<R, Void> mSuccess, Visitor<T, Void> mFailed){
+			this(mSuccess, mFailed, null);
+		}
+		
+		public  Observer2(Visitor<R, Void> mSuccess){
+			this(mSuccess , null);
+		}
+
+		public void onSuccess(Object param, R r) {
+			mSuccess.visit(r);
+		}
+
+		@Override
+		public void onFailed(Object param, T t) {
+			if (mFailed != null) {
+				mFailed.visit(t);
+			}
+		}
+
+		@Override
+		public void onThrowable(Object param, T t, Throwable e) {
+			if (mException != null) {
+				mException.visit(t, e);
+			} else {
+				super.onThrowable(param, t, e);
+			}
+		}
 	}
 
 	/**

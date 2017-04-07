@@ -1,6 +1,7 @@
 package com.heaven7.java.visitor.collection;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
@@ -22,7 +23,7 @@ import com.heaven7.java.visitor.util.Throwables;
  * @see CollectionCondition
  * @see Operator
  */
-public class ObservableCollectionService<T> {
+public final class ObservableCollectionService<T> {
 
 	private final Collection<T> mCollection;
 
@@ -31,8 +32,84 @@ public class ObservableCollectionService<T> {
 		this.mCollection = mCollection;
 	}
 	
+	public ObservableCollectionService<T> size(Observer<T, Integer> observer){
+		return apply(OperateConditions.ofSize(observer));
+	}
+	
+	public ObservableCollectionService<T> sizeEquals(int expectSize, Observer<T, Boolean> observer) {
+		return apply(OperateConditions.ofSizeEquals(expectSize, observer));
+	}
+	
+	public ObservableCollectionService<T> sizeMin(int minSize, Observer<T, Boolean> observer) {
+		return apply(OperateConditions.ofSizeMin(minSize, observer));
+	}
+	
+	public ObservableCollectionService<T> sizeMax(int maxSize, Observer<T, Boolean> observer) {
+		return apply(OperateConditions.ofSizeMax(maxSize, observer));
+	}
+	
+	/**
+	 * filter current collection by target predicate visitor.
+	 * @param param the parameter which can used by predicate visitor. 
+	 * @param predicate the predicate visitor.
+	 * @param observer the list result observer, the result order determined by the source collection is ordered or not.
+	 * @return this
+	 */
+	public ObservableCollectionService<T> filter(Object param,
+			PredicateVisitor<? super T> predicate, Observer<T, List<T>> observer) {
+		return apply(OperateConditions.ofFilter(Integer.MAX_VALUE, param, predicate, observer));
+	}
+	
+	/**
+	 * filter current collection by target predicate visitor.
+	 * @param maxLength the max length of list result.
+	 * @param param the parameter which can used by predicate visitor. 
+	 * @param predicate the predicate visitor.
+	 * @param observer the list result observer, the result order determined by the source collection is ordered or not.
+	 * @return this
+	 */
+	public ObservableCollectionService<T> filter(int maxLength , Object param,
+			PredicateVisitor<? super T> predicate, Observer<T, List<T>> observer) {
+		return apply(OperateConditions.ofFilter(maxLength, param, predicate, observer));
+	}
+	
+	/**
+	 * judge if not contains target element.
+	 * @param t the target element
+	 * @param observer the result observer
+	 * @return this.
+	 */
+	public ObservableCollectionService<T> containsReverse(T t,Observer<T, Boolean> observer){
+		return apply(OperateConditions.ofContainsReverse(t, observer));
+	}
+	public ObservableCollectionService<T> contains(T t, Observer<T, Boolean> observer){
+		return apply(OperateConditions.ofContains(t, observer));
+	}
+	public ObservableCollectionService<T> addAll(Collection<? extends T> coll){
+		return addAll(coll, null);
+	}
+	public ObservableCollectionService<T> addAll(Collection<? extends T> coll, Observer<T, Boolean> observer){
+		return apply(OperateConditions.ofAddAll(coll, observer));
+	}
+	
+	public ObservableCollectionService<T> addIfNotExist(T t){
+		return addIfNotExist(t, null);
+	}
+	public ObservableCollectionService<T> addIfNotExist(T t, Observer<T, Boolean> observer){
+		return apply(OperateConditions.ofAddIfNotExist(t, observer));
+	}
+	public ObservableCollectionService<T> add(T t){
+		return add(t, null);
+	}
+	public ObservableCollectionService<T> add(T t, Observer<T, Boolean> observer){
+		return apply(OperateConditions.ofAdd(t, observer));
+	}
+	
 	public ObservableCollectionService<T> clear(){
-		return apply(OperateConditions.ofClear(null));
+		return clear(null);
+	}
+	public ObservableCollectionService<T> clear(Observer<T, Boolean> observer){
+		return apply(OperateConditions.ofClear(observer));
 	}
 	
 	public ObservableCollectionService<T> replaceAll(ResultVisitor<? super T, T> result) {
