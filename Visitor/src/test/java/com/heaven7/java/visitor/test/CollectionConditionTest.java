@@ -3,6 +3,9 @@ package com.heaven7.java.visitor.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.collection.ObservableCollectionService;
+import com.heaven7.java.visitor.collection.VisitServices;
 import com.heaven7.java.visitor.collection.operator.ConditionChain;
 import com.heaven7.java.visitor.collection.operator.OperateConditions;
 import com.heaven7.java.visitor.util.Observers;
@@ -23,6 +26,20 @@ public class CollectionConditionTest extends TestCase{
 			System.out.println("success = failed");
 		}
 	};
+	
+	public void testFire(){
+		List<Integer> list = new ArrayList<Integer>();
+		list.add(1);
+		list.add(2);
+		list.add(3);
+		ObservableCollectionService<Integer> service = VisitServices.from(list).observableService();
+		service.fire("testFire", new ResultVisitor<Integer, Boolean>() {
+			@Override
+			public Boolean visit(Integer t, Object param) {
+				return t != 2;
+			}
+		}, mLogObserver);
+	}
 	
 	public void testConditionChain(){
 		List<Integer> list = new ArrayList<Integer>();

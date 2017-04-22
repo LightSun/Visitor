@@ -53,6 +53,12 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	int VISIT_RULE_UNTIL_FAILED = 13;
 	
+	/**
+	 * observable the visit service.
+	 * @return the visit service.
+	 */
+	@Independence
+	ObservableCollectionService<T> observableService();
 	
 	/**
 	 * zip the all elements with target visitor .

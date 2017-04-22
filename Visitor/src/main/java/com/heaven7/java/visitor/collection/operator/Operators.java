@@ -12,12 +12,37 @@ import java.util.List;
 
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.util.Observer;
+import com.heaven7.java.visitor.util.Predicates;
 /**
  * the all common operator in here.
  * @author heaven7
  * @since 2.0.0
  */
 public final class Operators {
+	
+	public static <T> Operator<T, Boolean> ofFire() {
+		return new BooleanOperator<T>() {
+			@SuppressWarnings("unchecked")
+			@Override
+			protected Boolean executeOperator(Collection<T> src, OperateCondition<T, Boolean> condition) {
+				final Object param = condition.getParam();
+				final ResultVisitor<? super T, Boolean> visitor = (ResultVisitor<? super T, Boolean>)
+						condition.getResultVisitor();
+				for(T t : src){
+					startVisitElement(t);
+					if(!Predicates.isTrue(visitor.visit(t, param))){
+						return false;
+					}
+				}
+				return true;
+			}
+			@Override
+			public int getRequireArgsFlags() {
+				return FLAG_RESULT;
+			}
+		};
+	}
 	
 	public static <T, R> Operator<T, List<R>> ofZipResult(final int maxSize) {
 		return new ListResultOperator<T, R>() {
@@ -315,5 +340,6 @@ public final class Operators {
 			return FLAG_RESULT;
 		}
 	}
+
 
 }

@@ -154,4 +154,14 @@ public final class OperateConditions {
 			Observer<T, List<T>> observer) {
 		return ofFilter(Integer.MAX_VALUE, param, predicate, observer);
 	}
+	
+	public static <T> CollectionCondition<T> ofFire(Object param, 
+			ResultVisitor<? super T, Boolean>  visitor,  
+			Observer<T, Boolean> observer     ) {
+		return new OperateCondition<T,Boolean>()
+				.result(visitor)
+				.extra(param)
+				.observer(observer)
+				.operator(Operators.ofFire());
+	}
 }

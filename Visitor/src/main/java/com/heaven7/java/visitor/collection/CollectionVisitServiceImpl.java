@@ -78,6 +78,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	// ===============================================================================
 
 	@Override
+	public ObservableCollectionService<T> observableService() {
+		return new ObservableCollectionService<>(mCollection);
+	}
+	@Override
 	public int size() {
 		return mCollection.size();
 	}

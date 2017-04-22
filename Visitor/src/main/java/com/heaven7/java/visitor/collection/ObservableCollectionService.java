@@ -27,9 +27,19 @@ public final class ObservableCollectionService<T> {
 
 	private final Collection<T> mCollection;
 
-	public ObservableCollectionService(Collection<T> mCollection) {
+	/*public*/ ObservableCollectionService(Collection<T> mCollection) {
 		super();
 		this.mCollection = mCollection;
+	}
+	
+	public ObservableCollectionService<T> fire(ResultVisitor<? super T, Boolean>  visitor,
+			Observer<T, Boolean> observer){
+		return fire(null, visitor, observer);
+	}
+	
+	public ObservableCollectionService<T> fire(Object param, ResultVisitor<? super T, Boolean>  visitor,
+			Observer<T, Boolean> observer){
+		return apply(OperateConditions.ofFire(param, visitor, observer));
 	}
 	
 	public ObservableCollectionService<T> size(Observer<T, Integer> observer){
