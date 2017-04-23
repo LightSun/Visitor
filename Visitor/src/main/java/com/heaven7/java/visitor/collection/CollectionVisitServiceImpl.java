@@ -66,6 +66,8 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	/** the flags of clean up, default is {@linkplain VisitService#FLAG_ALL} */
 	private int mCleanUpFlags = FLAG_ALL;
 
+	private ObservableCollectionService<T> mObservableService;
+
 	/* protected */ CollectionVisitServiceImpl(Collection<T> collection) {
 		super();
 		checkNull(collection);
@@ -79,7 +81,10 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	@Override
 	public ObservableCollectionService<T> observableService() {
-		return new ObservableCollectionService<>(mCollection);
+		if(mObservableService == null){
+			mObservableService = new ObservableCollectionService<T>(mCollection);
+		}
+		return mObservableService;
 	}
 	@Override
 	public int size() {
