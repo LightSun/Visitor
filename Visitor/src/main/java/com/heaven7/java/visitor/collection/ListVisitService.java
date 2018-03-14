@@ -18,7 +18,6 @@ import java.util.List;
  * @param <T> the element type.
  * @since 1.1.2
  */
-@Independence("all methods is independent in here.")
 public interface ListVisitService<T> extends CollectionVisitService<T>{
 
 	/**

@@ -186,7 +186,7 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 		return mObserver;
 	}
 
-	public Collection<? extends T> getOtherCollectionr() {
+	public Collection<? extends T> getOtherCollection() {
 		return mOther;
 	}
 

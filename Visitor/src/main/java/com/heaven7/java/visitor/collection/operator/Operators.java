@@ -163,7 +163,7 @@ public final class Operators {
 		return new BooleanOperator<T>() {
 			@Override
 			protected Boolean executeOperator(Collection<T> src, OperateCondition<T, Boolean> condition) {
-				return src.addAll(condition.getOtherCollectionr()) ;
+				return src.addAll(condition.getOtherCollection()) ;
 			}
 		};
 	}
@@ -306,7 +306,7 @@ public final class Operators {
 		return new BooleanOperator<T>() {
 			@Override
 			protected Boolean executeOperator(Collection<T> src, OperateCondition<T, Boolean> condition) {
-				return src.retainAll(condition.getOtherCollectionr());
+				return src.retainAll(condition.getOtherCollection());
 			}
 		};
 	}
@@ -315,7 +315,7 @@ public final class Operators {
 		return new BooleanOperator<T>() {
 			@Override
 			protected Boolean executeOperator(Collection<T> src, OperateCondition<T, Boolean> condition) {
-				return src.removeAll(condition.getOtherCollectionr());
+				return src.removeAll(condition.getOtherCollection());
 			}
 		};
 	}

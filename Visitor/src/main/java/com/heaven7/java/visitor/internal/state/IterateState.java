@@ -17,9 +17,6 @@ import com.heaven7.java.visitor.collection.IterationInfo;
  *
  * @param <T>
  *            the type of collection
- * @param <R>
- *            the result type of visit for
- *            {@link #visitForResult(Collection, boolean, com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.GroupOperateInterceptor, IterationInfo, Object, PredicateVisitor, ResultVisitor, List)}
  * @see {@linkplain SingleIterateState}
  * @see {@linkplain MultipleIterateState}
  */
@@ -30,9 +27,6 @@ public abstract class IterateState<T> {
 	 * 
 	 * @param <T>
 	 *            the type of collection
-	 * @param <R>
-	 *            the result type of visit for
-	 *            {@link #visitForResult(Collection, boolean, com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.GroupOperateInterceptor, IterationInfo, Object, PredicateVisitor, ResultVisitor, List)}
 	 * @return an instance of IterateState
 	 */
 	public static <T> IterateState<T> singleIterateState() {
@@ -44,9 +38,6 @@ public abstract class IterateState<T> {
 	 * 
 	 * @param <T>
 	 *            the type of collection
-	 * @param <R>
-	 *            the result type of visit for
-	 *            {@link #visitForResult(Collection, boolean, com.heaven7.java.visitor.collection.CollectionVisitServiceImpl.GroupOperateInterceptor, IterationInfo, Object, PredicateVisitor, ResultVisitor, List)}
 	 * @return an instance of IterateState
 	 */
 	public static <T> IterateState<T> multipleIterateState() {
@@ -83,11 +74,11 @@ public abstract class IterateState<T> {
 				: collection.iterator();
 		if (hasExtra) {
 			interceptor.begin();
-			T result = visitImpl(hasExtra, interceptor, param, predicate, it, info, out);
+			T result = visitImpl(true, interceptor, param, predicate, it, info, out);
 			interceptor.end();
 			return result;
 		}
-		return visitImpl(hasExtra, interceptor, param, predicate, it, info, out);
+		return visitImpl(false, interceptor, param, predicate, it, info, out);
 	}
 
 	/**
@@ -127,12 +118,12 @@ public abstract class IterateState<T> {
 		
 		if (hasExtra) {
 			interceptor.begin();
-			R result = visitForResultImpl(hasExtra, interceptor, param, predicate, 
+			R result = visitForResultImpl(true, interceptor, param, predicate,
 					resultVistor, it, info, out);
 			interceptor.end();
 			return result;
 		}
-		return visitForResultImpl(hasExtra, interceptor, param, predicate,
+		return visitForResultImpl(false, interceptor, param, predicate,
 				resultVistor, it, info, out);
 	}
 
