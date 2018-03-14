@@ -121,8 +121,9 @@ public class ConditionChain<T> implements CollectionCondition<T> {
 	}
 
 	private GroupCollectionCondition getNext() {
+		int size = mGroups.size();
 		int nextIndex = -1;
-		for (int size = mGroups.size(), i = size - 1; i >= 0; i--) {
+		for (int i = size - 1; i >= 0; i--) {
 			GroupCollectionCondition condition = mGroups.get(i);
 			if (mCurrent == condition) {
 				// have next ?
@@ -132,7 +133,7 @@ public class ConditionChain<T> implements CollectionCondition<T> {
 				break;
 			}
 		}
-		return nextIndex != -1 ? mGroups.get(nextIndex) : null;
+		return nextIndex >= 0 && nextIndex < size ? mGroups.get(nextIndex) : null;
 	}
 	
 	private GroupCollectionCondition getBefore() {

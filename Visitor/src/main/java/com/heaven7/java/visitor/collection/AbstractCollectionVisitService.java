@@ -22,7 +22,7 @@ import static com.heaven7.java.visitor.internal.InternalUtil.*;
  */
 public abstract class AbstractCollectionVisitService<T> implements CollectionVisitService<T> {
 
-	private final List<T> mCacheList = new ArrayList<T>();
+	/*private*/ final List<T> mCacheList = new ArrayList<T>();
 
 	protected AbstractCollectionVisitService() {
 		super();

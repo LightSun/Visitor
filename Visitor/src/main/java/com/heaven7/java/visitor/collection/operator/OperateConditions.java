@@ -18,7 +18,7 @@ public final class OperateConditions {
 	public static <T> OperateCondition<T, Boolean> ofClear(Observer<T, Boolean> observer) {
 		return new OperateCondition<T, Boolean>()
 				.observer(observer)
-				.operator(Operators.ofClear());
+				.operator(Operators.<T>ofClear());
 	}
 	// removeAll(Collection<?> c);
 	public static <T> OperateCondition<T, Boolean> ofRemoveAll(Collection<? extends T> c,
@@ -26,14 +26,14 @@ public final class OperateConditions {
 		return new OperateCondition<T, Boolean>()
 				.focus(c)
 				.observer(observer)
-				.operator(Operators.ofRemoveAll());
+				.operator(Operators.<T>ofRemoveAll());
 	}
 
 	//retainAll
 	public static <T> OperateCondition<T, Boolean> ofRetainAll(Collection<? extends T> c,
 			Observer<T, Boolean> observer) {
 		return ofRemoveAll(c, observer)
-				.operator(Operators.ofRetainAll());
+				.operator(Operators.<T>ofRetainAll());
 	}
 
 	//removeIf
@@ -43,7 +43,7 @@ public final class OperateConditions {
 				.predicate(predicate)
 				.extra(param)
 				.observer(observer)
-				.operator(Operators.ofRemoveIf());
+				.operator(Operators.<T>ofRemoveIf());
 	}
 
 	// replaceAll(@Nullable Object param, ResultVisitor<? super T, T> filter);
@@ -53,7 +53,7 @@ public final class OperateConditions {
 				.result(result)
 				.extra(param)
 				.observer(observer)
-				.operator(Operators.ofUpdateAll(maxLength));
+				.operator(Operators.<T>ofUpdateAll(maxLength));
 	}
 	// replaceAll(@Nullable Object param, ResultVisitor<? super T, T> filter);
 		public static <T> OperateCondition<T, Boolean> ofReplaceAll(Object param, 
@@ -66,39 +66,39 @@ public final class OperateConditions {
 		return new OperateCondition<T, Boolean>()
 				.focus(t)
 				.observer(observer)
-				.operator(Operators.ofContains());
+				.operator(Operators.<T>ofContains());
 	}
 	
 	public static <T> OperateCondition<T, Boolean> ofContainsReverse(T t, Observer<T, Boolean> observer) {
 		return new OperateCondition<T, Boolean>()
 				.focus(t)
 				.observer(observer)
-				.operator(Operators.ofContains(true));
+				.operator(Operators.<T>ofContains(true));
 	}
 
 	// size();
 	public static <T> OperateCondition<T, Integer> ofSize(Observer<T, Integer> observer) {
 		return new OperateCondition<T, Integer>()
 				.observer(observer)
-				.operator(Operators.ofSize());
+				.operator(Operators.<T>ofSize());
 	}
 	// if size >= min
 	public static <T> OperateCondition<T, Boolean> ofSizeMin(int minSize, Observer<T, Boolean> observer) {
 		return new OperateCondition<T, Boolean>()
 				.observer(observer)
-				.operator(Operators.ofSizeMin(minSize));
+				.operator(Operators.<T>ofSizeMin(minSize));
 	}
 	// if size <= max
 	public static <T> OperateCondition<T, Boolean> ofSizeMax(int maxSize, Observer<T, Boolean> observer) {
 		return new OperateCondition<T, Boolean>()
 				.observer(observer)
-				.operator(Operators.ofSizeMax(maxSize));
+				.operator(Operators.<T>ofSizeMax(maxSize));
 	}
 	//if size == expectSize
 	public static <T> OperateCondition<T, Boolean> ofSizeEquals(int expectSize, Observer<T, Boolean> observer) {
 		return new OperateCondition<T, Boolean>()
 				.observer(observer)
-				.operator(Operators.ofSizeEquals(expectSize));
+				.operator(Operators.<T>ofSizeEquals(expectSize));
 	}
 
 	// add
@@ -106,7 +106,7 @@ public final class OperateConditions {
 		return new OperateCondition<T, Boolean>()
 				.focus(t)
 				.observer(observer)
-				.operator(Operators.ofAdd());
+				.operator(Operators.<T>ofAdd());
 	}
 
 	// addIfNotExist
@@ -114,7 +114,7 @@ public final class OperateConditions {
 		return new OperateCondition<T, Boolean>()
 				.focus(t)
 				.observer(observer)
-				.operator(Operators.ofAddIfNotExist());
+				.operator(Operators.<T>ofAddIfNotExist());
 	}
 
 	// add -> list
@@ -123,7 +123,7 @@ public final class OperateConditions {
 		return new OperateCondition<T, Boolean>()
 				.focus(list)
 				.observer(observer)
-				.operator(Operators.ofAddList());
+				.operator(Operators.<T>ofAddList());
 	}
 
 	// remove t
@@ -131,13 +131,13 @@ public final class OperateConditions {
 		return new OperateCondition<T, Boolean>()
 				.focus(t)
 				.observer(observer)
-				.operator(Operators.ofRemove());
+				.operator(Operators.<T>ofRemove());
 	}
 
 	// removeIfExist(T newT);
 	public static <T> OperateCondition<T, Boolean> ofRemoveIfExist(T t, Observer<T, Boolean> observer) {
 		return ofRemove(t, observer)
-				.operator(Operators.ofRemoveIfExist());
+				.operator(Operators.<T>ofRemoveIfExist());
 	}
 
 	// queryAll/filter
@@ -147,7 +147,7 @@ public final class OperateConditions {
 				.predicate(predicate)
 				.extra(param)
 				.observer(observer)
-				.operator(Operators.ofFilter(maxLength));
+				.operator(Operators.<T>ofFilter(maxLength));
 	}
 	// queryAll/filter
 	public static <T> OperateCondition<T, List<T>> ofFilter(Object param, PredicateVisitor<? super T> predicate,
@@ -162,6 +162,6 @@ public final class OperateConditions {
 				.result(visitor)
 				.extra(param)
 				.observer(observer)
-				.operator(Operators.ofFire());
+				.operator(Operators.<T>ofFire());
 	}
 }

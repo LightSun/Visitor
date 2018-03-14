@@ -78,7 +78,7 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 	// ============================ start dynamic method
 
 	public OperateCondition<T, R> observer(Observer<? super T, R> observer) {
-		this.mObserver = observer !=null ? observer : Observers.defaultObserver();
+		this.mObserver = (Observer<? super T, R>) (observer != null ? observer : Observers.<T, R>defaultObserver());
 		return this;
 	}
 

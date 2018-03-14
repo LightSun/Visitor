@@ -1,14 +1,14 @@
 package com.heaven7.java.visitor.collection;
 
-import com.heaven7.java.visitor.PredicateVisitor;
-import com.heaven7.java.visitor.ResultVisitor;
-import com.heaven7.java.visitor.Visitors;
+import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Collections2;
+import com.heaven7.java.visitor.util.Throwables;
 
 import java.util.*;
 
+import static com.heaven7.java.visitor.internal.InternalUtil.processThrowable;
 import static com.heaven7.java.visitor.util.Predicates.isTrue;
 import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
@@ -255,6 +255,31 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 		return VisitServices.from(totalList);
 	}
 
+	@Override
+	public CollectionVisitService<T> fireWithIndex(Object param, FireIndexedVisitor<T> fireVisitor, ThrowableVisitor tv) {
+		Throwables.checkNull(fireVisitor);
+		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
+		try {
+			for(int i = 0 , size = list.size() ; i < size ; i ++){
+				fireVisitor.visit(list.get(i), i, param);
+			}
+		} catch (Throwable e) {
+			processThrowable(e, tv);
+		} finally {
+			list.clear();
+		}
+		return this;
+	}
+
+	@Override
+	public CollectionVisitService<T> fireWithIndex(Object param, FireIndexedVisitor<T> fireVisitor) {
+		return fireWithIndex(param, fireVisitor, null);
+	}
+
+	@Override
+	public CollectionVisitService<T> fireWithIndex(FireIndexedVisitor<T> fireVisitor) {
+		return fireWithIndex(null, fireVisitor, null);
+	}
 	//============
 	
 	@Override

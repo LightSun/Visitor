@@ -1,6 +1,10 @@
 package com.heaven7.java.visitor.collection;
 
+import com.heaven7.java.visitor.FireIndexedVisitor;
+import com.heaven7.java.visitor.FireVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.ThrowableVisitor;
+import com.heaven7.java.visitor.anno.DependOn;
 import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
 
@@ -16,6 +20,35 @@ import java.util.List;
  */
 @Independence("all methods is independent in here.")
 public interface ListVisitService<T> extends CollectionVisitService<T>{
+
+	/**
+	 * fire the all element with index by target {@linkplain FireVisitor} and etc.
+	 * @param fireVisitor fire index visitor
+	 * @return this
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<T> fireWithIndex(FireIndexedVisitor<T> fireVisitor);
+	/**
+	 * fire the all element with index by target {@linkplain FireVisitor} and etc.
+	 * @param param the parameter , can be null
+	 * @param fireVisitor fire index visitor
+	 * @return this
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<T> fireWithIndex(@Nullable Object param, FireIndexedVisitor<T> fireVisitor);
+
+	/**
+	 * fire the all element with index by target {@linkplain FireVisitor} and etc.
+	 * @param param the parameter , can be null
+	 * @param fireVisitor fire index visitor
+	 * @param throwVisitor the throwable visitor, can be null.
+	 * @return this
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<T> fireWithIndex(@Nullable Object param, FireIndexedVisitor<T> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
 	
 	/**
 	 * get a sub visit service by the target start index and count.
