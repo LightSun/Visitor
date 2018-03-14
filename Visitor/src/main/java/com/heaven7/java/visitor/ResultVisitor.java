@@ -1,7 +1,5 @@
 package com.heaven7.java.visitor;
 
-import com.heaven7.java.visitor.Visitor1;
-
 /**
  * the result visitor Created by heaven7 on 2017/1/16.
  */

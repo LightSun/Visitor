@@ -11,7 +11,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.heaven7.java.visitor.PredicateVisitor;
+import com.heaven7.java.visitor.ResultIndexedVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
+import com.heaven7.java.visitor.util.Collections2;
 import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.Predicates;
 /**
@@ -20,6 +22,32 @@ import com.heaven7.java.visitor.util.Predicates;
  * @since 2.0.0
  */
 public final class Operators {
+
+	public static <T> Operator<T, Boolean> ofFireIndex() {
+		return new BooleanOperator<T>() {
+			@SuppressWarnings("unchecked")
+			@Override
+			protected Boolean executeOperator(Collection<T> src, OperateCondition<T, Boolean> condition) {
+				final Object param = condition.getParam();
+				final ResultIndexedVisitor<? super T, Boolean> visitor = (ResultIndexedVisitor<? super T, Boolean>)
+						condition.getResultIndexedVisitor();
+				//for fire index .must be list
+				List<T> list = Collections2.asList(src);
+				for(int i = 0 , size = list.size() ; i < size ; i ++){
+					T t = list.get(i);
+					startVisitElement(t);
+					if(!Predicates.isTrue(visitor.visit(t, i, param))){
+						return false;
+					}
+				}
+				return true;
+			}
+			@Override
+			public int getRequireArgsFlags() {
+				return FLAG_RESULT_INDEXED;
+			}
+		};
+	}
 	
 	public static <T> Operator<T, Boolean> ofFire() {
 		return new BooleanOperator<T>() {

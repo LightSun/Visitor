@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Comparator;
 
 import com.heaven7.java.visitor.PredicateVisitor;
+import com.heaven7.java.visitor.ResultIndexedVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.Observers;
@@ -41,6 +42,11 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 	 * @see #focus(Collection)
 	 */
 	public static final int FLAG_COLLECTION     = 0x0008;
+	/**
+	 * the require flag:which indicate the {@linkplain ResultIndexedVisitor}.
+	 * @see #resultIndexed(ResultIndexedVisitor)
+	 */
+	public static final int FLAG_RESULT_INDEXED = 0x0010;
 
 	/** the flags which is already set. */
 	private int mSettingFlags;
@@ -53,6 +59,7 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 
 	private ResultVisitor<? super T, ?> mResult;
 	private PredicateVisitor<? super T> mPredicate;
+	private ResultIndexedVisitor<? super T, ?> mResultIndexed;
 	private Comparator<?> mComparator;
 
 	private Operator<T, R> mOperator;
@@ -77,6 +84,7 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 	}*/
 	// ============================ start dynamic method
 
+	@SuppressWarnings("unchecked")
 	public OperateCondition<T, R> observer(Observer<? super T, R> observer) {
 		this.mObserver = (Observer<? super T, R>) (observer != null ? observer : Observers.<T, R>defaultObserver());
 		return this;
@@ -113,6 +121,16 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 			mSettingFlags |= FLAG_PREDICATE;
 		} else {
 			mSettingFlags &= ~FLAG_PREDICATE;
+		}
+		return this;
+	}
+
+	public OperateCondition<T, R> resultIndexed(ResultIndexedVisitor<? super T, ?> result) {
+		this.mResultIndexed = result;
+		if (result != null) {
+			mSettingFlags |= FLAG_RESULT_INDEXED;
+		} else {
+			mSettingFlags &= ~FLAG_RESULT_INDEXED;
 		}
 		return this;
 	}
@@ -160,6 +178,9 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 				if ((lostFlags & FLAG_RESULT) != 0) {
 					throw new IllegalArgumentException("require ResultVisitor, but didn't set.");
 				}
+				if ((lostFlags & FLAG_RESULT_INDEXED) != 0) {
+					throw new IllegalArgumentException("require ResultIndexedVisitor, but didn't set.");
+				}
 			}
 		}
 	}
@@ -201,6 +222,10 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 	public ResultVisitor<? super T, ?> getResultVisitor() {
 		return mResult;
 	}
+	public ResultIndexedVisitor<? super T, ?> getResultIndexedVisitor() {
+
+		return mResultIndexed;
+	}
 
 	public PredicateVisitor<? super T> getPredicateVisitor() {
 		return mPredicate;
@@ -218,10 +243,6 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 	@Override
 	public boolean apply(Collection<T> src) {
 		checkArguments();
-		/*mTempTarget = src;
-		boolean result = mOperator.apply(src, this);
-		mTempTarget = null;
-		return result;*/
 		final Operator<T, R> operator = getOperator();
 		mOperator = null;
 		return operator.apply(src, this);
