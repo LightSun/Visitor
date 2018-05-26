@@ -1,9 +1,6 @@
 package com.heaven7.java.visitor.collection;
 
-import com.heaven7.java.visitor.FireIndexedVisitor;
-import com.heaven7.java.visitor.FireVisitor;
-import com.heaven7.java.visitor.ResultVisitor;
-import com.heaven7.java.visitor.ThrowableVisitor;
+import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.anno.DependOn;
 import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
@@ -20,16 +17,23 @@ import java.util.List;
  */
 public interface ListVisitService<T> extends CollectionVisitService<T>{
 
+	//--------------------------------- 1.2.0--------------------------------------------
+
+	CollectionVisitService<List<T>> group(int memberCount, boolean dropNotEnough);
+	List<T> getAsList();
+	List<T> copyAsList();
+	//--------------------------------- end 1.2.0--------------------------------------------
+
 	/**
-	 * fire the all element with index by target {@linkplain FireVisitor} and etc.
+	 * fire the all element with index by target {@linkplain FireIndexedVisitor} and etc.
 	 * @param fireVisitor fire index visitor
 	 * @return this
 	 * @since 1.2.0
 	 */
-	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	//@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fireWithIndex(FireIndexedVisitor<T> fireVisitor);
 	/**
-	 * fire the all element with index by target {@linkplain FireVisitor} and etc.
+	 * fire the all element with index by target {@linkplain FireIndexedVisitor} and etc.
 	 * @param param the parameter , can be null
 	 * @param fireVisitor fire index visitor
 	 * @return this
@@ -39,7 +43,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	CollectionVisitService<T> fireWithIndex(@Nullable Object param, FireIndexedVisitor<T> fireVisitor);
 
 	/**
-	 * fire the all element with index by target {@linkplain FireVisitor} and etc.
+	 * fire the all element with index by target {@linkplain FireIndexedVisitor} and etc.
 	 * @param param the parameter , can be null
 	 * @param fireVisitor fire index visitor
 	 * @param throwVisitor the throwable visitor, can be null.
@@ -48,6 +52,37 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fireWithIndex(@Nullable Object param, FireIndexedVisitor<T> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
+
+
+	/**
+	 * fire the all element with start or end by target {@linkplain StartEndVisitor} and etc.
+	 * @param fireVisitor fire start/end visitor
+	 * @return this
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<T> fireWithStartEnd(StartEndVisitor<T> fireVisitor);
+
+	/**
+	 * fire the all element with start or end by target {@linkplain StartEndVisitor} and etc.
+	 * @param param the parameter , can be null
+	 * @param fireVisitor fire start/end visitor
+	 * @return this
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<T> fireWithStartEnd(@Nullable Object param, StartEndVisitor<T> fireVisitor);
+
+	/**
+	 * fire the all element with start or end by target {@linkplain StartEndVisitor} and etc.
+	 * @param param the parameter , can be null
+	 * @param fireVisitor fire start/end visitor
+	 * @param throwVisitor the throwable visitor, can be null.
+	 * @return this
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<T> fireWithStartEnd(@Nullable Object param, StartEndVisitor<T> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
 	
 	/**
 	 * get a sub visit service by the target start index and count.

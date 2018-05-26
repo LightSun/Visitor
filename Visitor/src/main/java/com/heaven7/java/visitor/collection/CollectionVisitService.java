@@ -6,13 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.heaven7.java.visitor.FireBatchVisitor;
-import com.heaven7.java.visitor.FireVisitor;
-import com.heaven7.java.visitor.IterateVisitor;
-import com.heaven7.java.visitor.PredicateVisitor;
-import com.heaven7.java.visitor.ResultVisitor;
-import com.heaven7.java.visitor.SaveVisitor;
-import com.heaven7.java.visitor.ThrowableVisitor;
+import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.anno.DependOn;
 import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
@@ -52,7 +46,64 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * 'Collection'
 	 */
 	int VISIT_RULE_UNTIL_FAILED = 13;
-	
+
+    //============================================================= start  1.2.0 ===================================================
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<R> CollectionVisitService<R> map(@Nullable Object param,
+														@Nullable Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor);
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<R> CollectionVisitService<R> map(Object param, ResultVisitor<? super T,  R> visitor);
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<R> CollectionVisitService<R> map(ResultVisitor<? super T, R> visitor);
+
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K, V> MapVisitService<K, V> map2map(Object param, Comparator<? super K> comparator,
+										 ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K, V> MapVisitService<K, V> map2map(Object param,
+										 ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K, V> MapVisitService<K, V> map2map(ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
+
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<V> MapVisitService<T, V> map2mapAsKey(Object param, Comparator<? super T> comparator, ResultVisitor<? super T, V> valueVisitor);
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<V> MapVisitService<T, V> map2mapAsKey(Object param, ResultVisitor<? super T, V> valueVisitor);
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<V> MapVisitService<T, V> map2mapAsKey(ResultVisitor<? super T, V> valueVisitor);
+
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K> MapVisitService<K, T> map2mapAsValue(Object param, Comparator<? super K> comparator,
+											 ResultVisitor<? super T, K> valueVisitor);
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K> MapVisitService<K, T> map2mapAsValue(Object param, ResultVisitor<? super T, K> valueVisitor);
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K> MapVisitService<K, T> map2mapAsValue(ResultVisitor<? super T, K> valueVisitor);
+
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<T> queryList(Object param, PredicateVisitor<?super T> predicate);
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<T> queryList(PredicateVisitor<?super T> predicate);
+
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	T query(Object param, PredicateVisitor<?super T> predicate);
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	T query(PredicateVisitor<?super T> predicate);
+
+	CollectionVisitService<T> intersect(Collection<? super T> coll);
+
+	Collection<T> get();
+	Collection<T> copy();
+	/**
+	 * pile('leiji') the all elements.
+	 * @param <R> the result type.
+	 * @return the result
+	 */
+	<R> R pile(Object param, ResultVisitor<T, R> mapper, PileVisitor<R> pileVisitor);
+
+	T pile(Object param, PileVisitor<T> pileVisitor);
+	//============================================================= 1.2.0 ===================================================
+
 	/**
 	 * observable the visit service.
 	 * @return the visit service.
@@ -287,6 +338,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 			ResultVisitor<T, V>  valueVisitor);
 	
 	/**
+	 * <p>Use {@linkplain #map2mapAsValue(Object, Comparator, ResultVisitor)} instead.</p>
 	 * transform this service to map service. And the value type is T.
 	 * @param <K> the key type
 	 * @param param the extra parameter
@@ -295,11 +347,13 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.1.0
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K> MapVisitService<K,T> transformToMapAsValues(@Nullable Object param, 
 			@Nullable Comparator<? super K> comparator, ResultVisitor<? super T, K> keyVisitor);
 	
 	/**
+	 *  <p>Use {@linkplain #map2mapAsValue(Object, ResultVisitor)} instead.</p>
 	 * transform this service to map service. And the value type is T .
 	 * @param <K> the key type
 	 * @param param the extra parameter
@@ -307,10 +361,12 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.0.2
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K> MapVisitService<K,T> transformToMapAsValues(@Nullable Object param, ResultVisitor<? super T, K> keyVisitor);
 	
 	/**
+	 *  <p>Use {@linkplain #map2mapAsValue(ResultVisitor)} instead.</p>
 	 * transform this service to map service. And the value type is T .
 	 * @param <K> the key type
 	 * @param keyVisitor the key visitor.
@@ -318,10 +374,12 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see #transformToMapAsValues(Object, ResultVisitor)
 	 * @since 1.0.2
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K> MapVisitService<K,T> transformToMapAsValues(ResultVisitor<? super T, K> keyVisitor);
 	
 	/**
+	 * <p>Use {@linkplain #map2mapAsKey(Object,Comparator, ResultVisitor)}  instead.</p>
 	 * transform this service to map service. And the key type is T .
 	 * @param <V> the value type
 	 * @param param the extra parameter
@@ -330,11 +388,13 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.1.0
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<V> MapVisitService<T,V> transformToMapAsKeys(@Nullable Object param, 
 			@Nullable Comparator<? super T> comparator, ResultVisitor<? super T, V> valueVisitor);
 	
 	/**
+	 * <p>Use {@linkplain #map2mapAsKey(Object, ResultVisitor)}  instead.</p>
 	 * transform this service to map service. And the key type is T 
 	 * @param <V> the value type
 	 * @param param the extra parameter
@@ -342,10 +402,12 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.0.2
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<V> MapVisitService<T,V> transformToMapAsKeys(@Nullable Object param, ResultVisitor<? super T, V> valueVisitor);
 	
 	/**
+	 * <p>Use {@linkplain #map2mapAsKey(ResultVisitor)}  instead.</p>
 	 * transform this service to map service. And the key type is T 
 	 * @param <V> the value type
 	 * @param valueVisitor the value visitor.
@@ -353,10 +415,12 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see #transformToMapAsKeys(Object, ResultVisitor)
 	 * @since 1.0.2
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<V> MapVisitService<T,V> transformToMapAsKeys(ResultVisitor<? super T, V> valueVisitor);
 	
 	/**
+	 * <p>Use {@linkplain #map2map(Object, Comparator, ResultVisitor, ResultVisitor)} instead.</p>
 	 * transform this service to map service.
 	 * @param <K> the key type
 	 * @param <V> the value type
@@ -367,11 +431,13 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.1.0
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K,V> MapVisitService<K, V> transformToMap(@Nullable Object param,@Nullable Comparator<? super K> comparator,
 			ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
 	
 	/**
+	 *  <p>Use {@linkplain #map2map(Object,ResultVisitor, ResultVisitor)} instead.</p>
 	 * transform this service to map service.
 	 * @param <K> the key type
 	 * @param <V> the value type
@@ -381,11 +447,13 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the {@linkplain MapVisitService}
 	 * @since 1.0.2
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K,V> MapVisitService<K, V> transformToMap(@Nullable Object param, ResultVisitor<? super T, K> keyVisitor, 
 			ResultVisitor<? super T, V> valueVisitor);
 	
 	/**
+	 * <p>Use {@linkplain #map2map(ResultVisitor, ResultVisitor)} instead.</p>
 	 * transform this service to map service.
 	 * @param <K> the key type
 	 * @param <V> the value type
@@ -395,10 +463,12 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see #transformToMap(Object, ResultVisitor, ResultVisitor)
 	 * @since 1.0.2
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K,V> MapVisitService<K, V> transformToMap(ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
 
 	/**
+	 * <p>Use {@linkplain #map(Object, Comparator, ResultVisitor)} instead.</p>
 	 * transform current CollectionVisitService to another.
 	 * @param <R> the result type.
 	 * @param param 
@@ -411,11 +481,13 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @since 1.1.0
 	 * 
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> CollectionVisitService<R> transformToCollection(@Nullable Object param,
 			@Nullable Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor);
 	
 	/**
+	 * <p>Use {@linkplain #map(Object, ResultVisitor)} instead.</p>
 	 * transform current CollectionVisitService to another, but don't sort.
 	 * @param <R> the result type.
 	 * @param param 
@@ -426,10 +498,12 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see #transformToCollection(Object, Comparator, ResultVisitor)
 	 * @since 1.0.2
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> CollectionVisitService<R> transformToCollection(@Nullable Object param, ResultVisitor<? super T, R> resultVisitor);
 	
 	/**
+	 * <p>Use {@linkplain #map( ResultVisitor)} instead.</p>
 	 * transform current CollectionVisitService to another. but don't sort
 	 * @param <R> the result type.
 	 * @param resultVisitor
@@ -439,6 +513,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see #transformToCollection(Object, Comparator, ResultVisitor)
 	 * @since 1.0.2
 	 */
+	@Deprecated
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> CollectionVisitService<R> transformToCollection(ResultVisitor<? super T, R> resultVisitor);
 	

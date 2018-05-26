@@ -33,7 +33,7 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitService<T>
 		implements CollectionVisitService<T> {
 
-	protected static final boolean DEBUG = true;
+	//protected static final boolean DEBUG = true;
 
 	private final Collection<T> mCollection;
 
@@ -459,6 +459,13 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		}
 		return service;
 	}
+	//==================================== 1.2.0 =============================================
+
+	@Override
+	public Collection<T> get() {
+		return mCollection;
+	}
+	//==========================================================================================
 
 	// ============================== start--> private and static
 	// ===========================

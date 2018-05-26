@@ -31,7 +31,41 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 	}
 
 	// ==============================================================
-	
+
+	@Override
+	public List<T> getAsList() {
+		return (List<T>) get();
+	}
+	@Override
+	public List<T> copyAsList() {
+		return new ArrayList<T>(get());
+	}
+
+	@Override
+	public CollectionVisitService<List<T>> group(int memberCount, boolean dropNotEnough) {
+		int size = size();
+		int left = size % memberCount;
+		final int step = size / memberCount;
+		if(dropNotEnough){
+			left = step;
+		}
+
+		List<T> src = getAsList();
+		List<List<T>> list = new ArrayList<List<T>>();
+		int start = 0;
+		for(int i = 0 ; i < memberCount ; i ++){
+			List<T> ele;
+			if(i == memberCount - 1){
+				ele = src.subList(start, left);
+			}else{
+				ele = src.subList(start, step);
+			}
+			list.add(ele);
+			start += step;
+		}
+		return VisitServices.from(list);
+	}
+
 	@Override
 	public ListVisitService<T> asListService() throws UnsupportedOperationException {
 		return this;
@@ -256,12 +290,38 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 	}
 
 	@Override
+	public CollectionVisitService<T> fireWithStartEnd(StartEndVisitor<T> fireVisitor) {
+		return fireWithStartEnd(null, fireVisitor, null);
+	}
+
+	@Override
+	public CollectionVisitService<T> fireWithStartEnd(Object param, StartEndVisitor<T> fireVisitor) {
+		return fireWithStartEnd(param, fireVisitor, null);
+	}
+
+	@Override
+	public CollectionVisitService<T> fireWithStartEnd(Object param, StartEndVisitor<T> fireVisitor, ThrowableVisitor tv) {
+		Throwables.checkNull(fireVisitor);
+		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
+		try {
+			for(int i = 0 , size = list.size() ; i < size ; i ++){
+				fireVisitor.visit(param, list.get(i), i == 0, i == size - 1);
+			}
+		} catch (Throwable e) {
+			processThrowable(e, tv);
+		} finally {
+			list.clear();
+		}
+		return this;
+	}
+
+	@Override
 	public CollectionVisitService<T> fireWithIndex(Object param, FireIndexedVisitor<T> fireVisitor, ThrowableVisitor tv) {
 		Throwables.checkNull(fireVisitor);
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
 		try {
 			for(int i = 0 , size = list.size() ; i < size ; i ++){
-				fireVisitor.visit(list.get(i), i, param);
+				fireVisitor.visit(param, list.get(i), i, size);
 			}
 		} catch (Throwable e) {
 			processThrowable(e, tv);
@@ -304,5 +364,5 @@ final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 			}
 		};
 	}*/
-	
+
 }
