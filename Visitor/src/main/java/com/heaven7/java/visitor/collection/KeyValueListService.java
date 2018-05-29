@@ -1,5 +1,6 @@
 package com.heaven7.java.visitor.collection;
 
+import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.Visitors;
 import com.heaven7.java.visitor.anno.Nullable;
 
@@ -19,12 +20,21 @@ public class KeyValueListService<K,V> extends ListVisitServiceImpl<KeyValuePair<
     }
 
     public MapVisitService<K, V> map2map(@Nullable Comparator<? super  K> comparator){
-        return map2map(null, comparator, Visitors.<KeyValuePair<K,V>, K>unchangeResultVisitor(),
-                Visitors.<KeyValuePair<K,V>, V>unchangeResultVisitor());
+        return map2map(null, comparator, new ResultVisitor<KeyValuePair<K, V>, K>() {
+                    @Override
+                    public K visit(KeyValuePair<K, V> pair, Object param) {
+                        return pair.getKey();
+                    }
+                },
+                new ResultVisitor<KeyValuePair<K, V>, V>() {
+                    @Override
+                    public V visit(KeyValuePair<K, V> pair, Object param) {
+                        return pair.getValue();
+                    }
+                });
     }
     public MapVisitService<K, V> map2map(){
-        return map2map(Visitors.<KeyValuePair<K,V>, K>unchangeResultVisitor(),
-                Visitors.<KeyValuePair<K,V>, V>unchangeResultVisitor());
+        return map2map(null);
     }
 
 }
