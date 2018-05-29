@@ -27,10 +27,6 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
-allprojects {
-    sourceCompatibility = 1.6
-    targetCompatibility = 1.6
-}
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
@@ -45,6 +41,15 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
   //  compile 'com.heaven7.java.base:Java-base:1.1.0'
+}
+
+allprojects {
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+    }
 }
 
 publish {

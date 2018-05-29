@@ -27,7 +27,7 @@ public class ListApiTest {
 		Integer[] array = list.toArray((Integer[]) Array.newInstance(Integer.class, 0));
 		System.out.println(Arrays.toString(array));
 
-		ListIterator<Integer> it = list.listIterator(); // 也是按顺序的
+		ListIterator<Integer> it = list.listIterator();
 		while (it.hasNext()) {
 			System.out.println(it.next());
 		}

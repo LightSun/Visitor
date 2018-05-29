@@ -6,13 +6,9 @@ import java.io.File;
 
 public class FileTest {
 
-    @Test
+    //@Test
     public void read(){
-        String path = "D:\\360安全浏览器下载\\untitled folder\\wedding\\churchIn";
-        //String path = "D:\\360安全浏览器下载\\untitled folder\\wedding\\churchOut";
-        //String path = "D:\\360安全浏览器下载\\untitled folder\\wedding\\dinner";
-       //String path = "D:\\360安全浏览器下载\\untitled folder\\wedding\\empty";
-        //String path = "D:\\360安全浏览器下载\\untitled folder\\wedding\\character";
+        String path = "";
         File file = new File(path);
         File[] files = file.listFiles();
         StringBuilder sb = new StringBuilder();

@@ -36,9 +36,10 @@ public final class Operators {
 				for(int i = 0 , size = list.size() ; i < size ; i ++){
 					T t = list.get(i);
 					startVisitElement(t);
-					if(!Predicates.isTrue(visitor.visit(t, i, param))){
+					/*if(!Predicates.isTrue(visitor.visit(t, i, param))){
 						return false;
-					}
+					}*/
+					//TODO wait
 				}
 				return true;
 			}
