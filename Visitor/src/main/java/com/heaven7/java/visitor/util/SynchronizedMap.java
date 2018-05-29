@@ -1,5 +1,6 @@
 package com.heaven7.java.visitor.util;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.heaven7.java.visitor.collection.KeyValuePair;
@@ -82,6 +83,20 @@ public class SynchronizedMap<K, V> implements Map<K, V> {
 	}
 
 	@Override
+	public void putPairs(Collection<KeyValuePair<K, V>> pairs) {
+		synchronized (mLock) {
+			mBase.putPairs(pairs);
+		}
+	}
+
+	@Override
+	public void putPairs2(Collection<KeyValuePair<V, K>> pairs) {
+		synchronized (mLock) {
+			mBase.putPairs2(pairs);
+		}
+	}
+
+	@Override
 	public V replace(K key, V value) {
 		synchronized (mLock) {
 			return mBase.replace(key, value);
@@ -113,6 +128,12 @@ public class SynchronizedMap<K, V> implements Map<K, V> {
 	public List<V> values() {
 		synchronized (mLock) {
 			return mBase.values();
+		}
+	}
+	@Override
+	public void copyTo(Map<K, V> out) {
+		synchronized (mLock) {
+			mBase.copyTo(out);
 		}
 	}
 

@@ -54,6 +54,278 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V>> {
 
+	//================================== start 1.2.0 ====================================
+
+	/**
+	 * map to collection service by pair.
+	 * @param com the comparator if you want sort
+	 * @return the service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	KeyValueListService<K, V> mapPair(@Nullable Comparator<KeyValuePair<K,V>> com);
+	/**
+	 * map to collection service by pair.
+	 * @return the service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	KeyValueListService<K, V>  mapPair();
+	/**
+	 * map to collection service by pair and swap position of key-value.
+	 * @param com the comparator if you want sort
+	 * @return the service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	KeyValueListService<V, K>  mapWithSwap(@Nullable Comparator<KeyValuePair<V,K>> com);
+	/**
+	 * map to collection service by pair and swap position of key-value.
+	 * @return the service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	KeyValueListService<V, K>  mapWithSwap();
+
+	/**
+	 * map to collection service with only keys
+	 * @param com the comparator if you want sort
+	 * @return the service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	CollectionVisitService<K> mapKey(@Nullable Comparator<? super K> com);
+	/**
+	 * map to collection service with only keys
+	 * @return the service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	CollectionVisitService<K> mapKey();
+	/**
+	 * map to collection service with only values
+	 * @param com the comparator if you want sort
+	 * @return the service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	CollectionVisitService<V> mapValue(@Nullable Comparator<? super V> com);
+	/**
+	 * map to collection service with only values
+	 * @return the service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	CollectionVisitService<V> mapValue();
+
+	/**
+	 * map to a collection visit service
+	 * @param param the param
+	 * @param com the comparator
+	 * @param visitor the map visitor
+	 * @param <R> the result type
+	 * @return the collection visit service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<R> CollectionVisitService<R> map(@Nullable Object param,@Nullable Comparator<? super R> com, MapResultVisitor<K,V, R> visitor);
+	/**
+	 * map to a collection visit service
+	 * @param param the param
+	 * @param visitor the map visitor
+	 * @param <R> the result type
+	 * @return the collection visit service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<R> CollectionVisitService<R> map(@Nullable Object param, MapResultVisitor<K,V, R> visitor);
+	/**
+	 * map to a collection visit service
+	 * @param visitor the map visitor
+	 * @param <R> the result type
+	 * @return the collection visit service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<R> CollectionVisitService<R> map(MapResultVisitor<K,V, R> visitor);
+
+	/**
+	 * map to a new map visit service
+	 * @param param the param
+	 * @param com the comparator
+	 * @param visitor the map visitor
+	 * @param <V2> the value type
+	 * @return the new visit service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<V2> MapVisitService<K, V2> map2MapKey(@Nullable Object param, @Nullable Comparator<? super K> com, MapResultVisitor<K,V, V2> visitor);
+	/**
+	 * map to a new map visit service
+	 * @param param the param
+	 * @param visitor the map visitor
+	 * @param <V2> the value type
+	 * @return the new visit service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<V2> MapVisitService<K, V2> map2MapKey(@Nullable Object param,  MapResultVisitor<K,V, V2> visitor);
+	/**
+	 * map to a new map visit service
+	 * @param visitor the map visitor
+	 * @param <V2> the value type
+	 * @return the new visit service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<V2> MapVisitService<K, V2> map2MapKey(MapResultVisitor<K,V, V2> visitor);
+	/**
+	 * map to a new map visit service
+	 * @param param the param
+	 * @param com the comparator
+	 * @param visitor the map visitor
+	 * @param <K2> the key type
+	 * @return the new visit service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<K2> MapVisitService<K2, V> map2MapValue(@Nullable Object param, @Nullable Comparator<? super K2> com, MapResultVisitor<K,V,K2> visitor);
+	/**
+	 * map to a new map visit service
+	 * @param param the param
+	 * @param visitor the map visitor
+	 * @param <K2> the key type
+	 * @return the new visit service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<K2> MapVisitService<K2, V> map2MapValue(@Nullable Object param, MapResultVisitor<K,V,K2> visitor);
+	/**
+	 * map to a new map visit service
+	 * @param visitor the map visitor
+	 * @param <K2> the key type
+	 * @return the new visit service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<K2> MapVisitService<K2, V> map2MapValue(MapResultVisitor<K,V,K2> visitor);
+
+	/**
+	 * map to a new map visit service
+	 * @param com the comparator if you want sort
+	 * @return the new visit service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	MapVisitService<V, K> map2MapWithSwap(@Nullable Comparator<? super V> com);
+	/**
+	 * map to a new map visit service
+	 * @return the new visit service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	MapVisitService<V, K> map2MapWithSwap();
+
+	/**
+	 * map to a new map visit service
+	 * @param param the parameter
+	 * @param com the comparator
+	 * @param key the key visitor
+	 * @param value the value visitor
+	 * @param <K2> the key type
+	 * @param <V2> the value type
+	 * @return a new map service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<K2,V2> MapVisitService<K2,V2> map2Map(@Nullable Object param, @Nullable Comparator<? super K2> com, MapResultVisitor<K,V, K2> key,  MapResultVisitor<K,V, V2> value);
+	/**
+	 * map to a new map visit service
+	 * @param param the parameter
+	 * @param key the key visitor
+	 * @param value the value visitor
+	 * @param <K2> the key type
+	 * @param <V2> the value type
+	 * @return a new map service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<K2,V2> MapVisitService<K2,V2> map2Map(@Nullable Object param,  MapResultVisitor<K,V, K2> key,  MapResultVisitor<K,V, V2> value);
+	/**
+	 * map to a new map visit service
+	 * @param key the key visitor
+	 * @param value the value visitor
+	 * @param <K2> the key type
+	 * @param <V2> the value type
+	 * @return a new map service
+	 * @since 1.2.0
+	 */
+	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
+	<K2,V2> MapVisitService<K2,V2> map2Map(MapResultVisitor<K,V, K2> key,  MapResultVisitor<K,V, V2> value);
+
+	/**
+	 * get the map
+	 * @return the map
+	 * @since 1.2.0
+	 */
+	Map<K, V> get();
+	/**
+	 * copy the map
+	 * @param com the comparator if you want sort
+	 * @return the map
+	 * @since 1.2.0
+	 */
+	Map<K, V> copy(@Nullable Comparator<? super K> com);
+	/**
+	 * copy the map
+	 * @return the map
+	 * @since 1.2.0
+	 */
+	Map<K, V> copy();
+	/**
+	 * copy the map to a new service
+	 * @param com the comparator if you want sort
+	 * @return the new service
+	 * @since 1.2.0
+	 */
+	MapVisitService<K, V> copyService(@Nullable Comparator<? super K> com);
+	/**
+	 * copy the map to a new service
+	 * @return the new service
+	 * @since 1.2.0
+	 */
+	MapVisitService<K, V> copyService();
+	/**
+	 * filter to a new map visit service
+	 * @param param the parameter
+	 * @param com the comparator if you want sort
+	 * @param predicate the predicate visitor
+	 * @param dropOut the drop out map
+	 * @return a new map service
+	 * @since 1.2.0
+	 */
+	MapVisitService<K, V> filter(@Nullable Object param,@Nullable  Comparator<? super K> com,
+								 MapPredicateVisitor<K, V> predicate,@Nullable Map<K, V> dropOut);
+	/**
+	 * filter to a new map visit service
+	 * @param param the parameter
+	 * @param predicate the predicate visitor
+	 * @param dropOut the drop out map
+	 * @return a new map service
+	 * @since 1.2.0
+	 */
+	MapVisitService<K, V> filter(@Nullable Object param, MapPredicateVisitor<K, V> predicate, Map<K, V> dropOut);
+	/**
+	 * filter to a new map visit service
+	 * @param predicate the predicate visitor
+	 * @param dropOut the drop out map
+	 * @return a new map service
+	 * @since 1.2.0
+	 */
+	MapVisitService<K, V> filter(MapPredicateVisitor<K, V> predicate, Map<K, V> dropOut);
+
+	//================================== end 1.2.0 ======================================
+
 	/**
 	 * fire the all key-value pair by target {@linkplain MapFireBatchVisitor}
 	 * and etc.

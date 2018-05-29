@@ -206,10 +206,10 @@ public class CompositeTest extends VisitServiceTest {
 	}
 
 	protected <T> int getSize(CollectionVisitService<T> service) {
-		return service.visitForQueryList(Visitors.<T>truePredicateVisitor(), null).size();
+		return service.size();
 	}
 
 	protected <K, V> int getSize(MapVisitService<K, V> service) {
-		return service.visitForQueryList(Visitors.<K,V>trueMapPredicateVisitor(), null).size();
+		return service.size();
 	}
 }

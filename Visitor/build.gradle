@@ -56,3 +56,4 @@ publish {
     website = 'https://github.com/LightSun/Visitor'
 }
 
+//gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false

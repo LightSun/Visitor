@@ -23,7 +23,7 @@ import com.heaven7.java.visitor.util.Throwables;
  * @see CollectionCondition
  * @see Operator
  */
-public final class ObservableCollectionService<T> {
+/*public*/ final class ObservableCollectionService<T> {
 
 	private final Collection<T> mCollection;
 

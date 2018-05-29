@@ -48,68 +48,249 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	int VISIT_RULE_UNTIL_FAILED = 13;
 
     //============================================================= start  1.2.0 ===================================================
+
+	/**
+	 * map the service to another collection service.
+	 * @param param the parameter
+	 * @param sort the comparator if you want sort
+	 * @param resultVisitor the transform visitor
+	 * @param <R> the result type
+	 * @return the new result visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> CollectionVisitService<R> map(@Nullable Object param,
 														@Nullable Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor);
+	/**
+	 * map the service to another collection service.
+	 * @param param the parameter
+	 * @param visitor the transform visitor
+	 * @param <R> the result type
+	 * @return the new result visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> CollectionVisitService<R> map(Object param, ResultVisitor<? super T,  R> visitor);
+	/**
+	 * map the service to another collection service.
+	 * @param visitor the transform visitor
+	 * @param <R> the result type
+	 * @return the new result visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<R> CollectionVisitService<R> map(ResultVisitor<? super T, R> visitor);
 
+	/**
+	 * map the service to another map service.
+	 * @param param the parameter
+	 * @param comparator the comparator, if you want to sort
+	 * @param keyVisitor the key visitor
+	 * @param valueVisitor the value visitor
+	 * @param <K> the key type of map
+	 * @param <V> the value type of map
+	 * @return the new result map visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
-	<K, V> MapVisitService<K, V> map2map(Object param, Comparator<? super K> comparator,
+	<K, V> MapVisitService<K, V> map2map(Object param,@Nullable Comparator<? super K> comparator,
 										 ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
+	/**
+	 * map the service to another map service.
+	 * @param param the parameter
+	 * @param keyVisitor the key visitor
+	 * @param valueVisitor the value visitor
+	 * @param <K> the key type of map
+	 * @param <V> the value type of map
+	 * @return the new result map visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K, V> MapVisitService<K, V> map2map(Object param,
 										 ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
+	/**
+	 * map the service to another map service.
+	 * @param keyVisitor the key visitor
+	 * @param valueVisitor the value visitor
+	 * @param <K> the key type of map
+	 * @param <V> the value type of map
+	 * @return the new result map visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K, V> MapVisitService<K, V> map2map(ResultVisitor<? super T, K> keyVisitor, ResultVisitor<? super T, V> valueVisitor);
 
+	/**
+	 * map the service to another map service .
+	 * @param param the parameter
+	 * @param comparator the comparator
+	 * @param valueVisitor the value visitor
+	 * @param <V> the value type of map
+	 * @return the new result map visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<V> MapVisitService<T, V> map2mapAsKey(Object param, Comparator<? super T> comparator, ResultVisitor<? super T, V> valueVisitor);
+	/**
+	 * map the service to another map service.
+	 * @param param the parameter
+	 * @param valueVisitor the value visitor
+	 * @param <V> the value type of map
+	 * @return the new result map visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<V> MapVisitService<T, V> map2mapAsKey(Object param, ResultVisitor<? super T, V> valueVisitor);
+	/**
+	 * map the service to another map service.
+	 * @param valueVisitor the value visitor
+	 * @param <V> the value type of map
+	 * @return the new result map visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<V> MapVisitService<T, V> map2mapAsKey(ResultVisitor<? super T, V> valueVisitor);
 
+	/**
+	 * map the service to another map service .
+	 * @param param the parameter
+	 * @param comparator the comparator
+	 * @param keyVisitor the key visitor
+	 * @param <K> the key type of map
+	 * @return the new result map visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K> MapVisitService<K, T> map2mapAsValue(Object param, Comparator<? super K> comparator,
-											 ResultVisitor<? super T, K> valueVisitor);
+											 ResultVisitor<? super T, K> keyVisitor);
+	/**
+	 * map the service to another map service .
+	 * @param param the parameter
+	 * @param keyVisitor the key visitor
+	 * @param <K> the key type of map
+	 * @return the new result map visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
-	<K> MapVisitService<K, T> map2mapAsValue(Object param, ResultVisitor<? super T, K> valueVisitor);
+	<K> MapVisitService<K, T> map2mapAsValue(Object param, ResultVisitor<? super T, K> keyVisitor);
+	/**
+	 * map the service to another map service .
+	 * @param keyVisitor the key visitor
+	 * @param <K> the key type of map
+	 * @return the new result map visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
-	<K> MapVisitService<K, T> map2mapAsValue(ResultVisitor<? super T, K> valueVisitor);
+	<K> MapVisitService<K, T> map2mapAsValue(ResultVisitor<? super T, K> keyVisitor);
 
+	/**
+	 * query collection which match the predicate as a service .
+	 * @param param the parameter
+	 * @param predicate the element predicate
+	 * @return the new result visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> queryList(Object param, PredicateVisitor<?super T> predicate);
+	/**
+	 * query collection  which match the predicate as a service .
+	 * @param predicate the element predicate
+	 * @return the new result visit service.
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> queryList(PredicateVisitor<?super T> predicate);
 
+	/**
+	 * query /find a element which match the predicate
+	 * @param param the parameter
+	 * @param predicate the predicate
+	 * @return the matched element
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	T query(Object param, PredicateVisitor<?super T> predicate);
+	/**
+	 * query /find a element which match the predicate
+	 * @param predicate the predicate
+	 * @return the matched element
+	 * @since 1.2.0
+	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	T query(PredicateVisitor<?super T> predicate);
 
+	/**
+	 * compute the intersect between current collection and target .
+	 * @param coll the target collection
+	 * @return the intersected collection visit service
+	 * @since 1.2.0
+	 */
 	CollectionVisitService<T> intersect(Collection<? super T> coll);
 
+	/**
+	 * filter the current collection as a new service
+	 * @param param the parameter
+	 * @param predicate the predicate
+	 * @param dropOut the drop out list. that means when some element not include in the result service. it can be drop to this.
+	 * @return the collection visit service
+	 * @since 1.2.0
+	 */
+	CollectionVisitService<T> filter(Object param, PredicateVisitor<T> predicate,@Nullable List<T> dropOut);
+
+	/**
+	 * get the collection.
+	 * @return the current collection
+	 * @since 1.2.0
+	 */
 	Collection<T> get();
+	/**
+	 * copy the collection.
+	 * @return a copy of current collection
+	 * @since 1.2.0
+	 */
 	Collection<T> copy();
 	/**
-	 * pile('leiji') the all elements.
+	 * copy the collection service.
+	 * @return a copy of current collection service
+	 * @since 1.2.0
+	 */
+	CollectionVisitService<T> copyService();
+	/**
+	 * pile('leiji') the all elements to a result.
 	 * @param <R> the result type.
+	 * @param param the extra parameter
+	 * @param mapper the element transformer/mapper before pile
+	 * @param pileVisitor the pile visitor
 	 * @return the result
+	 * @since 1.2.0
 	 */
 	<R> R pile(Object param, ResultVisitor<T, R> mapper, PileVisitor<R> pileVisitor);
-
+	/**
+	 * pile('leiji') the all elements to a result.
+	 * @param param the extra parameter
+	 * @param pileVisitor the pile visitor
+	 * @return the result
+	 * @see  #pile(Object, ResultVisitor, PileVisitor)
+	 * @since 1.2.0
+	 */
 	T pile(Object param, PileVisitor<T> pileVisitor);
+	/**
+	 * pile('leiji') the all elements to a result.
+	 * @param pileVisitor the pile visitor
+	 * @return the result
+	 * @see  #pile(Object, PileVisitor)
+	 * @see  #pile(Object, ResultVisitor, PileVisitor)
+	 * @since 1.2.0
+	 */
+	T pile(PileVisitor<T> pileVisitor);
 	//============================================================= 1.2.0 ===================================================
 
-	/**
+	/*
 	 * observable the visit service.
 	 * @return the visit service.
 	 */
-	@Independence
-	ObservableCollectionService<T> observableService();
+	/*@Independence
+	ObservableCollectionService<T> observableService();*/
 	
 	/**
 	 * zip the all elements with target visitor .

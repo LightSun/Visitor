@@ -20,7 +20,7 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
  * @param <T>
  *            the element type
  */
-final class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
+/*final*/ class ListVisitServiceImpl<T> extends CollectionVisitServiceImpl<T>
 		implements CollectionVisitService<T>, ListVisitService<T> {
 	
 	private StringBuilder mSb;

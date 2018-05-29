@@ -5,9 +5,15 @@ import com.heaven7.java.visitor.MapResultVisitor;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.state.MapIterateState;
 import com.heaven7.java.visitor.util.Map;
+import com.heaven7.java.visitor.util.Map2Map;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import static com.heaven7.java.visitor.internal.InternalUtil.newMap;
+
 /**
  * an impl of MapVisitService.
  * @author heaven7
@@ -23,6 +29,11 @@ import java.util.List;
 
 	public MapVisitServiceImpl(Map<K, V> mMap) {
 		super(mMap);
+	}
+
+	@Override
+	public Map<K, V> get() {
+		return mMap;
 	}
 
 	@Override

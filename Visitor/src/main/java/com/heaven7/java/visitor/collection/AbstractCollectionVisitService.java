@@ -4,6 +4,7 @@ import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Observer;
+import com.heaven7.java.visitor.util.Predicates;
 import com.heaven7.java.visitor.util.Throwables;
 
 import java.util.*;
@@ -565,6 +566,19 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
+    public CollectionVisitService<T> filter(Object param, PredicateVisitor<T> predicate, List<T> dropOut) {
+        List<T> result = new ArrayList<T>();
+        for (T t : get()) {
+            if(Predicates.isTrue(predicate.visit(t, param))){
+                result.add(t);
+            }else if(dropOut != null){
+                dropOut.add(t);
+            }
+        }
+        return VisitServices.from(result);
+    }
+
+    @Override
     public final <R> R pile(Object param, ResultVisitor<T, R> mapper, PileVisitor<R> pileVisitor) {
         R pileResult = null;
         for (T t : get()) {
@@ -581,6 +595,16 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     @Override
     public final T pile(Object param, PileVisitor<T> pileVisitor) {
         return pile(param, Visitors.<T, T>unchangeResultVisitor(), pileVisitor);
+    }
+
+    @Override
+    public T pile(PileVisitor<T> pileVisitor) {
+        return pile(null, Visitors.<T, T>unchangeResultVisitor(), pileVisitor);
+    }
+
+    @Override
+    public CollectionVisitService<T> copyService() {
+        return VisitServices.from(copy());
     }
     // ========================================== end 1.2.0 ==========================================
 

@@ -2,6 +2,7 @@ package com.heaven7.java.visitor.util;
 
 import com.heaven7.java.visitor.collection.KeyValuePair;
 
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
@@ -34,6 +35,11 @@ public interface Map<K, V> {
 
 	void putAll(java.util.Map<? extends K, ? extends V> map);
 
+	/* @since 1.2.0 */
+	void putPairs(Collection<KeyValuePair<K, V>> pairs);
+	/* @since 1.2.0 */
+	void putPairs2(Collection<KeyValuePair<V, K>> pairs);
+
 	// =================================================//
 
 	V replace(K key, V value);
@@ -45,6 +51,9 @@ public interface Map<K, V> {
 	List<K> keys();
 
 	List<V> values();
+
+	/* @since 1.2.0 */
+	void copyTo(Map<K, V> out);
 
 	// =================================================//
 	/**
