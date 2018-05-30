@@ -6,6 +6,7 @@ import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Collections2;
 import com.heaven7.java.visitor.util.Throwables;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import static com.heaven7.java.visitor.internal.InternalUtil.processThrowable;
@@ -42,7 +43,44 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	}
 
 	@Override
-	public CollectionVisitService<List<T>> group(int memberCount, boolean dropNotEnough) {
+	public ListVisitService<T> fireMulti(int count, Object param, FireMultiVisitor<T> visitor) {
+		return fireMulti(count, count, param, visitor);
+	}
+
+	@Override
+	public ListVisitService<T> fireMulti(int count, int step, Object param, FireMultiVisitor<T> visitor) {
+		Throwables.checkNull(visitor);
+		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
+		if(list.isEmpty()){
+			throw new IllegalStateException();
+		}
+        int[] indexes = new int[count];
+		//init index
+        for(int i = 0  ; i < indexes.length ; i ++){
+			indexes[i] = i;
+		}
+		List<T> ns = new ArrayList<>();
+		int size = list.size();
+		do{
+			for(int index : indexes){
+				//the index >= size will be ignore
+				if(index < size) {
+					ns.add(list.get(index));
+				}
+			}
+			visitor.visit(param, ns);
+			ns.clear();
+			//add by step
+			for(int i = 0  ; i < indexes.length ; i ++){
+				indexes[i] += step;
+			}
+		}while (indexes[0] < size);
+		list.clear();
+		return this;
+	}
+
+	@Override
+	public ListVisitService<List<T>> group(int memberCount, boolean dropNotEnough) {
 		int size = size();
 		int left = size % memberCount;
 		final int step = size / memberCount;
@@ -290,17 +328,17 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	}
 
 	@Override
-	public CollectionVisitService<T> fireWithStartEnd(StartEndVisitor<T> fireVisitor) {
+	public ListVisitService<T> fireWithStartEnd(StartEndVisitor<T> fireVisitor) {
 		return fireWithStartEnd(null, fireVisitor, null);
 	}
 
 	@Override
-	public CollectionVisitService<T> fireWithStartEnd(Object param, StartEndVisitor<T> fireVisitor) {
+	public ListVisitService<T> fireWithStartEnd(Object param, StartEndVisitor<T> fireVisitor) {
 		return fireWithStartEnd(param, fireVisitor, null);
 	}
 
 	@Override
-	public CollectionVisitService<T> fireWithStartEnd(Object param, StartEndVisitor<T> fireVisitor, ThrowableVisitor tv) {
+	public ListVisitService<T> fireWithStartEnd(Object param, StartEndVisitor<T> fireVisitor, ThrowableVisitor tv) {
 		Throwables.checkNull(fireVisitor);
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
 		try {
@@ -316,7 +354,7 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	}
 
 	@Override
-	public CollectionVisitService<T> fireWithIndex(Object param, FireIndexedVisitor<T> fireVisitor, ThrowableVisitor tv) {
+	public ListVisitService<T> fireWithIndex(Object param, FireIndexedVisitor<T> fireVisitor, ThrowableVisitor tv) {
 		Throwables.checkNull(fireVisitor);
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
 		try {
@@ -332,12 +370,12 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	}
 
 	@Override
-	public CollectionVisitService<T> fireWithIndex(Object param, FireIndexedVisitor<T> fireVisitor) {
+	public ListVisitService<T> fireWithIndex(Object param, FireIndexedVisitor<T> fireVisitor) {
 		return fireWithIndex(param, fireVisitor, null);
 	}
 
 	@Override
-	public CollectionVisitService<T> fireWithIndex(FireIndexedVisitor<T> fireVisitor) {
+	public ListVisitService<T> fireWithIndex(FireIndexedVisitor<T> fireVisitor) {
 		return fireWithIndex(null, fireVisitor, null);
 	}
 	//============

@@ -20,13 +20,36 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	//--------------------------------- 1.2.0--------------------------------------------
 
 	/**
+	 * fire elements with multi elements at the same time. and 'step = count'.
+	 * @param count the count of every fire
+	 * @param param the param
+	 * @param visitor the fire multi visitor
+	 * @return this
+	 * @see #fireMulti(int, int, Object, FireMultiVisitor)
+	 * @since 1.2.2
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	ListVisitService<T> fireMulti(int count, @Nullable Object param, FireMultiVisitor<T> visitor);
+	/**
+	 * fire elements with multi elements at the same time.
+	 * @param count the count of every fire
+	 * @param step  the step of fire
+	 * @param param the param
+	 * @param visitor the fire multi visitor
+	 * @return this
+	 * @since 1.2.2
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	ListVisitService<T> fireMulti(int count, int step, @Nullable Object param, FireMultiVisitor<T> visitor);
+
+	/**
 	 * group a collection to lists service
 	 * @param memberCount the member count of a group
 	 * @param dropNotEnough true if not enough drop the elements
 	 * @return the new service
 	 * @since 1.2.0
 	 */
-	CollectionVisitService<List<T>> group(int memberCount, boolean dropNotEnough);
+	ListVisitService<List<T>> group(int memberCount, boolean dropNotEnough);
 	/**
 	 * get as list
 	 * @return the list
@@ -47,8 +70,8 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @return this
 	 * @since 1.2.0
 	 */
-	//@DependOn(classes ={OperateManager.class, IterateControl.class })
-	CollectionVisitService<T> fireWithIndex(FireIndexedVisitor<T> fireVisitor);
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	ListVisitService<T> fireWithIndex(FireIndexedVisitor<T> fireVisitor);
 	/**
 	 * fire the all element with index by target {@linkplain FireIndexedVisitor} and etc.
 	 * @param param the parameter , can be null
@@ -57,7 +80,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @since 1.2.0
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
-	CollectionVisitService<T> fireWithIndex(@Nullable Object param, FireIndexedVisitor<T> fireVisitor);
+	ListVisitService<T> fireWithIndex(@Nullable Object param, FireIndexedVisitor<T> fireVisitor);
 
 	/**
 	 * fire the all element with index by target {@linkplain FireIndexedVisitor} and etc.
@@ -68,7 +91,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @since 1.2.0
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
-	CollectionVisitService<T> fireWithIndex(@Nullable Object param, FireIndexedVisitor<T> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
+	ListVisitService<T> fireWithIndex(@Nullable Object param, FireIndexedVisitor<T> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
 
 
 	/**
@@ -78,7 +101,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @since 1.2.0
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
-	CollectionVisitService<T> fireWithStartEnd(StartEndVisitor<T> fireVisitor);
+	ListVisitService<T> fireWithStartEnd(StartEndVisitor<T> fireVisitor);
 
 	/**
 	 * fire the all element with start or end by target {@linkplain StartEndVisitor} and etc.
@@ -88,7 +111,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @since 1.2.0
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
-	CollectionVisitService<T> fireWithStartEnd(@Nullable Object param, StartEndVisitor<T> fireVisitor);
+	ListVisitService<T> fireWithStartEnd(@Nullable Object param, StartEndVisitor<T> fireVisitor);
 
 	/**
 	 * fire the all element with start or end by target {@linkplain StartEndVisitor} and etc.
@@ -99,7 +122,7 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @since 1.2.0
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
-	CollectionVisitService<T> fireWithStartEnd(@Nullable Object param, StartEndVisitor<T> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
+	ListVisitService<T> fireWithStartEnd(@Nullable Object param, StartEndVisitor<T> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
 	
 	/**
 	 * get a sub visit service by the target start index and count.
