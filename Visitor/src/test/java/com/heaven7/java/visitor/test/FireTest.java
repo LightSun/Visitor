@@ -18,7 +18,7 @@ public class FireTest extends VisitServiceTest{
 		VisitServices.from(mStus = createStudent(8)).fireMulti(3, 3,
 				"hello", new FireMultiVisitor<Student>() {
 			@Override
-			public void visit(Object param, List<Student> students) {
+			public void visit(Object param, int count , int step, List<Student> students) {
 				System.out.println(students);
 			}
 		});
