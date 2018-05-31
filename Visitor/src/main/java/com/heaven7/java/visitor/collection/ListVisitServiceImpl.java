@@ -68,7 +68,7 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 					ns.add(list.get(index));
 				}
 			}
-			visitor.visit(param, ns);
+			visitor.visit(param,count, step, ns);
 			ns.clear();
 			//add by step
 			for(int i = 0  ; i < indexes.length ; i ++){
