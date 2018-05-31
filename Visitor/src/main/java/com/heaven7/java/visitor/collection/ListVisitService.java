@@ -50,18 +50,6 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 * @since 1.2.0
 	 */
 	ListVisitService<List<T>> group(int memberCount, boolean dropNotEnough);
-	/**
-	 * get as list
-	 * @return the list
-	 * @since 1.2.0
-	 */
-	List<T> getAsList();
-	/**
-	 * copy as list
-	 * @return the list
-	 * @since 1.2.0
-	 */
-	List<T> copyAsList();
 	//--------------------------------- end 1.2.0--------------------------------------------
 
 	/**

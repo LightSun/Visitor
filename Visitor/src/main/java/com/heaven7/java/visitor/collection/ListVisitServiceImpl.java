@@ -34,15 +34,6 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	// ==============================================================
 
 	@Override
-	public List<T> getAsList() {
-		return (List<T>) get();
-	}
-	@Override
-	public List<T> copyAsList() {
-		return new ArrayList<T>(get());
-	}
-
-	@Override
 	public ListVisitService<T> fireMulti(int count, Object param, FireMultiVisitor<T> visitor) {
 		return fireMulti(count, count, param, visitor);
 	}

@@ -225,6 +225,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the intersected collection visit service
 	 * @since 1.2.0
 	 */
+	@Independence
 	CollectionVisitService<T> intersect(Collection<? super T> coll);
 
 	/**
@@ -235,6 +236,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the collection visit service
 	 * @since 1.2.0
 	 */
+	@Independence
 	CollectionVisitService<T> filter(Object param, PredicateVisitor<T> predicate,@Nullable List<T> dropOut);
 
 	/**
@@ -242,18 +244,44 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the current collection
 	 * @since 1.2.0
 	 */
+	@Independence
 	Collection<T> get();
 	/**
 	 * copy the collection.
 	 * @return a copy of current collection
 	 * @since 1.2.0
 	 */
+	@Independence
 	Collection<T> copy();
+
+	/**
+	 * copy to target collection.
+	 * @param out the out collection
+	 * @return this.
+	 * @since 1.2.4
+	 */
+	@Independence
+	CollectionVisitService<T> copyTo(Collection<T> out);
+	/**
+	 * get as list
+	 * @return the list
+	 * @since 1.2.4
+	 */
+	@Independence
+	List<T> getAsList();
+	/**
+	 * copy as list
+	 * @return the list
+	 * @since 1.2.4
+	 */
+	@Independence
+	List<T> copyAsList();
 	/**
 	 * copy the collection service.
 	 * @return a copy of current collection service
 	 * @since 1.2.0
 	 */
+	@Independence
 	CollectionVisitService<T> copyService();
 	/**
 	 * pile('leiji') the all elements to a result.
@@ -264,6 +292,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the result
 	 * @since 1.2.0
 	 */
+	@Independence
 	<R> R pile(Object param, ResultVisitor<T, R> mapper, PileVisitor<R> pileVisitor);
 	/**
 	 * pile('leiji') the all elements to a result.
@@ -273,6 +302,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see  #pile(Object, ResultVisitor, PileVisitor)
 	 * @since 1.2.0
 	 */
+	@Independence
 	T pile(Object param, PileVisitor<T> pileVisitor);
 	/**
 	 * pile('leiji') the all elements to a result.
@@ -282,7 +312,9 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @see  #pile(Object, ResultVisitor, PileVisitor)
 	 * @since 1.2.0
 	 */
+	@Independence
 	T pile(PileVisitor<T> pileVisitor);
+
 	//============================================================= 1.2.0 ===================================================
 
 	/*

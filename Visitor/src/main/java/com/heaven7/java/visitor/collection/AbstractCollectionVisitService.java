@@ -601,6 +601,24 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     public T pile(PileVisitor<T> pileVisitor) {
         return pile(null, Visitors.<T, T>unchangeResultVisitor(), pileVisitor);
     }
+    @Override
+    public List<T> getAsList() {
+        Collection<T> coll = get();
+        if(coll instanceof List){
+            return (List<T>) coll;
+        }
+        return new ArrayList<>(coll);
+    }
+    @Override
+    public List<T> copyAsList() {
+        return new ArrayList<T>(get());
+    }
+
+    @Override
+    public CollectionVisitService<T> copyTo(Collection<T> out) {
+        out.addAll(get());
+        return this;
+    }
 
     @Override
     public CollectionVisitService<T> copyService() {
