@@ -61,6 +61,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @return the sorted map service.
 	 * @since 1.2.6
 	 */
+	@Independence
 	MapVisitService<K, V> sort(Comparator<? super K> c);
 	//================================== start 1.2.0 ====================================
 

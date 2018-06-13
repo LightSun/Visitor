@@ -280,9 +280,16 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	@Override
 	public <K, V> MapVisitService<K, List<V>> groupService(Object param, ResultVisitor<T, K> keyVisitor,
 			ResultVisitor<T, V> valueVisitor) {
+		return groupService(param, null, keyVisitor, valueVisitor);
+	}
+
+	@Override
+	public <K, V> MapVisitService<K, List<V>> groupService(Object param, Comparator<? super K> c,
+														   ResultVisitor<T, K> keyVisitor, ResultVisitor<T, V> valueVisitor) {
 		checkNull(keyVisitor);
+		checkNull(valueVisitor);
 		final List<T> list = asList();
-		final Map<K, List<V>> map = InternalUtil.newMap(null);
+		final Map<K, List<V>> map = InternalUtil.newMap(c);
 		List<V> val;
 		K key;
 		for(T t : list){
@@ -292,11 +299,14 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 				val = new ArrayList<V>();
 				map.put(key, val);
 			}
-			val.add(valueVisitor.visit(t, param));
+			V valueResult = valueVisitor.visit(t, param);
+			if(valueResult != null) {
+				val.add(valueResult);
+			}
 		}
 		return VisitServices.from(map);
 	}
-	
+
 	@Override
 	public ListVisitService<List<T>> groupService(int everyGroupCount) {
 		final List<List<T>> totalList = new ArrayList<List<T>>();

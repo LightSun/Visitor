@@ -240,6 +240,22 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	@Independence
 	<K, V> MapVisitService<K, List<V>> groupService(@Nullable Object param, ResultVisitor<T, K> keyVisitor,
 			ResultVisitor<T, V>  valueVisitor);
+
+	/**
+	 * group the collection to {@linkplain MapVisitService}.
+	 * @param <K> the key type
+	 * @param <V> the type of list value
+	 * @param param the parameter which is used to visitor.
+	 * @param keyVisitor the key visitor.
+	 * @param valueVisitor the value visitor.
+	 * @return {@linkplain MapVisitService}
+	 * @see #groupService(Object, ResultVisitor, ResultVisitor)
+	 * @see #groupService(ResultVisitor)
+	 * @since 1.2.7
+	 */
+	@Independence
+	<K, V> MapVisitService<K, List<V>> groupService(@Nullable Object param, Comparator<? super K> c,
+													ResultVisitor<T, K> keyVisitor, ResultVisitor<T, V>  valueVisitor);
 	
 	/**
 	 * group the list to scrap ListVisitService.
