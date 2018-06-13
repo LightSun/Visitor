@@ -152,6 +152,15 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 	// ==================================================================//
 
+
+	@Override @SuppressWarnings("unchecked")
+	public MapVisitService<K, V> sort(Comparator<? super K> c) {
+		Throwables.checkNull(c);
+		Map<K, V> map = new Map2Map<K,V>((java.util.Map<K, V>) newMap(c));
+		get().copyTo(map);
+		return VisitServices.from(map);
+	}
+
 	@Override
 	public MapVisitService<K, V> fireBatch(MapFireBatchVisitor<K, V> fireVisitor) {
 		return fireBatch(fireVisitor, null);

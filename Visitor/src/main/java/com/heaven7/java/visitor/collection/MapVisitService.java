@@ -54,6 +54,14 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V>> {
 
+
+	/**
+	 * sort the map service.
+	 * @param c the comparator
+	 * @return the sorted map service.
+	 * @since 1.2.6
+	 */
+	MapVisitService<K, V> sort(Comparator<? super K> c);
 	//================================== start 1.2.0 ====================================
 
 	/**
