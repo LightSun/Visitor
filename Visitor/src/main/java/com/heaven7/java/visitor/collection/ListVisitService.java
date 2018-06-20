@@ -17,6 +17,7 @@ import java.util.List;
  */
 public interface ListVisitService<T> extends CollectionVisitService<T>{
 
+
 	//--------------------------------- 1.2.0--------------------------------------------
 
 	/**

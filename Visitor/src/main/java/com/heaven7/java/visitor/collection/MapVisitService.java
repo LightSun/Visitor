@@ -56,6 +56,31 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 
 
 	/**
+	 * normalize the services(include current and other services).
+	 * @param param the extra param
+	 * @param service the other service
+	 * @param visitor  the normalize visitor
+	 * @param <V1> the value type of service
+	 * @param <R> the result type
+	 * @return the new map service.
+	 * @since 1.2.7
+	 */
+	<V1, R> MapVisitService<K, R> normalize(Object param, MapVisitService<K, V1> service, NormalizeVisitor<K, V, V1 ,Void, R> visitor);
+	/**
+	 * normalize the services(include current and other services).
+	 * @param param the extra param
+	 * @param s1 the other service 1
+	 * @param s2  the other service 2
+	 * @param visitor  the normalize visitor
+	 * @param <V1> the value type of service 1
+	 * @param <V2> the value type of service 2
+	 * @param <R> the result type
+	 * @return the new map service.
+	 * @since 1.2.7
+	 */
+	<V1, V2, R> MapVisitService<K, R> normalize(Object param, MapVisitService<K, V1> s1, MapVisitService<K, V2> s2, NormalizeVisitor<K, V, V1 ,V2, R> visitor);
+
+	/**
 	 * sort the map service.
 	 * @param c the comparator
 	 * @return the sorted map service.

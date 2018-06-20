@@ -47,7 +47,45 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	int VISIT_RULE_UNTIL_FAILED = 13;
 
+	/**
+	 * normalize elements
+	 * @param param the extra param
+	 * @param l1 the other list 1
+	 * @param main the main visitor of current service
+	 * @param v1 the visitor 1of l1
+	 * @param visitor the normalize visitor
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param <T1> the element type of l1
+	 * @return the normalized map service.
+	 * @since 1.2.7
+	 */
+	<K, V, T1> MapVisitService<K,V> normalize(Object param, List<T1> l1,
+											  ResultVisitor<T, K> main, ResultVisitor<T1, K> v1,
+											  NormalizeVisitor<K, T, T1, Void, V> visitor);
+
+	/**
+	 * normalize elements
+	 * @param param the extra param
+	 * @param l1 the other list 1
+	 * @param l2 the other list 2
+	 * @param main the main visitor of current service
+	 * @param v1 the visitor 1of l1
+	 * @param v2 the visitor 1of l2
+	 * @param visitor the normalize visitor
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param <T1> the element type of l1
+	 * @param <T2> the element type of l2
+	 * @return the normalized map service.
+	 * @since 1.2.7
+	 */
+	<K, V, T1, T2> MapVisitService<K,V> normalize(Object param, List<T1> l1, List<T2> l2,
+												  ResultVisitor<T, K> main, ResultVisitor<T1, K> v1,  ResultVisitor<T2, K> v2,
+												  NormalizeVisitor<K, T, T1, T2, V> visitor);
+
     //============================================================= start  1.2.0 ===================================================
+
 
 	/**
 	 * map the service to another collection service.
@@ -231,13 +269,30 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	/**
 	 * filter the current collection as a new service
 	 * @param param the parameter
-	 * @param predicate the predicate
+	 * @param predicate the predicate. if return true means will include in result service.
 	 * @param dropOut the drop out list. that means when some element not include in the result service. it can be drop to this.
 	 * @return the collection visit service
 	 * @since 1.2.0
 	 */
 	@Independence
 	CollectionVisitService<T> filter(Object param, PredicateVisitor<T> predicate,@Nullable List<T> dropOut);
+
+	/**
+	 * filter the current collection as a new service
+	 * @param predicate the predicate, if return true means will include in result service.
+	 * @return the collection visit service
+	 * @since 1.2.7
+	 */
+	@Independence
+	CollectionVisitService<T> filter(PredicateVisitor<T> predicate);
+
+	/**
+	 * trim the all 'null' elements
+	 * @return this
+	 * @since 1.2.7
+	 */
+	@Independence
+	CollectionVisitService<T> trim();
 
 	/**
 	 * get the collection.

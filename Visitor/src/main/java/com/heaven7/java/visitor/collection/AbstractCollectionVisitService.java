@@ -566,12 +566,45 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
+    public <K, V, T1> MapVisitService<K, V> normalize(Object param, List<T1> l1,
+                                                      ResultVisitor<T, K> main, ResultVisitor<T1, K> v1,
+                                                      NormalizeVisitor<K, T, T1, Void, V> visitor) {
+        MapVisitService<K, T1> s1 = VisitServices.from(l1).map2mapAsValue(param, v1);
+        return map2mapAsValue(param, main).normalize(param, s1, visitor);
+    }
+
+    @Override
+    public <K, V, T1, T2> MapVisitService<K, V> normalize(Object param, List<T1> l1, List<T2> l2, ResultVisitor<T, K> main,
+                                                          ResultVisitor<T1, K> v1,  ResultVisitor<T2, K> v2,
+                                                          NormalizeVisitor<K, T, T1, T2, V> visitor) {
+        MapVisitService<K, T1> s1 = VisitServices.from(l1).map2mapAsValue(param, v1);
+        MapVisitService<K, T2> s2 = VisitServices.from(l2).map2mapAsValue(param, v2);
+        return map2mapAsValue(param, main).normalize(param, s1, s2, visitor);
+    }
+
+    @Override
+    public CollectionVisitService<T> trim() {
+        Iterator<T> it = get().iterator();
+        for (; it.hasNext(); ) {
+            if (it.next() == null) {
+                it.remove();
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public CollectionVisitService<T> filter(PredicateVisitor<T> predicate) {
+        return filter(null, predicate, null);
+    }
+
+    @Override
     public CollectionVisitService<T> filter(Object param, PredicateVisitor<T> predicate, List<T> dropOut) {
         List<T> result = new ArrayList<T>();
         for (T t : get()) {
-            if(Predicates.isTrue(predicate.visit(t, param))){
+            if (Predicates.isTrue(predicate.visit(t, param))) {
                 result.add(t);
-            }else if(dropOut != null){
+            } else if (dropOut != null) {
                 dropOut.add(t);
             }
         }
@@ -601,14 +634,16 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     public T pile(PileVisitor<T> pileVisitor) {
         return pile(null, Visitors.<T, T>unchangeResultVisitor(), pileVisitor);
     }
+
     @Override
     public List<T> getAsList() {
         Collection<T> coll = get();
-        if(coll instanceof List){
+        if (coll instanceof List) {
             return (List<T>) coll;
         }
         return new ArrayList<>(coll);
     }
+
     @Override
     public List<T> copyAsList() {
         return new ArrayList<T>(get());

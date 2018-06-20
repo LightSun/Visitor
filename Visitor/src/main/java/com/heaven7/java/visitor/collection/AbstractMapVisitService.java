@@ -153,6 +153,44 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 	// ==================================================================//
 
 
+	@Override
+	public <V1, R> MapVisitService<K, R> normalize(Object param, final MapVisitService<K, V1> service,final NormalizeVisitor<K, V, V1, Void, R> visitor) {
+		Throwables.checkNull(visitor);
+		return VisitServices.from(get().getKeyValues()).map2map(param, new ResultVisitor<KeyValuePair<K, V>, K>() {
+			@Override
+			public K visit(KeyValuePair<K, V> pair, Object param) {
+				return pair.getKey();
+			}
+		}, new ResultVisitor<KeyValuePair<K,V>, R>() {
+			@Override
+			public R visit(KeyValuePair<K, V> pair, Object param) {
+				K key = pair.getKey();
+				V1 v1 = service.get().get(key);
+				return visitor.visit(key, pair.getValue(), v1, null, param);
+			}
+		});
+	}
+
+	@Override
+	public <V1, V2, R> MapVisitService<K, R> normalize(final Object param,final MapVisitService<K, V1> s1,final MapVisitService<K, V2> s2,
+													   final NormalizeVisitor<K, V, V1, V2, R> visitor) {
+		Throwables.checkNull(visitor);
+		return VisitServices.from(get().getKeyValues()).map2map(param, new ResultVisitor<KeyValuePair<K, V>, K>() {
+			@Override
+			public K visit(KeyValuePair<K, V> pair, Object param) {
+				return pair.getKey();
+			}
+		}, new ResultVisitor<KeyValuePair<K,V>, R>() {
+			@Override
+			public R visit(KeyValuePair<K, V> pair, Object param) {
+				K key = pair.getKey();
+				V1 v1 = s1.get().get(key);
+				V2 v2 = s2.get().get(key);
+				return visitor.visit(key, pair.getValue(), v1, v2, param);
+			}
+		});
+	}
+
 	@Override @SuppressWarnings("unchecked")
 	public MapVisitService<K, V> sort(Comparator<? super K> c) {
 		Throwables.checkNull(c);
