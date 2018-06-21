@@ -88,6 +88,18 @@ public final class VisitServices {
 	}
 
 	/**
+	 * create key value list service from pairs.
+	 * @param list the pairs
+	 * @param <K> the key type of pair
+	 * @param <V> the value type of pair
+	 * @return the key value list service
+	 * @since 1.2.71
+	 */
+	public static <K,V> KeyValueListService<K,V> fromPairs(List<KeyValuePair<K,V>> list) {
+		return new KeyValueListService<K,V>(list);
+	}
+
+	/**
 	 * create an instance of {@linkplain MapVisitService} from target map.
 	 * @param <K> the key type
 	 * @param <V> the value type
