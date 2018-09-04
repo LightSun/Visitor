@@ -11,6 +11,7 @@ import junit.framework.TestCase;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.heaven7.java.visitor.collection.Operation.*;
@@ -44,6 +45,20 @@ public class VisitServiceTest extends TestCase {
 
 
 	//================================================
+
+	public void testRemoveRepeat(){
+		int oldSize = mService.size();
+		String name = mStus.get(0).getName();
+		mService.addIfNotExist(new Student(name));
+		assertEquals(mService.size() ,oldSize + 1);
+		CollectionVisitService<Student> targetService = mService.removeRepeat(new Comparator<Student>() {
+			@Override
+			public int compare(Student o1, Student o2) {
+				return o1.name.equals(o2.name) ? 0 : -1;
+			}
+		});
+		assertEquals(targetService.size() ,oldSize);
+	}
 
 	public void testZipServiceThrowable(){
 		final String str = "testZipServiceFiled";
