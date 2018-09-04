@@ -29,17 +29,38 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 
     @Override
     public CollectionVisitService<T> removeRepeat() {
-        return removeRepeat(null);
+        return removeRepeat(null, null, null);
     }
 
     @Override
-    public CollectionVisitService<T> removeRepeat(Comparator<? super T> com) {
+    public CollectionVisitService<T> removeRepeat(WeightVisitor<T> weightVisitor) {
+        return removeRepeat(null, null, weightVisitor);
+    }
+
+    @Override
+    public CollectionVisitService<T> removeRepeat(Object param, Comparator<? super T> com) {
+        return removeRepeat(param, com, null);
+    }
+
+    @Override
+    public CollectionVisitService<T> removeRepeat(Object param, Comparator<? super T> com, final WeightVisitor<T> weightVisitor) {
         final List<T> result = new ArrayList<>();
         final CompareHelper<T> helper = new CompareHelper<>(com);
         filter(null, new PredicateVisitor<T>() {
             @Override
             public Boolean visit(T t, Object param) {
-                return helper.contains(result, t);
+                int index = helper.getContainsIndex(result, t);
+                if(index >= 0 && weightVisitor != null){
+                    T oldT = result.get(index);
+                    Integer w1 = weightVisitor.visit(oldT, param);
+                    Integer w2 = weightVisitor.visit(t, param);
+                    //new element is more important
+                    if(w2 > w1){
+                        result.set(index, t);
+                    }
+                }
+                //contains means will filter . or else will be in drop out list
+                return index >= 0;
             }
         }, result);
         return VisitServices.from(result);
@@ -689,16 +710,16 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
         public CompareHelper(@Nullable  Comparator<? super T> com) {
             this.com = com;
         }
-        public boolean contains(List<T> container, T target){
+        public int getContainsIndex(List<T> container, T target){
             if(com == null){
-                return container.contains(target);
+                return container.indexOf(target);
             }else{
-                for(T t : container){
-                    if(com.compare(t, target) == 0){
-                        return true;
+                for(int size = container.size(), i = size -1 ; i >=0 ; i --){
+                    if(com.compare(container.get(i), target) == 0){
+                        return i;
                     }
                 }
-                return false;
+                return -1;
             }
         }
     }

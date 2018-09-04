@@ -46,18 +46,47 @@ public class VisitServiceTest extends TestCase {
 
 	//================================================
 
-	public void testRemoveRepeat(){
+	public void testRemoveRepeat1(){
 		int oldSize = mService.size();
 		String name = mStus.get(0).getName();
 		mService.addIfNotExist(new Student(name));
 		assertEquals(mService.size() ,oldSize + 1);
-		CollectionVisitService<Student> targetService = mService.removeRepeat(new Comparator<Student>() {
+		CollectionVisitService<Student> targetService = mService.removeRepeat(null, new Comparator<Student>() {
 			@Override
 			public int compare(Student o1, Student o2) {
 				return o1.name.equals(o2.name) ? 0 : -1;
 			}
 		});
 		assertEquals(targetService.size() ,oldSize);
+	}
+	public void testRemoveRepeat2(){
+		int oldSize = mService.size();
+		final String name = mStus.get(0).getName();
+		Student student = new Student(name);
+		student.id = Integer.MAX_VALUE;
+		mService.addIfNotExist(student);
+		assertEquals(mService.size() ,oldSize + 1);
+		CollectionVisitService<Student> targetService = mService.removeRepeat(null, new Comparator<Student>() {
+			@Override
+			public int compare(Student o1, Student o2) {
+				return o1.name.equals(o2.name) ? 0 : -1;
+			}
+		}, new WeightVisitor<Student>() {
+			@Override
+			public Integer visit(Student student, Object param) {
+				return student.id;
+			}
+		});
+		assertEquals(targetService.size() ,oldSize);
+		List<Student> list = targetService.filter(new PredicateVisitor<Student>() {
+			@Override
+			public Boolean visit(Student student, Object param) {
+				return student.getName().equals(name);
+			}
+		}).getAsList();
+		assertEquals(list.size() ,1);
+		assertEquals(list.get(0).getId() ,Integer.MAX_VALUE);
+
 	}
 
 	public void testZipServiceThrowable(){

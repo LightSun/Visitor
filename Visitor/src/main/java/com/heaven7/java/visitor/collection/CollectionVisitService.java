@@ -288,20 +288,39 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 
 
 	/**
-	 * remove the repeat elements
+	 * remove the repeat elements and retain by the order.
 	 * @return the repeat removed collection service.
-	 * @since 1.2.8
+	 * @since 1.2.9
 	 */
 	@Independence
 	CollectionVisitService<T> removeRepeat();
 	/**
 	 * remove the repeat elements
-	 * @param com the comparator. null means equals.
+	 * @param weightVisitor the weight visitor, decide which element to retain.
 	 * @return the repeat removed collection service.
-     * @since 1.2.8
+	 * @since 1.2.9
 	 */
 	@Independence
-	CollectionVisitService<T> removeRepeat(Comparator<? super T> com);
+	CollectionVisitService<T> removeRepeat(WeightVisitor<T> weightVisitor);
+	/**
+	 * remove the repeat elements
+	 * @param param the parameter
+	 * @param com the comparator used for repeat. null means equals.
+	 * @return the repeat removed collection service.
+	 * @since 1.2.9
+	 */
+	@Independence
+	CollectionVisitService<T> removeRepeat(Object param, Comparator<? super T> com);
+	/**
+	 * remove the repeat elements
+	 * @param param the parameter
+	 * @param com the comparator used for repeat. null means equals.
+	 * @param weightVisitor decide which element to retain.
+	 * @return the repeat removed collection service.
+     * @since 1.2.9
+	 */
+	@Independence
+	CollectionVisitService<T> removeRepeat(Object param, Comparator<? super T> com, WeightVisitor<T> weightVisitor);
 
 	/**
 	 * trim the all 'null' elements
