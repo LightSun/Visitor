@@ -30,6 +30,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 		mList.add(5);
 		mList.add(100);
 		mListService = VisitServices.from(mList);
+		System.out.println("setup: " + mList);
 	}
 	
 	public void testZipResultThrowable(){
@@ -143,6 +144,7 @@ public class ListVisitServiceTest extends VisitServiceTest {
 				assertTrue(RuntimeException.class.isAssignableFrom(e.getClass()));
 			}
 		});
+		System.out.println(mListService.getAsList());
 	}
 	
 	public void testZipFailed(){
@@ -169,30 +171,34 @@ public class ListVisitServiceTest extends VisitServiceTest {
 				
 			}
 		});
+		System.out.println(mListService.getAsList());
 	}
 	
 	public void testZipSuccess(){
 		final String str = "testZipSuccess";
-		mListService.zip(str, new PredicateVisitor<Integer>() {
+		List<Integer> list = mListService.zip(str, new PredicateVisitor<Integer>() {
 			@Override
 			public Boolean visit(Integer t, Object param) {
 				assertEquals(str, param);
-				return true;
+				return t != 3;
 			}
-		}, new Observer<Integer,Void>() {
+		}, new Observer<Integer, Void>() {
 			@Override
 			public void onSuccess(Object param, Void r) {
 				assertEquals(str, param);
 			}
+
 			@Override
 			public void onFailed(Object param, Integer t) {
-				
+				System.out.println("onFailed: " + t);
 			}
+
 			@Override
 			public void onThrowable(Object param, Integer t, Throwable e) {
-				
+
 			}
-		});
+		}).getAsList();
+		System.out.println(list);
 	}
 	
 	public void testSubserviceFromCollection(){

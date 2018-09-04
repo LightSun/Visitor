@@ -56,7 +56,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 
 
 	/**
-	 * normalize the services(include current and other services).
+	 * normalize the services(include current and other services) to another service.
 	 * @param param the extra param
 	 * @param service the other service
 	 * @param visitor  the normalize visitor

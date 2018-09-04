@@ -286,6 +286,23 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	@Independence
 	CollectionVisitService<T> filter(PredicateVisitor<T> predicate);
 
+
+	/**
+	 * remove the repeat elements
+	 * @return the repeat removed collection service.
+	 * @since 1.2.8
+	 */
+	@Independence
+	CollectionVisitService<T> removeRepeat();
+	/**
+	 * remove the repeat elements
+	 * @param com the comparator. null means equals.
+	 * @return the repeat removed collection service.
+     * @since 1.2.8
+	 */
+	@Independence
+	CollectionVisitService<T> removeRepeat(Comparator<? super T> com);
+
 	/**
 	 * trim the all 'null' elements
 	 * @return this

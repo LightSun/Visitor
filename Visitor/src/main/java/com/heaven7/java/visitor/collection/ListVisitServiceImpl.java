@@ -45,9 +45,9 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 		if(list.isEmpty()){
 			throw new IllegalStateException();
 		}
-        int[] indexes = new int[count];
+        final int[] indexes = new int[count];
 		//init index
-        for(int i = 0  ; i < indexes.length ; i ++){
+        for(int i = 0  ; i < count ; i ++){
 			indexes[i] = i;
 		}
 		List<T> ns = new ArrayList<>();
@@ -59,10 +59,10 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 					ns.add(list.get(index));
 				}
 			}
-			visitor.visit(param,count, step, ns);
+			visitor.visit(param, count, step, ns);
 			ns.clear();
 			//add by step
-			for(int i = 0  ; i < indexes.length ; i ++){
+			for(int i = 0  ; i < count ; i ++){
 				indexes[i] += step;
 			}
 		}while (indexes[0] < size);

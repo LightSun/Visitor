@@ -28,6 +28,24 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
+    public CollectionVisitService<T> removeRepeat() {
+        return removeRepeat(null);
+    }
+
+    @Override
+    public CollectionVisitService<T> removeRepeat(Comparator<? super T> com) {
+        final List<T> result = new ArrayList<>();
+        final CompareHelper<T> helper = new CompareHelper<>(com);
+        filter(null, new PredicateVisitor<T>() {
+            @Override
+            public Boolean visit(T t, Object param) {
+                return helper.contains(result, t);
+            }
+        }, result);
+        return VisitServices.from(result);
+    }
+
+    @Override
     public final <R> CollectionVisitService<R> zipService(
             ResultVisitor<T, R> resultVisitor, Observer<T, List<R>> observer) {
         return zipService(null, resultVisitor, observer);
@@ -663,6 +681,27 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 
     // ===================== start inner classes
     // ====================================
+
+    private static class CompareHelper<T>{
+
+        final Comparator<? super T> com;
+
+        public CompareHelper(@Nullable  Comparator<? super T> com) {
+            this.com = com;
+        }
+        public boolean contains(List<T> container, T target){
+            if(com == null){
+                return container.contains(target);
+            }else{
+                for(T t : container){
+                    if(com.compare(t, target) == 0){
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+    }
 
     private static class WrappedObserveVisitor<T, R> implements IterateVisitor<T> {
 
