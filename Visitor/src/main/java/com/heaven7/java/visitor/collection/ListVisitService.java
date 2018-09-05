@@ -44,6 +44,29 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	ListVisitService<T> fireMulti(int count, int step, @Nullable Object param, FireMultiVisitor<T> visitor);
 
 	/**
+	 * fire elements with multi elements at the same time. and 'step = count'.
+	 * @param count the count of every fire
+	 * @param param the param
+	 * @param visitor the fire multi visitor , which can stop next visit.
+	 * @return this
+	 * @see #fireMulti(int, int, Object, FireMultiVisitor)
+	 * @since 1.2.9.1
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	ListVisitService<T> fireMulti2(int count, @Nullable Object param, FireMultiVisitor2<T> visitor);
+	/**
+	 * fire elements with multi elements at the same time.
+	 * @param count the count of every fire
+	 * @param step  the step of fire
+	 * @param param the param
+	 * @param visitor the fire multi visitor, which can stop next visit.
+	 * @return this
+	 * @since 1.2.9.1
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	ListVisitService<T> fireMulti2(int count, int step, @Nullable Object param, FireMultiVisitor2<T> visitor);
+
+	/**
 	 * group a collection to lists service
 	 * @param memberCount the member count of a group
 	 * @param dropNotEnough true if not enough drop the elements

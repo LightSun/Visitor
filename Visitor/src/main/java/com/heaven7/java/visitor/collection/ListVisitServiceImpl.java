@@ -39,15 +39,31 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	}
 
 	@Override
-	public ListVisitService<T> fireMulti(int count, int step, Object param, FireMultiVisitor<T> visitor) {
+	public ListVisitService<T> fireMulti(int count, int step, Object param, final FireMultiVisitor<T> visitor) {
+		return fireMulti2(count, step, param, new FireMultiVisitor2<T>() {
+			@Override
+			public boolean visit(Object param, int count, int step, List<T> ts) {
+				visitor.visit(param, count, step, ts);
+				return false;
+			}
+		});
+	}
+
+	@Override
+	public ListVisitService<T> fireMulti2(int count, Object param, FireMultiVisitor2<T> visitor) {
+		return fireMulti2(count, count, param, visitor);
+	}
+
+	@Override
+	public ListVisitService<T> fireMulti2(int count, int step, Object param, FireMultiVisitor2<T> visitor) {
 		Throwables.checkNull(visitor);
 		final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
 		if(list.isEmpty()){
 			throw new IllegalStateException();
 		}
-        final int[] indexes = new int[count];
+		final int[] indexes = new int[count];
 		//init index
-        for(int i = 0  ; i < count ; i ++){
+		for(int i = 0  ; i < count ; i ++){
 			indexes[i] = i;
 		}
 		List<T> ns = new ArrayList<>();
@@ -59,7 +75,10 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 					ns.add(list.get(index));
 				}
 			}
-			visitor.visit(param, count, step, ns);
+			//should stop
+			if(visitor.visit(param, count, step, ns)){
+                break;
+			}
 			ns.clear();
 			//add by step
 			for(int i = 0  ; i < count ; i ++){
