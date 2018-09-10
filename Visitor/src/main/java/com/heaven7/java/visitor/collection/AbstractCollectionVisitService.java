@@ -651,6 +651,42 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
+    public CollectionVisitService<T> filter(Object param, PredicateVisitor<T> predicate, int maxCount, List<T> dropOut) {
+        return filter(param, null, predicate, maxCount, dropOut);
+    }
+
+    @Override
+    public CollectionVisitService<T> filter(Object param, Comparator<? super T> com ,PredicateVisitor<T> predicate, int maxCount, List<T> dropOut) {
+        Throwables.checkNull(predicate);
+        if(maxCount <= 0){
+            throw new IllegalArgumentException("maxCount must > 0");
+        }
+        //sort
+        ArrayList<T> newList = new ArrayList<>(get());
+        if(com != null) {
+            Collections.sort(newList, com);
+        }
+        //start build result
+        List<T> result = new ArrayList<T>();
+        int matchSize = 0;
+        for (T t : newList) {
+            if(matchSize == maxCount){
+                if(dropOut == null){
+                    break;
+                }else{
+                    dropOut.add(t);
+                }
+            }else if (Predicates.isTrue(predicate.visit(t, param))) {
+                result.add(t);
+                matchSize ++;
+            } else if (dropOut != null) {
+                dropOut.add(t);
+            }
+        }
+        return VisitServices.from(result);
+    }
+
+    @Override
     public final <R> R pile(Object param, ResultVisitor<T, R> mapper, PileVisitor<R> pileVisitor) {
         R pileResult = null;
         for (T t : get()) {

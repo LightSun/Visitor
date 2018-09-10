@@ -269,6 +269,31 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	/**
 	 * filter the current collection as a new service
 	 * @param param the parameter
+	 * @param com the comparator, before iterate.
+	 * @param predicate the predicate. if return true means will include in result service.
+	 * @param maxCount the max count of matched elements.
+	 * @param dropOut the drop out list. that means when some element not include in the result service. it can be drop to this.
+	 * @return the collection visit service
+	 * @since 1.2.9.2
+	 */
+	@Independence
+	CollectionVisitService<T> filter(Object param, @Nullable Comparator<?super T> com, PredicateVisitor<T> predicate, int maxCount, @Nullable List<T> dropOut);
+
+	/**
+	 * filter the current collection as a new service
+	 * @param param the parameter
+	 * @param predicate the predicate. if return true means will include in result service.
+	 * @param maxCount the max count of matched elements.
+	 * @param dropOut the drop out list. that means when some element not include in the result service. it can be drop to this.
+	 * @return the collection visit service
+	 * @since 1.2.9.2
+	 */
+	@Independence
+	CollectionVisitService<T> filter(Object param, PredicateVisitor<T> predicate, int maxCount, @Nullable List<T> dropOut);
+
+	/**
+	 * filter the current collection as a new service
+	 * @param param the parameter
 	 * @param predicate the predicate. if return true means will include in result service.
 	 * @param dropOut the drop out list. that means when some element not include in the result service. it can be drop to this.
 	 * @return the collection visit service

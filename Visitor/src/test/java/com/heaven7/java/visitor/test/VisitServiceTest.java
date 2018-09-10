@@ -46,6 +46,20 @@ public class VisitServiceTest extends TestCase {
 
 	//================================================
 
+	public void testFilterMaxCount(){
+		List<Student> retain = new ArrayList<>();
+		CollectionVisitService<Student> maxService = mService.filter(null,
+				Visitors.<Student>truePredicateVisitor(), 2, retain);
+		assertEquals(maxService.size(), 2);
+		assertEquals(retain.size(), mService.size() - 2);
+	}
+
+	public void testFilterMaxCount_null(){
+		CollectionVisitService<Student> maxService = mService.filter(null,
+				Visitors.<Student>truePredicateVisitor(), 2, null);
+		assertEquals(maxService.size(), 2);
+	}
+
 	public void testRemoveRepeat1(){
 		int oldSize = mService.size();
 		String name = mStus.get(0).getName();
