@@ -4,6 +4,7 @@ import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.util.Collections2;
+import com.heaven7.java.visitor.util.Predicates;
 import com.heaven7.java.visitor.util.Throwables;
 
 import java.lang.reflect.Array;
@@ -32,6 +33,28 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	}
 
 	// ==============================================================
+
+	@Override
+	public <R> R mapResult(Object param, ResultVisitor<T, R> visitor) {
+		return mapResult(param, visitor, new PredicateVisitor<R>() {
+			@Override
+			public Boolean visit(R r, Object param) {
+				return r != null;
+			}
+		});
+	}
+
+	@Override
+	public <R> R mapResult(Object param, ResultVisitor<T, R> visitor, PredicateVisitor<R> predicate) {
+		R result = null;
+		for (T t : get()){
+			result = visitor.visit(t, param);
+			if(Predicates.isTrue(predicate.visit(result, param) )){
+				break;
+			}
+		}
+		return result;
+	}
 
 	@Override
 	public ListVisitService<T> fireMulti(int count, Object param, FireMultiVisitor<T> visitor) {

@@ -48,6 +48,24 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	int VISIT_RULE_UNTIL_FAILED = 13;
 
 	/**
+	 * get the min element by target comparator
+	 * @param com the comparator
+	 * @return the min element
+	 * @since 1.3.0
+	 */
+	@Independence
+	T min(Comparator<? super  T> com);
+
+	/**
+	 * get the max element by target comparator
+	 * @param com the comparator
+	 * @return the max element
+	 * @since 1.3.0
+	 */
+	@Independence
+	T max(Comparator<? super  T> com);
+
+	/**
 	 * normalize elements
 	 * @param param the extra param
 	 * @param l1 the other list 1
@@ -60,6 +78,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the normalized map service.
 	 * @since 1.2.7
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K, V, T1> MapVisitService<K,V> normalize(Object param, List<T1> l1,
 											  ResultVisitor<T, K> main, ResultVisitor<T1, K> v1,
 											  NormalizeVisitor<K, T, T1, Void, V> visitor);
@@ -80,6 +99,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @return the normalized map service.
 	 * @since 1.2.7
 	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	<K, V, T1, T2> MapVisitService<K,V> normalize(Object param, List<T1> l1, List<T2> l2,
 												  ResultVisitor<T, K> main, ResultVisitor<T1, K> v1,  ResultVisitor<T2, K> v2,
 												  NormalizeVisitor<K, T, T1, T2, V> visitor);

@@ -17,6 +17,28 @@ import java.util.List;
  */
 public interface ListVisitService<T> extends CollectionVisitService<T>{
 
+	/**
+	 * map a result by a element. if any one map success. the iterate will stop. if all map failed. return null.
+	 * @param param the param
+	 * @param visitor the result visitor
+	 * @param <R> the result type
+	 * @return the result
+	 * @since 1.3.0
+	 */
+	@Independence
+	<R> R mapResult(Object param, ResultVisitor<T, R> visitor);
+
+	/**
+	 * map a result by a element. if any one map success. the iterate will stop. if all map failed. return null.
+	 * @param param the param
+	 * @param visitor the result visitor
+	 * @param predicate the predicate visitor to decide the result is success or not.
+	 * @param <R> the result type
+	 * @return the result
+	 * @since 1.3.0
+	 */
+	@Independence
+	<R> R mapResult(Object param, ResultVisitor<T, R> visitor, PredicateVisitor<R> predicate);
 
 	//--------------------------------- 1.2.0--------------------------------------------
 

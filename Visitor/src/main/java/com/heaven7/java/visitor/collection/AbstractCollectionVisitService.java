@@ -28,6 +28,25 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
+    public T max(final Comparator<? super T> com) {
+        return pile(new PileVisitor<T>() {
+            @Override
+            public T visit(Object o, T t, T t2) {
+                return com.compare(t, t2) >=0 ? t : t2;
+            }
+        });
+    }
+    @Override
+    public T min(final Comparator<? super T> com) {
+        return pile(new PileVisitor<T>() {
+            @Override
+            public T visit(Object o, T t, T t2) {
+                return com.compare(t, t2) < 0 ? t : t2;
+            }
+        });
+    }
+
+    @Override
     public CollectionVisitService<T> removeRepeat() {
         return removeRepeat(null, null, null);
     }
