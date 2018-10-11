@@ -34,6 +34,19 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 
 	// ==============================================================
 
+
+	@Override
+	public KeyValuePair<Integer, T> queryIndex(Object param, PredicateVisitor<T> visitor) {
+		List<T> list = getAsList();
+		for(int i = 0, size = list.size() ; i < size ; i ++){
+			T t = list.get(i);
+			if(Predicates.isTrue(visitor.visit(t, param))){
+				return KeyValuePair.create(i, t);
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public <R> R mapResult(Object param, ResultVisitor<T, R> visitor) {
 		return mapResult(param, visitor, new PredicateVisitor<R>() {

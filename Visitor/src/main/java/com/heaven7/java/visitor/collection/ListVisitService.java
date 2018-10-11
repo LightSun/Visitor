@@ -18,6 +18,16 @@ import java.util.List;
 public interface ListVisitService<T> extends CollectionVisitService<T>{
 
 	/**
+	 * query item with index, then pack the item and index as a pair.
+	 * @param param the param
+	 * @param visitor the predicate visitor.
+	 * @return the pair which contains index and item.
+	 * @since 1.3.0.1
+	 */
+	@Independence
+	KeyValuePair<Integer, T> queryIndex(Object param, PredicateVisitor<T> visitor);
+
+	/**
 	 * map a result by a element. if any one map success. the iterate will stop. if all map failed. return null.
 	 * @param param the param
 	 * @param visitor the result visitor
