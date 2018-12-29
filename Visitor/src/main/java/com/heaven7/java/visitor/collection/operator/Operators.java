@@ -36,10 +36,9 @@ public final class Operators {
 				for(int i = 0 , size = list.size() ; i < size ; i ++){
 					T t = list.get(i);
 					startVisitElement(t);
-					/*if(!Predicates.isTrue(visitor.visit(t, i, param))){
+					if(!Predicates.isTrue(visitor.visit(param, t, i, size))){
 						return false;
-					}*/
-					//TODO wait
+					}
 				}
 				return true;
 			}
@@ -285,6 +284,10 @@ public final class Operators {
 				}
 				return false;
 			}
+			@Override
+			public int getRequireArgsFlags() {
+				return 0;
+			}
 		};
 	}
 	public static <T> Operator<T, Boolean> ofRemoveIfExist() {
@@ -316,7 +319,7 @@ public final class Operators {
 				T t = null;
 				while (each.hasNext()) {
 					startVisitElement(t = each.next());
-					if (predicate.visit(t, param)) {
+					if (isTrue(predicate.visit(t, param))) {
 						each.remove();
 						removed = true;
 					}

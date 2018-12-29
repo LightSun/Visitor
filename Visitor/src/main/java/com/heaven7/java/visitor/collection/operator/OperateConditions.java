@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.heaven7.java.visitor.PredicateVisitor;
+import com.heaven7.java.visitor.ResultIndexedVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.util.Observer;
 
@@ -160,6 +161,16 @@ public final class OperateConditions {
 			Observer<T, Boolean> observer     ) {
 		return new OperateCondition<T,Boolean>()
 				.result(visitor)
+				.extra(param)
+				.observer(observer)
+				.operator(Operators.<T>ofFire());
+	}
+
+	public static <T> CollectionCondition<T> ofFireIndex(Object param,
+													ResultIndexedVisitor<? super T, Boolean> visitor,
+													Observer<T, Boolean> observer) {
+		return new OperateCondition<T, Boolean>()
+				.resultIndexed(visitor)
 				.extra(param)
 				.observer(observer)
 				.operator(Operators.<T>ofFire());

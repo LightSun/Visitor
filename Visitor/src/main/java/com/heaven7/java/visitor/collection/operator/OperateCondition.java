@@ -8,6 +8,7 @@ import com.heaven7.java.visitor.ResultIndexedVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
 import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.Observers;
+import com.heaven7.java.visitor.util.Throwables;
 
 /**
  * the common operate condition.
@@ -244,7 +245,7 @@ public class OperateCondition<T, R> implements CollectionCondition<T> {
 	public boolean apply(Collection<T> src) {
 		checkArguments();
 		final Operator<T, R> operator = getOperator();
-		mOperator = null;
+		Throwables.checkNull(operator);
 		return operator.apply(src, this);
 	}
 

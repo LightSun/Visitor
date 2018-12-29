@@ -35,8 +35,7 @@ public class ConditionChain<T> implements CollectionCondition<T> {
 		Throwables.checkNull(anchor);
 		GroupCollectionCondition group = mMap.get(anchor);
 		if (group == null) {
-			group = new GroupCollectionCondition();
-			mMap.put(anchor, group);
+			throw new IllegalStateException("anchor not exist.");
 		}
 		this.mCurrent = group;
 		return this;

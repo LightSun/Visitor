@@ -14,6 +14,7 @@ public interface ResultIndexedVisitor<T, R>{
      * @param t the element
      * @param index the index
      * @param param the extra param
+     * @param size the size of collection
      * @return the result of this visit
      */
     R visit(Object param, T t, int index, int size);
