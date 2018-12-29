@@ -173,6 +173,6 @@ public final class OperateConditions {
 				.resultIndexed(visitor)
 				.extra(param)
 				.observer(observer)
-				.operator(Operators.<T>ofFire());
+				.operator(Operators.<T>ofFireIndex());
 	}
 }
