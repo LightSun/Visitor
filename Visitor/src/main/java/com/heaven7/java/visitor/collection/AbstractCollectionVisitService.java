@@ -642,9 +642,8 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
         }
         //normalize
         MapVisitService<K, T> s1 = VisitServices.from(l1).map2mapAsValue(param, keyVisitor);
-        MapVisitService<K, V> normalizeMap = VisitServices.from(map)
-                .normalize(param, s1, visitor)
-                .trimNullValue();
+        MapVisitService<K, V> normalizeMap = VisitServices.from(map).normalize(param, s1, visitor);
+
         CollectionVisitService<V> normalService = normalizeMap.mapValue();
         //diff current
         List<T> diff_cur = new ArrayList<>();

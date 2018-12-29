@@ -173,7 +173,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 				V1 v1 = service.get().get(key);
 				return visitor.visit(key, pair.getValue(), v1, null, param);
 			}
-		});
+		}).trimNullValue();
 	}
 
 	@Override
@@ -193,7 +193,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 				V2 v2 = s2.get().get(key);
 				return visitor.visit(key, pair.getValue(), v1, v2, param);
 			}
-		});
+		}).trimNullValue();
 	}
 
 	@Override @SuppressWarnings("unchecked")
