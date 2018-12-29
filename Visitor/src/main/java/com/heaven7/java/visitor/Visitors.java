@@ -95,6 +95,17 @@ public final class Visitors {
 	/**
 	 * @param <K> the key type
 	 * @param <V> the value type
+	 * @return a MapPredicateVisitor that non-null value return true, null return false.
+	 * @since 1.3.1
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K,V> MapPredicateVisitor<K,V> nonNullValueMapPredicateVisitor() {
+		return (MapPredicateVisitor<K,V>) MAP_PREDICARE_VALUE_NON_NULL;
+	}
+
+	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @return a MapPredicateVisitor that always return false.
 	 */
 	@SuppressWarnings("unchecked")
@@ -174,6 +185,12 @@ public final class Visitors {
 		@Override
 		public Boolean visit(KeyValuePair<Object, Object> pair, Object param) {
 			return Boolean.FALSE;
+		}
+	};
+	private static final MapPredicateVisitor<Object, Object> MAP_PREDICARE_VALUE_NON_NULL = new MapPredicateVisitor<Object, Object>() {
+		@Override
+		public Boolean visit(KeyValuePair<Object, Object> pair, Object param) {
+			return pair.getValue() != null;
 		}
 	};
 	private static final PredicateVisitor<Object> PREDICARE_FALSE = new PredicateVisitor<Object>() {

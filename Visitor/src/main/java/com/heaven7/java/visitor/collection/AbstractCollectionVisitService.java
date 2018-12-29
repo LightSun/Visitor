@@ -624,6 +624,62 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
+    public <K, V> MapVisitService<K, V> diff(Object param, Collection<T> l1, ResultVisitor<T, K> keyVisitor,
+                                             NormalizeVisitor<K, T, T, Void, V> visitor,
+                                             final DiffPredicateVisitor<V, T> diffPredicateCur,
+                                             final DiffPredicateVisitor<V, T> diffPredicateOther,
+                                             DiffResultVisitor<V, T> diffVisitor) {
+        Throwables.checkNull(keyVisitor);
+        Throwables.checkNull(visitor);
+        Throwables.checkNull(diffPredicateCur);
+        Throwables.checkNull(diffPredicateOther);
+        Throwables.checkNull(diffVisitor);
+        //build map
+        final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
+        final Map<K, T> map = newMap(null);
+        for (T t : list) {
+            map.put(keyVisitor.visit(t, param), t);
+        }
+        //normalize
+        MapVisitService<K, T> s1 = VisitServices.from(l1).map2mapAsValue(param, keyVisitor);
+        MapVisitService<K, V> normalizeMap = VisitServices.from(map)
+                .normalize(param, s1, visitor)
+                .trimNullValue();
+        CollectionVisitService<V> normalService = normalizeMap.mapValue();
+        //diff current
+        List<T> diff_cur = new ArrayList<>();
+        for (final T t : list){
+            boolean empty = normalService.filter(param, new PredicateVisitor<V>() {
+                @Override
+                public Boolean visit(V v, Object param) {
+                    return !diffPredicateCur.visit(param, v, t);
+                }
+            }, 1, null).get().isEmpty();
+            //empty means not contains is the normalize list.
+            if(empty){
+                diff_cur.add(t);
+            }
+        }
+        list.clear();
+        //diff other
+        List<T> diff_other = new ArrayList<>();
+        for (final T t : l1){
+            boolean empty = normalService.filter(param, new PredicateVisitor<V>() {
+                @Override
+                public Boolean visit(V v, Object param) {
+                    return !diffPredicateOther.visit(param, v, t);
+                }
+            }, 1, null).get().isEmpty();
+            //empty means not contains is the normalize list.
+            if(empty){
+                diff_other.add(t);
+            }
+        }
+        diffVisitor.visit(param, normalService.getAsList(), diff_cur, diff_other);
+        return normalizeMap;
+    }
+
+    @Override
     public <K, V> MapVisitService<K, V> normalize(Object param, Collection<T> l1, ResultVisitor<T, K> keyVisitor,
                                                   NormalizeVisitor<K, T, T, Void, V> visitor) {
         return normalize(param, l1, keyVisitor, keyVisitor, visitor);

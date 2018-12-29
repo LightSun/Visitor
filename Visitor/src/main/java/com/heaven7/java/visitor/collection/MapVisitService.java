@@ -54,6 +54,11 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V>> {
 
+	/**
+	 * trim the null value.
+	 * @return the map service.
+	 */
+	MapVisitService<K, V> trimNullValue();
 
 	/**
 	 * normalize the services(include current and other services) to another service.

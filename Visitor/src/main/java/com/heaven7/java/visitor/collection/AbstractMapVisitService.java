@@ -154,6 +154,11 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 
 	@Override
+	public MapVisitService<K, V> trimNullValue() {
+		return filter(Visitors.<K, V>nonNullValueMapPredicateVisitor(), null);
+	}
+
+	@Override
 	public <V1, R> MapVisitService<K, R> normalize(Object param, final MapVisitService<K, V1> service,final NormalizeVisitor<K, V, V1, Void, R> visitor) {
 		Throwables.checkNull(visitor);
 		return VisitServices.from(get().getKeyValues()).map2map(param, new ResultVisitor<KeyValuePair<K, V>, K>() {

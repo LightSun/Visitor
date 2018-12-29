@@ -1,18 +1,13 @@
 package com.heaven7.java.visitor.test;
 
 import com.heaven7.java.visitor.*;
-import com.heaven7.java.visitor.collection.CollectionVisitService;
-import com.heaven7.java.visitor.collection.IterationInfo;
-import com.heaven7.java.visitor.collection.VisitServices;
+import com.heaven7.java.visitor.collection.*;
 import com.heaven7.java.visitor.test.help.Student;
 import com.heaven7.java.visitor.test.help.Student2;
 import com.heaven7.java.visitor.util.Observers;
 import junit.framework.TestCase;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static com.heaven7.java.visitor.collection.Operation.*;
 import static com.heaven7.java.visitor.test.help.TestUtil.*;
@@ -45,6 +40,46 @@ public class VisitServiceTest extends TestCase {
 
 
 	//================================================
+
+	public void testDiff(){
+		List<Integer> other = Arrays.asList(1, 2, 3, 4, 5);
+		VisitServices.from(1, 2, 3, 7, 8, 9, 10).diff(null, other, new ResultVisitor<Integer, String>() {
+			@Override
+			public String visit(Integer integer, Object param) {
+				return integer + "";
+			}
+		}, new NormalizeVisitor<String, Integer, Integer, Void, String>() {
+			@Override
+			public String visit(String key, Integer integer, Integer integer2, Void aVoid, Object param) {
+				if(integer.equals(integer2)){
+					return integer + "_" + integer2;
+				}
+				return null;
+			}
+		}, new DiffPredicateVisitor<String, Integer>() {
+			@Override
+			public Boolean visit(Object param, String s, Integer integer) {
+				String cur = s.split("_")[0];
+				return !Integer.valueOf(cur).equals(integer);
+			}
+		}, new DiffPredicateVisitor<String, Integer>() {
+			@Override
+			public Boolean visit(Object param, String s, Integer integer) {
+				String other = s.split("_")[1];
+				return !Integer.valueOf(other).equals(integer);
+			}
+		}, new DiffResultVisitor<String, Integer>() {
+			@Override
+			public void visit(Object param, List<String> normalizeList, List<Integer> currentNonNormalizeList, List<Integer> otherNonNormalizeList) {
+				assertEquals(normalizeList.size(), 3);
+				assertEquals(currentNonNormalizeList.size(), 4);
+				assertEquals(otherNonNormalizeList.size(), 2);
+				System.out.println("normalizeList: " + normalizeList);
+				System.out.println("currentNonNormalizeList: " + currentNonNormalizeList);
+				System.out.println("otherNonNormalizeList: " + otherNonNormalizeList);
+			}
+		});
+	}
 
 	public void testFilterMaxCount(){
 		List<Student> retain = new ArrayList<>();

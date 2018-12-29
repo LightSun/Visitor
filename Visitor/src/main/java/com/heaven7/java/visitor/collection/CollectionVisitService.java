@@ -106,6 +106,27 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 
 	//--------------------------------------------- 1.3.1 --------------------------------------------------
 	/**
+	 * normalize elements from current collection and other collection. and notify result by diff result visitor.
+	 * @param param the extra param
+	 * @param l1 the other list 1
+	 * @param keyVisitor the key visitor
+	 * @param visitor the normalize visitor
+	 * @param diffPredicateCur the diff predicate visitor of current collection
+	 * @param diffPredicateOther the diff predicate visitor of other collection
+	 * @param diffVisitor the diff result visitor which will be notify.
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @return the normalized map service.
+	 * @since 1.3.1
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K, V> MapVisitService<K, V> diff(Object param, Collection<T> l1,
+										   ResultVisitor<T, K> keyVisitor,
+										   NormalizeVisitor<K, T, T, Void, V> visitor,
+									       DiffPredicateVisitor<V, T> diffPredicateCur,
+									       DiffPredicateVisitor<V, T> diffPredicateOther,
+									       DiffResultVisitor<V, T> diffVisitor);
+	/**
 	 * normalize elements from current collection
 	 * @param param the extra param
 	 * @param l1 the other list 1
