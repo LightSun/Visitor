@@ -17,8 +17,8 @@ import com.heaven7.java.visitor.collection.IterationInfo;
  *
  * @param <T>
  *            the type of collection
- * @see {@linkplain SingleIterateState}
- * @see {@linkplain MultipleIterateState}
+ * @see SingleIterateState
+ * @see MultipleIterateState
  */
 public abstract class IterateState<T> {
 

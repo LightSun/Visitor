@@ -8,7 +8,8 @@ import com.heaven7.java.visitor.collection.KeyValuePair;
  * fire/emit visitor
  * @author heaven7
  *
- * @param <T> the object to fire
+ * @param <K> the key type
+ * @param <V> the value type
  * @since 1.1.1
  */
 public interface MapFireBatchVisitor<K, V> extends FireBatchVisitor<KeyValuePair<K, V>>{

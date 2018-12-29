@@ -46,10 +46,10 @@ public class ListApiTest {
 
 		ListIterator<Integer> it = list.listIterator();
 		while (it.hasNext()) {
-			Integer cur = it.next(); //这个方法只会放回原来list的元素。新增的不在此次迭代中
+			Integer cur = it.next();
 			System.err.println(cur);
 			if (cur >= 2) {
-				// it.previous or next 都会移动游标. 前移或者后移
+				// it.previous or next
 				//System.out.println("before change: cur = " + cur + " ,pre = " 
 				//+ it.previous() + " ,next = " + it.next());
 				 it.add(0);

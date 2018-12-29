@@ -418,8 +418,8 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 *            fire visitor
 	 * @return this
 	 * @since 1.1.1
-	 * @see [{@linkplain #fire(MapFireVisitor, ThrowableVisitor)}
-	 * @see [{@linkplain #fire(Object, MapFireVisitor, ThrowableVisitor)}
+	 * @see #fire(MapFireVisitor, ThrowableVisitor)
+	 * @see #fire(Object, MapFireVisitor, ThrowableVisitor)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	MapVisitService<K, V> fire(MapFireVisitor<K, V> fireVisitor);
@@ -434,7 +434,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 *            the throwable visitor, can be null.
 	 * @return this
 	 * @since 1.1.1
-	 * @see [{@linkplain #fire(Object, MapFireVisitor, ThrowableVisitor)}
+	 * @see #fire(Object, MapFireVisitor, ThrowableVisitor)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	MapVisitService<K, V> fire(MapFireVisitor<K, V> fireVisitor, @Nullable ThrowableVisitor throwVisitor);
@@ -713,7 +713,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 *            the value visitor
 	 * @return a {@linkplain MapVisitService}.
 	 * @since 1.0.2
-	 * @see {#transformToMapAsKeys(Object, MapResultVisitor)
+	 * @see #transformToMapAsKeys(Object, MapResultVisitor)
 	 */
 	@DependOn(classes ={MapOperateManager.class, IterateControl.class })
 	<V2> MapVisitService<K, V2> transformToMapAsKeys(MapResultVisitor<K, V, V2> valueVisitor);

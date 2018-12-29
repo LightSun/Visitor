@@ -29,13 +29,12 @@ public class TestPerformance{
 	public static void main(String[] args) {
 		final int count = 10000;
 		final TestPerformance tp = new TestPerformance();
-		//在for 循环内外. 调用花费的时间不同？
 		//tp.testVisitResult();      // 8, 9, 13
 		tp.testTraditionalResult();  // 0,1, 2
 		for(int i= 0  ; i < count; i++){
-			//tp.testVisitDelete();         //基本是0
-			//tp.testTraditionalDelete();   //基本是0
-			//tp.testVisitResult();         //基本是0
+			//tp.testVisitDelete();
+			//tp.testTraditionalDelete();
+			//tp.testVisitResult();
 		}
 		
 		

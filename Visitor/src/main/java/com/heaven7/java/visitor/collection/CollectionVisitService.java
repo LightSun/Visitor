@@ -607,21 +607,33 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	
 	/**
 	 * fire the all element by target {@linkplain FireVisitor}.
+	 * <P>see also</P>
+	 * <ui>
+	 *     <li>
+	 *           {@linkplain #fire(FireVisitor, ThrowableVisitor)}
+	 *     </li>
+	 *      <li>
+	 *           {@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
+	 *     </li>
+	 * </ui>
 	 * @param fireVisitor fire visitor
 	 * @return this
 	 * @since 1.1.1
-	 * @see {@linkplain #fire(FireVisitor, ThrowableVisitor)}
-	 * @see {@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fire(FireVisitor<T> fireVisitor);
 	/**
 	 * fire the all element by target {@linkplain FireVisitor} and etc.
+	 * <P>see also</P>
+	 * <ui>
+	 *     <li>
+	 *          {@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
+	 *     </li>
+	 * </ui>
 	 * @param fireVisitor fire visitor 
 	 * @param throwVisitor the throwable visitor, can be null.
 	 * @return this
 	 * @since 1.1.1
-	 * @see {@linkplain #fire(Object, FireVisitor, ThrowableVisitor)}
 	 */
 	@DependOn(classes ={OperateManager.class, IterateControl.class })
 	CollectionVisitService<T> fire(FireVisitor<T> fireVisitor,@Nullable ThrowableVisitor throwVisitor);
@@ -1290,26 +1302,25 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	
 	
 	/**
-	 * The pending operate manager used to support filter/delete/update/insert in iteration for all {@linkplain Collection}. 
+	 * The pending operate manager used to support "filter/delete/update/insert" in iteration for all Collection.
 	 * and support insert after iteration (before method return).
 	 * <ul>
-	 * <li>filter method (in iteration): <br>  {@linkplain OperateManager#filter(Object, PredicateVisitor)}} <br> {@linkplain OperateManager#filter(PredicateVisitor)}}
-	 * <li>delete method (in iteration): <br> {@linkplain OperateManager#delete(Object, PredicateVisitor)}} <br> {@linkplain OperateManager#delete(PredicateVisitor)}}
-	 * <li>update method (in iteration): <br> {@linkplain OperateManager#update(Object, PredicateVisitor) <br> {@linkplain OperateManager#update(Object, Object, PredicateVisitor)}
+	 * <li>filter method (in iteration): <br> {@linkplain OperateManager#filter(Object, PredicateVisitor)} <br> {@linkplain OperateManager#filter(PredicateVisitor)}
+	 * <li>delete method (in iteration): <br> {@linkplain OperateManager#delete(Object, PredicateVisitor)} <br> {@linkplain OperateManager#delete(PredicateVisitor)}
+	 * <li>update method (in iteration): <br> {@linkplain OperateManager#update(Object, PredicateVisitor)} <br> {@linkplain OperateManager#update(Object, Object, PredicateVisitor)}
 	 * <li> insert method (in iteration, and only support for List): <br>
-	 *   {@linkplain OperateManager#insert(List, IterateVisitor)}  <br>
-	 *   {@linkplain OperateManager#insert(List, Object, IterateVisitor)}  <br>
-	 *   {@linkplain OperateManager#insert(Object, IterateVisitor)}  <br>
-	 *   {@linkplain OperateManager#insert(Object, Object, IterateVisitor)} <br>
-	 * <li>insert finally method (after iteration ): <br>
-	 *   {@linkplain OperateManager#insertFinally(List, IterateVisitor)}  <br>
-	 *   {@linkplain OperateManager#insertFinally(List, Object, IterateVisitor)}  <br>
-	 *   {@linkplain OperateManager#insertFinally(Object, IterateVisitor)}  <br>
-	 *   {@linkplain OperateManager#insertFinally(Object, Object, IterateVisitor)} <br>  
+	 *     {@linkplain OperateManager#insert(List, IterateVisitor)}<br>
+	 *         {@linkplain OperateManager#insert(List, Object, IterateVisitor)}<br>
+	 *             {@linkplain OperateManager#insert(Object, IterateVisitor)}<br>
+	 *                 {@linkplain OperateManager#insert(Object, Object, IterateVisitor)} <br>
+	 * <li>insert finally method (after iteration ):<br>
+	 *   {@linkplain OperateManager#insertFinally(List, IterateVisitor)}<br>
+	 *   {@linkplain OperateManager#insertFinally(List, Object, IterateVisitor)}<br>
+	 *   {@linkplain OperateManager#insertFinally(Object, IterateVisitor)}<br>
+	 *   {@linkplain OperateManager#insertFinally(Object, Object, IterateVisitor)}<br>
 	 *  </ul>
 	 * @author heaven7
 	 *
-	 * @param <R> the return type for {@link #end()}
 	 * @param <T> the parametric type of most method
 	 */
 	abstract class OperateManager<T> implements Cacheable<OperateManager<T>>,

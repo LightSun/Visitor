@@ -109,7 +109,7 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 	 *            the operate. see
 	 *            {@linkplain Operation#OP_DELETE}} and etc.
 	 * @return this.
-	 * @see {@linkplain #cancelIntercept(int)}
+	 * @see #cancelIntercept(int)
 	 */
 	public IterateControl<T> interceptIfSuccess(int operate){
 		mCallback.checkOperation(operate);
@@ -127,7 +127,7 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 	 *            {@linkplain Operation#OP_DELETE}} and etc.
 	 * @return this.
 	 * @since 1.1.0
-	 * @see {@linkplain #interceptIfSuccess(int)}
+	 * @see #interceptIfSuccess(int)
 	 */
 	public IterateControl<T> cancelIntercept(int operate){
 		mCallback.checkOperation(operate);
@@ -140,7 +140,7 @@ public final class IterateControl<T> implements Endable<T>, Cacheable<IterateCon
 
 	/**
 	 * define the target operate run the first in current iteration, but it may
-	 * change. such as recall {@linkplain #first(int)}}.the more to see in demo.
+	 * change. such as recall this method.the more to see in demo.
 	 * 
 	 * @param operate
 	 *            the operate. see
