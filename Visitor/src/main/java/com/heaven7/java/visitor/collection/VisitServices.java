@@ -88,6 +88,19 @@ public final class VisitServices {
 	}
 
 	/**
+	 * create {@linkplain ListVisitService} from the target array.<br>
+	 * @param <T>
+	 *            the type
+	 * @param ts
+	 *            the target array.
+	 * @return an instance of {@linkplain CollectionVisitServiceImpl}
+	 * @since 1.3.1
+	 */
+	public static <T> ListVisitService<T> from(T... ts) {
+		return new ListVisitServiceImpl<T>(new ArrayList<T>(Arrays.asList(ts)));
+	}
+
+	/**
 	 * create key value list service from pairs.
 	 * @param list the pairs
 	 * @param <K> the key type of pair

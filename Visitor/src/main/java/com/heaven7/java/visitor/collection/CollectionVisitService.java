@@ -104,6 +104,61 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 												  ResultVisitor<T, K> main, ResultVisitor<T1, K> v1,  ResultVisitor<T2, K> v2,
 												  NormalizeVisitor<K, T, T1, T2, V> visitor);
 
+	//--------------------------------------------- 1.3.1 --------------------------------------------------
+	/**
+	 * normalize elements from current collection
+	 * @param param the extra param
+	 * @param l1 the other list 1
+	 * @param keyVisitor the key visitor
+	 * @param visitor the normalize visitor
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @return the normalized map service.
+	 * @since 1.3.1
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K, V> MapVisitService<K, V> normalize(Object param, Collection<T> l1,
+										   ResultVisitor<T, K> keyVisitor,
+										   NormalizeVisitor<K, T, T, Void, V> visitor);
+
+	/**
+	 * normalize elements
+	 * @param param the extra param
+	 * @param l1 the other list 1
+	 * @param l2 the other list 2
+	 * @param main the main visitor of current service
+	 * @param v1 the visitor 1of l1
+	 * @param v2 the visitor 1of l2
+	 * @param visitor the normalize visitor
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param <T1> the element type of l1
+	 * @param <T2> the element type of l2
+	 * @return the normalized map service.
+	 * @since 1.3.1
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K, V, T1, T2> MapVisitService<K,V> normalize(Object param, Collection<T1> l1, Collection<T2> l2,
+												  ResultVisitor<T, K> main, ResultVisitor<T1, K> v1,  ResultVisitor<T2, K> v2,
+												  NormalizeVisitor<K, T, T1, T2, V> visitor);
+	/**
+	 * normalize elements
+	 * @param param the extra param
+	 * @param l1 the other list 1
+	 * @param main the main visitor of current service
+	 * @param v1 the visitor 1of l1
+	 * @param visitor the normalize visitor
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param <T1> the element type of l1
+	 * @return the normalized map service.
+	 * @since 1.3.1
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	<K, V, T1> MapVisitService<K,V> normalize(Object param, Collection<T1> l1,
+											  ResultVisitor<T, K> main, ResultVisitor<T1, K> v1,
+											  NormalizeVisitor<K, T, T1, Void, V> visitor);
+
     //============================================================= start  1.2.0 ===================================================
 
 
