@@ -71,7 +71,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param l1 the other list 1
 	 * @param main the main visitor of current service
 	 * @param v1 the visitor 1of l1
-	 * @param visitor the normalize visitor
+	 * @param visitor the normalize visitor, if return null. means will be exclude in result service.
 	 * @param <K> the key type
 	 * @param <V> the value type
 	 * @param <T1> the element type of l1
@@ -91,7 +91,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param main the main visitor of current service
 	 * @param v1 the visitor 1of l1
 	 * @param v2 the visitor 1of l2
-	 * @param visitor the normalize visitor
+	 * @param visitor the normalize visitor, if return null. means will be exclude in result service.
 	 * @param <K> the key type
 	 * @param <V> the value type
 	 * @param <T1> the element type of l1
@@ -110,7 +110,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param param the extra param
 	 * @param l1 the other list 1
 	 * @param keyVisitor the key visitor
-	 * @param visitor the normalize visitor
+	 * @param visitor the normalize visitor, if return null. means will be exclude in result service.
 	 * @param diffPredicateCur the diff predicate visitor of current collection
 	 * @param diffPredicateOther the diff predicate visitor of other collection
 	 * @param diffVisitor the diff result visitor which will be notify.
@@ -131,7 +131,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param param the extra param
 	 * @param l1 the other list 1
 	 * @param keyVisitor the key visitor
-	 * @param visitor the normalize visitor
+	 * @param visitor the normalize visitor, if return null. means will be exclude in result service.
 	 * @param <K> the key type
 	 * @param <V> the value type
 	 * @return the normalized map service.
@@ -150,7 +150,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param main the main visitor of current service
 	 * @param v1 the visitor 1of l1
 	 * @param v2 the visitor 1of l2
-	 * @param visitor the normalize visitor
+	 * @param visitor the normalize visitor, if return null. means will be exclude in result service.
 	 * @param <K> the key type
 	 * @param <V> the value type
 	 * @param <T1> the element type of l1
@@ -168,7 +168,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 * @param l1 the other list 1
 	 * @param main the main visitor of current service
 	 * @param v1 the visitor 1of l1
-	 * @param visitor the normalize visitor
+	 * @param visitor the normalize visitor. if return null. means will be exclude in result service.
 	 * @param <K> the key type
 	 * @param <V> the value type
 	 * @param <T1> the element type of l1
