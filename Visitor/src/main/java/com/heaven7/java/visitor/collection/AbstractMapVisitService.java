@@ -182,7 +182,7 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 				}
 			}
 		}
-		return (MapVisitService<K2, V2>) VisitServices.from(copy());
+		return (MapVisitService<K2, V2>) VisitServices.from(get());
 	}
 
 	@Override

@@ -138,6 +138,13 @@ public class SynchronizedMap<K, V> implements Map<K, V> {
 	}
 
 	@Override
+	public K getOneKey() {
+		synchronized (mLock) {
+			return mBase.getOneKey();
+		}
+	}
+
+	@Override
 	public java.util.Map<K, V> toNormalMap() {
 		synchronized (mLock) {
 			return mBase.toNormalMap();

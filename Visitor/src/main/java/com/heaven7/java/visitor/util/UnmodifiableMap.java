@@ -88,6 +88,11 @@ public class UnmodifiableMap<K,V> extends AbstractMap<K, V> implements Map<K, V>
 	}
 
 	@Override
+	public K getOneKey() {
+		return mMap.getOneKey();
+	}
+
+	@Override
 	public java.util.Map<K, V> toNormalMap() {
 		return InternalUtil.unmodifiable(mMap.toNormalMap());
 	}
