@@ -125,4 +125,12 @@ public class SparseArray2Map<E> extends AbstractMap<Integer, E> {
 		}
 	}
 
+	@Override
+	public Integer getOneKey() {
+		final int size = mMap.size();
+		if(size == 0){
+			return null;
+		}
+		return mMap.keyAt(0);
+	}
 }

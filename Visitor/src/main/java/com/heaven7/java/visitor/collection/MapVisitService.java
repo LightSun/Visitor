@@ -54,6 +54,44 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V>> {
 
+
+	/**
+	 * make the map service as another map service.
+	 * @param valueType the target value class
+	 * @param <V2> the target value type
+	 * @return the another map service
+	 * @throws ClassCastException if can't cast to .
+	 * @since 1.3.2
+	 */
+	<V2> MapVisitService<K, V2> asAnotherValue(@Nullable Class<V2> valueType) throws ClassCastException;
+	/**
+	 * make the map service as another map service.
+	 * @param keyClass the target key class
+	 * @param <K2> the target key type
+	 * @return the another map service
+	 * @throws ClassCastException if can't cast to .
+	 * @since 1.3.2
+	 */
+	<K2> MapVisitService<K2, V> asAnotherKey(@Nullable Class<K2> keyClass) throws ClassCastException;
+	/**
+	 * make the map service as another map service.
+	 * @param keyClass the target key class
+	 * @param valueType the target value class
+	 * @param <K2> the target key type
+	 * @param <V2> the target value type
+	 * @return the another map service
+	 * @throws ClassCastException if can't cast to .
+	 * @since 1.3.2
+	 */
+	<K2, V2> MapVisitService<K2, V2> asAnother(@Nullable Class<K2> keyClass, @Nullable Class<V2> valueType) throws ClassCastException;
+	/**
+	 * make the map service as another map service.
+	 * @param <K2> the target key type
+	 * @param <V2> the target value type
+	 * @return the another map service
+	 * @since 1.3.2
+	 */
+	<K2, V2> MapVisitService<K2, V2> asAnother();
 	/**
 	 * trim the null value.
 	 * @return the map service.

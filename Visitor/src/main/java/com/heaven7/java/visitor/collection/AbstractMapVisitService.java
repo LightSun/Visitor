@@ -3,6 +3,7 @@ package com.heaven7.java.visitor.collection;
 import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.collection.IterateControl.Callback;
+import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.internal.OperationPools;
 import com.heaven7.java.visitor.util.*;
 import com.heaven7.java.visitor.util.Map.MapTravelCallback;
@@ -152,6 +153,37 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 	// ==================================================================//
 
+
+	@Override
+	public <V2> MapVisitService<K, V2> asAnotherValue(Class<V2> valueType) throws ClassCastException {
+		return asAnother(null, valueType);
+	}
+	@Override
+	public <K2> MapVisitService<K2, V> asAnotherKey(Class<K2> keyClass) throws ClassCastException {
+		return asAnother(keyClass, null);
+	}
+
+	@Override
+	public <K2, V2> MapVisitService<K2, V2> asAnother() {
+		return asAnother(null, null);
+	}
+
+	@Override @SuppressWarnings("unchecked")
+	public <K2, V2> MapVisitService<K2, V2> asAnother(Class<K2> keyClass, Class<V2> valueClass) throws ClassCastException {
+		if(keyClass != null || valueClass != null){
+			K key = mMap.getOneKey();
+			if(key != null){
+				if(keyClass != null){
+					InternalUtil.checkCast(keyClass, key.getClass());
+				}
+				V v = mMap.get(key);
+				if(v != null && valueClass != null){
+					InternalUtil.checkCast(valueClass, v.getClass());
+				}
+			}
+		}
+		return (MapVisitService<K2, V2>) VisitServices.from(copy());
+	}
 
 	@Override
 	public MapVisitService<K, V> trimNullValue() {

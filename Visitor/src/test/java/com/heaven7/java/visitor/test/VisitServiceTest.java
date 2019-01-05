@@ -41,6 +41,25 @@ public class VisitServiceTest extends TestCase {
 
 	//================================================
 
+	public void testAsAnother(){
+		List<Integer> other = Arrays.asList(1, 2, 3, 4, 5);
+		List<Number> asList = VisitServices.from(other).asAnother(Number.class).getAsList();
+		System.out.println(asList);
+
+		try {
+			VisitServices.from(other).asAnother(Student.class).getAsList();
+		}catch (ClassCastException e){
+            //must reach here
+		}
+		try {
+			CollectionVisitService<Student> service = VisitServices.from(other).asAnother();
+			List<Student> asList1 = service.getAsList();
+			System.out.println(asList1.get(0).id );
+		}catch (ClassCastException e){
+			//must reach here
+		}
+	}
+
 	public void testDiff(){
 		List<Integer> other = Arrays.asList(1, 2, 3, 4, 5);
 		VisitServices.from(1, 2, 3, 7, 8, 9, 10).diff(null, other, new ResultVisitor<Integer, String>() {

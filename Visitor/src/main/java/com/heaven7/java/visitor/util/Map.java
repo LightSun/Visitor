@@ -55,6 +55,8 @@ public interface Map<K, V> {
 	/* @since 1.2.0 */
 	void copyTo(Map<K, V> out);
 
+	K getOneKey();
+
 	// =================================================//
 	/**
 	 * to normal map

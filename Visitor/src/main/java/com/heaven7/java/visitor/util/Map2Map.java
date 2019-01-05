@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * an instance of {@linkplain com.heaven7.java.visitor.util.Map}. convert
@@ -120,4 +121,12 @@ public class Map2Map<K, V> extends AbstractMap<K, V> {
 		}
 	}
 
+	@Override
+	public K getOneKey() {
+		Set<K> set = mMap.keySet();
+		if(set.isEmpty()){
+			return null;
+		}
+		return new ArrayList<>(set).get(0);
+	}
 }

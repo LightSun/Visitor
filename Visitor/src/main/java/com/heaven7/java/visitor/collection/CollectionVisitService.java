@@ -66,6 +66,25 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	T max(Comparator<? super  T> com);
 
 	/**
+	 * make the service as another element type visit service.
+	 * @param <T2> the target class type
+	 * @return the result service
+	 * @since 1.3.2
+	 */
+	@Independence
+	<T2> CollectionVisitService<T2> asAnother();
+	/**
+	 * make the service as another element type visit service.
+	 * @param clazz the target class
+	 * @param <T2> the target class type
+	 * @return the result service
+	 * @throws ClassCastException if current element type can't cast to the target type
+	 * @since 1.3.2
+	 */
+	@Independence
+	<T2> CollectionVisitService<T2> asAnother(@Nullable Class<T2> clazz) throws ClassCastException;
+
+	/**
 	 * normalize elements
 	 * @param param the extra param
 	 * @param l1 the other list 1

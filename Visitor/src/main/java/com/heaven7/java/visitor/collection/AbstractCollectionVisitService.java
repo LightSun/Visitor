@@ -7,6 +7,8 @@ import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.Predicates;
 import com.heaven7.java.visitor.util.Throwables;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 import static com.heaven7.java.visitor.internal.InternalUtil.*;
@@ -25,6 +27,24 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
 
     protected AbstractCollectionVisitService() {
         super();
+    }
+
+    @Override
+    public <T2> CollectionVisitService<T2> asAnother() {
+        return asAnother(null);
+    }
+
+    @Override @SuppressWarnings("unchecked")
+    public <T2> CollectionVisitService<T2> asAnother(@Nullable Class<T2> clazz) {
+        List<T> list = getAsList();
+        if(clazz != null && list.size() > 0){
+            Class<?> cur = list.get(0).getClass();
+            if(!clazz.isAssignableFrom(cur)){
+                throw new ClassCastException("type '"+ cur.getName()
+                        +"' can't cast to '"+ clazz.getName() +"'");
+            }
+        }
+        return (CollectionVisitService<T2>) VisitServices.from(list);
     }
 
     @Override

@@ -30,6 +30,13 @@ import com.heaven7.java.visitor.util.VisitException;
  */
 public final class InternalUtil {
 
+	public static void checkCast(Class<?> parent, Class<?> child){
+		if(!parent.isAssignableFrom(child)){
+			throw new ClassCastException("type '"+ child.getName() + "' can't cast to '"
+					+ parent.getName() + "'");
+		}
+	}
+
 	public static void processThrowable(Throwable e, ThrowableVisitor tv) throws VisitException {
 		if (tv != null) {
 			tv.visit(e);
