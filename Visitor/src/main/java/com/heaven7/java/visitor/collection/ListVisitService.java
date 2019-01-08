@@ -18,6 +18,17 @@ import java.util.List;
 public interface ListVisitService<T> extends CollectionVisitService<T>{
 
 	/**
+	 * map to another type with index.
+	 * @param param the param
+	 * @param result the result index visitor.
+	 * @param <T2> the target type to map
+	 * @return the mapped list visit service
+	 * @since 1.3.3
+	 */
+	@Independence
+	<T2> ListVisitService<T2> mapIndexed(Object param, ResultIndexedVisitor<T, T2> result);
+
+	/**
 	 * query item with index, then pack the item and index as a pair.
 	 * @param param the param
 	 * @param visitor the predicate visitor.

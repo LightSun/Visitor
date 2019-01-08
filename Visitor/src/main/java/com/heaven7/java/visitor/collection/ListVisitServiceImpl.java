@@ -33,7 +33,15 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	}
 
 	// ==============================================================
-
+	@Override
+	public <T2> ListVisitService<T2> mapIndexed(Object param, ResultIndexedVisitor<T, T2> result) {
+		List<T2> results = new ArrayList<>();
+		List<T> list = getAsList();
+		for(int i = 0, size = list.size() ; i < size ; i++ ){
+			results.add(result.visit(param, list.get(i), i, size));
+		}
+		return VisitServices.from(results);
+	}
 
 	@Override
 	public KeyValuePair<Integer, T> queryIndex(Object param, PredicateVisitor<T> visitor) {
