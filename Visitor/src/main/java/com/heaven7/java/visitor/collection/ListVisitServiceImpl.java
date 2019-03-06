@@ -148,9 +148,9 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 		for(int i = 0 ; i < memberCount ; i ++){
 			List<T> ele;
 			if(i == memberCount - 1){
-				ele = src.subList(start, left);
+				ele = src.subList(start, start + left);
 			}else{
-				ele = src.subList(start, step);
+				ele = src.subList(start, start + step);
 			}
 			list.add(ele);
 			start += step;

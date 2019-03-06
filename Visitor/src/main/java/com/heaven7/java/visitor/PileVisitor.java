@@ -47,6 +47,48 @@ public interface PileVisitor<T> extends Visitor2<Object, T, T, T> {
             return integer / integer2;
         }
     };
+
+    /**
+     * the pile visitor of 'int-add '
+     * @since 1.3.4
+     */
+    PileVisitor<Long> LONG_ADD = new PileVisitor<Long>() {
+        @Override
+        public Long visit(Object o, Long v1, Long v2) {
+            return v1 + v2;
+        }
+    };
+    /**
+     * the pile visitor of 'int-sub'
+     * @since 1.3.4
+     */
+    PileVisitor<Long> LONG_SUB = new PileVisitor<Long>() {
+        @Override
+        public Long visit(Object o, Long v1, Long v2) {
+            return v1 - v2;
+        }
+    };
+    /**
+     * the pile visitor of 'int-multi'
+     * @since 1.3.4
+     */
+    PileVisitor<Long> LONG_MULTI = new PileVisitor<Long>() {
+        @Override
+        public Long visit(Object o, Long v1, Long v2) {
+            return v1 * v2;
+        }
+    };
+    /**
+     * the pile visitor of 'int-div'
+     * @since 1.3.4
+     */
+    PileVisitor<Long> LONG_DIV = new PileVisitor<Long>() {
+        @Override
+        public Long visit(Object o, Long v1, Long v2) {
+            return v1 / v2;
+        }
+    };
+
     /**
      * the pile visitor of 'float-add'
      * @since 1.2.5
