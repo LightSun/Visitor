@@ -70,10 +70,10 @@ public class VisitServiceTest extends TestCase {
 		}, new NormalizeVisitor<String, Integer, Integer, Void, String>() {
 			@Override
 			public String visit(String key, Integer integer, Integer integer2, Void aVoid, Object param) {
-				if(integer.equals(integer2)){
-					return integer + "_" + integer2;
+				if(integer == null || integer2 == null){
+					return null;
 				}
-				return null;
+				return integer + "_" + integer2;
 			}
 		}, new DiffPredicateVisitor<String, Integer>() {
 			@Override
