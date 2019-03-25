@@ -38,7 +38,10 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 		List<T2> results = new ArrayList<>();
 		List<T> list = getAsList();
 		for(int i = 0, size = list.size() ; i < size ; i++ ){
-			results.add(result.visit(param, list.get(i), i, size));
+			T2 temp = result.visit(param, list.get(i), i, size);
+			if(temp != null){
+				results.add(temp);
+			}
 		}
 		return VisitServices.from(results);
 	}

@@ -54,7 +54,6 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V>> {
 
-
 	/**
 	 * make the map service as another map service.
 	 * @param valueType the target value class
