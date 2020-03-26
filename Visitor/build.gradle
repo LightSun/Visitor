@@ -11,6 +11,9 @@
 // https://github.com/LightSun/Visitor.git
 apply plugin: 'java'
 apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'maven'
+
+group = 'com.github.LightSun'
 
 buildscript {
 	repositories {
