@@ -91,6 +91,14 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	CollectionVisitService<Byte> mapByte();
 
 	/**
+	 * map the all items from collection to Long.
+	 * @return the Long collection service
+	 * @since 1.3.6
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<Long> mapLong();
+
+	/**
 	 * merge element service to list collection service
 	 * @return the list collection service
 	 * @since 1.3.6

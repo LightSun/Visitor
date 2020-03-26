@@ -80,6 +80,19 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 
 	@Override
+	public CollectionVisitService<Long> mapLong() {
+		return map(new ResultVisitor<T, Long>() {
+			@Override
+			public Long visit(T t, Object param) {
+				if(t instanceof ILongItem){
+					return ((ILongItem) t).getLong();
+				}
+				return null;
+			}
+		});
+	}
+
+	@Override
 	public CollectionVisitService<Byte> mapByte() {
 		return map(new ResultVisitor<T, Byte>() {
 			@Override

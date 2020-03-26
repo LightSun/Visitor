@@ -59,8 +59,12 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	public ListVisitService<String> mapString() {
 		return (ListVisitService<String>) super.mapString();
 	}
+    @Override
+    public ListVisitService<Long> mapLong() {
+        return (ListVisitService<Long>) super.mapLong();
+    }
 
-	@Override
+    @Override
 	public ListVisitService<T> addIfNotExist(T newT, com.heaven7.java.visitor.util.Observer<T, Void> observer) {
 		return (ListVisitService<T>) super.addIfNotExist(newT, observer);
 	}
