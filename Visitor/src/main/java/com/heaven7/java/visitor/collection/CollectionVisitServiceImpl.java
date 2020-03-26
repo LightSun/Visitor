@@ -8,6 +8,7 @@ import com.heaven7.java.visitor.collection.IterateControl.Callback;
 import com.heaven7.java.visitor.internal.InternalUtil;
 import com.heaven7.java.visitor.internal.OperationPools;
 import com.heaven7.java.visitor.internal.state.IterateState;
+import com.heaven7.java.visitor.item.*;
 import com.heaven7.java.visitor.util.Collections2;
 import com.heaven7.java.visitor.util.Observer;
 import com.heaven7.java.visitor.util.SparseArray;
@@ -66,8 +67,6 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 	/** the flags of clean up, default is {@linkplain VisitService#FLAG_ALL} */
 	private int mCleanUpFlags = FLAG_ALL;
 
-	private ObservableCollectionService<T> mObservableService;
-
 	/* protected */ CollectionVisitServiceImpl(Collection<T> collection) {
 		super();
 		checkNull(collection);
@@ -79,13 +78,99 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 
 	// ===============================================================================
 
-/*	@Override
-	public ObservableCollectionService<T> observableService() {
-		if(mObservableService == null){
-			mObservableService = new ObservableCollectionService<T>(mCollection);
+
+	@Override
+	public CollectionVisitService<Byte> mapByte() {
+		return map(new ResultVisitor<T, Byte>() {
+			@Override
+			public Byte visit(T t, Object param) {
+				if(t instanceof IByteItem){
+					return ((IByteItem) t).getByte();
+				}
+				return null;
+			}
+		});
+	}
+
+	@Override
+	public CollectionVisitService<Integer> mapInt() {
+		return map(new ResultVisitor<T, Integer>() {
+			@Override
+			public Integer visit(T t, Object param) {
+				if(t instanceof IIntItem){
+					return ((IIntItem) t).getInt();
+				}
+				return null;
+			}
+		});
+	}
+
+	@Override
+	public CollectionVisitService<Float> mapFloat() {
+		return map(new ResultVisitor<T, Float>() {
+			@Override
+			public Float visit(T t, Object param) {
+				if(t instanceof IFloatItem){
+					return ((IFloatItem) t).getFloat();
+				}
+				return null;
+			}
+		});
+	}
+
+	@Override
+	public CollectionVisitService<Double> mapDouble() {
+		return map(new ResultVisitor<T, Double>() {
+			@Override
+			public Double visit(T t, Object param) {
+				if(t instanceof IDoubleItem){
+					return ((IDoubleItem) t).getDouble();
+				}
+				return null;
+			}
+		});
+	}
+	@Override
+	public CollectionVisitService<String> mapString() {
+		return map(new ResultVisitor<T, String>() {
+			@Override
+			public String visit(T t, Object param) {
+				if(t instanceof IStringItem){
+					return ((IStringItem) t).getString();
+				}
+				return null;
+			}
+		});
+	}
+	@Override
+	public CollectionVisitService<List<T>> merge() {
+		ArrayList<List<T>> result = new ArrayList<>();
+		result.add(new ArrayList<>(mCollection));
+		return VisitServices.from(result);
+	}
+	@SuppressWarnings("unchecked")
+	public<R> CollectionVisitService<R> separate(){
+		if(mCollection.isEmpty()){
+			return VisitServices.from(new ArrayList<R>());
 		}
-		return mObservableService;
-	}*/
+		ArrayList<T> ts = new ArrayList<>(mCollection);
+		if(ts.get(0) instanceof Collection){
+			List<R> list = new ArrayList<>();
+			int size = ts.size();
+			try{
+				for (int i = 0; i < size; i++) {
+					Collection<R> t = (Collection<R>) ts.get(0);
+					list.addAll(t);
+				}
+			}catch (ClassCastException e){
+				throw new IllegalStateException("for separate. element must impl Collection, And also type mus be target type.");
+			}
+			return VisitServices.from(list);
+		}else {
+			throw new IllegalStateException("for separate. element must impl Collection.");
+		}
+	}
+
 	@Override
 	public int size() {
 		return mCollection.size();

@@ -32,6 +32,177 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 		super(collection);
 	}
 
+	@Override
+	public ListVisitService<List<T>> merge() {
+		return (ListVisitService<List<T>>) super.merge();
+	}
+	public<R> ListVisitService<R> separate(){
+		return (ListVisitService<R>) super.separate();
+	}
+	@Override
+	public ListVisitService<Double> mapDouble() {
+		return (ListVisitService<Double>) super.mapDouble();
+	}
+	@Override
+	public ListVisitService<Byte> mapByte() {
+		return (ListVisitService<Byte>) super.mapByte();
+	}
+	@Override
+	public ListVisitService<Integer> mapInt() {
+		return (ListVisitService<Integer>) super.mapInt();
+	}
+	@Override
+	public ListVisitService<Float> mapFloat() {
+		return (ListVisitService<Float>) super.mapFloat();
+	}
+	@Override
+	public ListVisitService<String> mapString() {
+		return (ListVisitService<String>) super.mapString();
+	}
+
+	@Override
+	public ListVisitService<T> addIfNotExist(T newT, com.heaven7.java.visitor.util.Observer<T, Void> observer) {
+		return (ListVisitService<T>) super.addIfNotExist(newT, observer);
+	}
+	@Override
+	public ListVisitService<T> addIfNotExist(T newT) {
+		return (ListVisitService<T>) super.addIfNotExist(newT);
+	}
+	@Override
+	public ListVisitService<T> removeIfExist(T newT, com.heaven7.java.visitor.util.Observer<T, Void> observer) {
+		return (ListVisitService<T>) super.removeIfExist(newT, observer);
+	}
+	@Override
+	public ListVisitService<T> removeIfExist(T newT) {
+		return (ListVisitService<T>) super.removeIfExist(newT);
+	}
+	@Override
+	public ListVisitService<T> reset(int flags) {
+		return (ListVisitService<T>) super.reset(flags);
+	}
+	@Override
+	public ListVisitService<T> resetAll() {
+		return (ListVisitService<T>) super.resetAll();
+	}
+
+	@Override
+	public ListVisitService<T> save(Collection<T> out, boolean clearBeforeSave) {
+		return (ListVisitService<T>) super.save(out, clearBeforeSave);
+	}
+	@Override
+	public ListVisitService<T> save(SaveVisitor<T> visitor) {
+		return (ListVisitService<T>) super.save(visitor);
+	}
+	@Override
+	public ListVisitService<T> save(Collection<T> out) {
+		return (ListVisitService<T>) super.save(out);
+	}
+	@Override
+	public ListVisitService<T> intersect(Collection<? super T> coll) {
+		return (ListVisitService<T>) super.intersect(coll);
+	}
+
+	@Override
+	public ListVisitService<T> zip(Object param, PredicateVisitor<T> visitor, com.heaven7.java.visitor.util.Observer<T, Void> observer) {
+		return (ListVisitService<T>) super.zip(param, visitor, observer);
+	}
+	@Override
+	public <R> ListVisitService<T> zipResult(Object param, ResultVisitor<T, R> visitor, com.heaven7.java.visitor.util.Observer<T, List<R>> observer) {
+		return (ListVisitService<T>) super.zipResult(param, visitor, observer);
+	}
+
+	@Override
+	public <T2> ListVisitService<T2> asAnother(Class<T2> clazz) {
+		return (ListVisitService<T2>) super.asAnother(clazz);
+	}
+	@Override
+	public <T2> ListVisitService<T2> asAnother() {
+		return (ListVisitService<T2>) super.asAnother();
+	}
+
+	@Override
+	public ListVisitService<T> removeRepeat(Object param, Comparator<? super T> com, WeightVisitor<T> weightVisitor) {
+		return (ListVisitService<T>) super.removeRepeat(param, com, weightVisitor);
+	}
+
+	@Override
+	public ListVisitService<T> removeRepeat(Object param, Comparator<? super T> com) {
+		return (ListVisitService<T>) super.removeRepeat(param, com);
+	}
+	@Override
+	public ListVisitService<T> removeRepeat(WeightVisitor<T> weightVisitor) {
+		return (ListVisitService<T>) super.removeRepeat(weightVisitor);
+	}
+	@Override
+	public ListVisitService<T> removeRepeat() {
+		return (ListVisitService<T>) super.removeRepeat();
+	}
+
+	@Override
+	public ListVisitService<T> filter(Object param, Comparator<? super T> com, PredicateVisitor<T> predicate, int maxCount, List<T> dropOut) {
+		return (ListVisitService<T>) super.filter(param, com, predicate, maxCount, dropOut);
+	}
+	@Override
+	public ListVisitService<T> filter(Object param, PredicateVisitor<T> predicate, int maxCount, List<T> dropOut) {
+		return (ListVisitService<T>) super.filter(param, predicate, maxCount, dropOut);
+	}
+	@Override
+	public ListVisitService<T> filter(Object param, PredicateVisitor<T> predicate, List<T> dropOut) {
+		return (ListVisitService<T>) super.filter(param, predicate, dropOut);
+	}
+	@Override
+	public ListVisitService<T> filter(PredicateVisitor<T> predicate) {
+		return (ListVisitService<T>) super.filter(predicate);
+	}
+
+	@Override
+	public ListVisitService<T> fireBatch(FireBatchVisitor<T> fireVisitor){
+		return (ListVisitService<T>) super.fireBatch(fireVisitor);
+	}
+
+	@Override
+	public ListVisitService<T> fireBatch(Object param, FireBatchVisitor<T> visitor, ThrowableVisitor tv) {
+		return (ListVisitService<T>) super.fireBatch(param, visitor, tv);
+	}
+	@Override
+	public ListVisitService<T> fireBatch(FireBatchVisitor<T> visitor, ThrowableVisitor tv) {
+		return (ListVisitService<T>) super.fireBatch(visitor, tv);
+	}
+	@Override
+	public ListVisitService<T> fire(Object param, FireVisitor<T> visitor, ThrowableVisitor tv) {
+		return (ListVisitService<T>) super.fire(param, visitor, tv);
+	}
+	@Override
+	public ListVisitService<T> fire(FireVisitor<T> visitor, ThrowableVisitor tv) {
+		return (ListVisitService<T>) super.fire(visitor, tv);
+	}
+	@Override
+	public ListVisitService<T> fire(FireVisitor<T> fireVisitor) {
+		return (ListVisitService<T>) super.fire(fireVisitor);
+	}
+
+	@Override
+	public ListVisitService<T> queryList(Object param, PredicateVisitor<? super T> predicate) {
+		return (ListVisitService<T>) super.queryList(param, predicate);
+	}
+
+	@Override
+	public ListVisitService<T> queryList(PredicateVisitor<? super T> predicate) {
+		return (ListVisitService<T>) super.queryList(predicate);
+	}
+	@Override
+	public <R> ListVisitService<R> map(Object param, Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor) {
+		return (ListVisitService<R>) super.map(param, sort, resultVisitor);
+	}
+	@Override
+	public <R> ListVisitService<R> map(Object param, ResultVisitor<? super T, R> visitor) {
+		return (ListVisitService<R>) super.map(param, visitor);
+	}
+	@Override
+	public <R> ListVisitService<R> map(ResultVisitor<? super T, R> visitor) {
+		return (ListVisitService<R>) super.map(visitor);
+	}
+
 	// ==============================================================
 	@Override
 	public <T2> ListVisitService<T2> mapIndexed(Object param, ResultIndexedVisitor<T, T2> result) {

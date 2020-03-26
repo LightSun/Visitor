@@ -75,10 +75,7 @@ public final class InternalUtil {
 	}
 
 	/**
-	 * get the collection visit service. if the Comparator is null return
-	 * 'VisitServices.from((Collection) list)' or else return
-	 * 'VisitServices.from(list)';
-	 * 
+	 * get the collection visit service.
 	 * @param <T>
 	 *            the element type.
 	 * @param c
@@ -90,10 +87,8 @@ public final class InternalUtil {
 	public static <T> CollectionVisitService<T> getVisitService(List<T> list, Comparator<? super T> c) {
 		if (c != null) {
 			Collections.sort(list, c);
-			return VisitServices.from(list);
-		} else {
-			return VisitServices.from((Collection<T>) list);
 		}
+		return VisitServices.from(list);
 	}
 
 	/**

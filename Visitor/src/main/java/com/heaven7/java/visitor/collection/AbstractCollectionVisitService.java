@@ -165,18 +165,18 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
-    public final CollectionVisitService<T> fireBatch(FireBatchVisitor<T> visitor) {
+    public CollectionVisitService<T> fireBatch(FireBatchVisitor<T> visitor) {
         return fireBatch(visitor, null);
     }
 
     @Override
-    public final CollectionVisitService<T> fireBatch(
+    public CollectionVisitService<T> fireBatch(
             FireBatchVisitor<T> visitor, ThrowableVisitor tv) {
         return fireBatch(null, visitor, tv);
     }
 
     @Override
-    public final CollectionVisitService<T> fireBatch(
+    public CollectionVisitService<T> fireBatch(
             Object param, FireBatchVisitor<T> visitor, ThrowableVisitor tv) {
         Throwables.checkNull(visitor);
         final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
@@ -191,17 +191,17 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
-    public final CollectionVisitService<T> fire(FireVisitor<T> fireVisitor) {
+    public CollectionVisitService<T> fire(FireVisitor<T> fireVisitor) {
         return fire(fireVisitor, null);
     }
 
     @Override
-    public final CollectionVisitService<T> fire(FireVisitor<T> visitor, ThrowableVisitor tv) {
+    public CollectionVisitService<T> fire(FireVisitor<T> visitor, ThrowableVisitor tv) {
         return fire(null, visitor, tv);
     }
 
     @Override
-    public final CollectionVisitService<T> fire(
+    public CollectionVisitService<T> fire(
             Object param, FireVisitor<T> visitor, ThrowableVisitor tv) {
         Throwables.checkNull(visitor);
         final List<T> list = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
@@ -218,17 +218,17 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
-    public final CollectionVisitService<T> resetAll() {
+    public CollectionVisitService<T> resetAll() {
         return reset(FLAG_ALL);
     }
 
     @Override
-    public final CollectionVisitService<T> save(Collection<T> out) {
+    public  CollectionVisitService<T> save(Collection<T> out) {
         return save(out, false);
     }
 
     @Override
-    public final CollectionVisitService<T> save(SaveVisitor<T> visitor) {
+    public CollectionVisitService<T> save(SaveVisitor<T> visitor) {
         Throwables.checkNull(visitor);
         final List<T> results = visitForQueryList(Visitors.truePredicateVisitor(), mCacheList);
         try {
@@ -240,7 +240,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
-    public final CollectionVisitService<T> save(Collection<T> out, boolean clearBeforeSave) {
+    public CollectionVisitService<T> save(Collection<T> out, boolean clearBeforeSave) {
         Throwables.checkNull(out);
         if (clearBeforeSave) {
             out.clear();
@@ -549,29 +549,29 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
-    public final CollectionVisitService<T> queryList(PredicateVisitor<? super T> predicate) {
+    public  CollectionVisitService<T> queryList(PredicateVisitor<? super T> predicate) {
         return queryList(null, predicate);
     }
 
     @Override
-    public final CollectionVisitService<T> queryList(Object param, PredicateVisitor<? super T> predicate) {
+    public CollectionVisitService<T> queryList(Object param, PredicateVisitor<? super T> predicate) {
         Throwables.checkNull(predicate);
         return VisitServices.from(visitForQueryList(param, predicate, null));
     }
 
     @Override
-    public final <R> CollectionVisitService<R> map(
+    public <R> CollectionVisitService<R> map(
             Object param, Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor) {
         return transformToCollection(param, sort, resultVisitor);
     }
 
     @Override
-    public final <R> CollectionVisitService<R> map(ResultVisitor<? super T, R> visitor) {
+    public <R> CollectionVisitService<R> map(ResultVisitor<? super T, R> visitor) {
         return transformToCollection(visitor);
     }
 
     @Override
-    public final <R> CollectionVisitService<R> map(Object param, ResultVisitor<? super T, R> visitor) {
+    public  <R> CollectionVisitService<R> map(Object param, ResultVisitor<? super T, R> visitor) {
         return transformToCollection(param, visitor);
     }
 
@@ -633,7 +633,7 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
-    public final CollectionVisitService<T> intersect(Collection<? super T> coll) {
+    public CollectionVisitService<T> intersect(Collection<? super T> coll) {
         List<T> list = new ArrayList<T>();
         for (T t : get()) {
             if (coll.contains(t)) {

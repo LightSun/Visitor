@@ -47,6 +47,67 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	int VISIT_RULE_UNTIL_FAILED = 13;
 
+
+	//========================= start 1.3.6 =====================================
+	/**
+	 * map the all items from collection to Integer.
+	 * <p>Be careful that the item should impl {@linkplain com.heaven7.java.visitor.item.IIntItem}</p>
+	 * @return the Integer collection service
+	 * @since 1.3.6
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<Integer> mapInt();
+	/**
+	 * map the all items from collection to Float.
+	 * <p>Be careful that the item should impl {@linkplain com.heaven7.java.visitor.item.IFloatItem}</p>
+	 * @return the Float collection service
+	 * @since 1.3.6
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<Float> mapFloat();
+	/**
+	 * map the all items from collection to Double.
+	 * <p>Be careful that the item should impl {@linkplain com.heaven7.java.visitor.item.IDoubleItem}</p>
+	 * @return the Double collection service
+	 * @since 1.3.6
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<Double> mapDouble();
+
+	/**
+	 * map the all items from collection to string.
+	 * <p>Be careful that the item should impl {@linkplain com.heaven7.java.visitor.item.IStringItem}</p>
+	 * @return the string collection service
+	 * @since 1.3.6
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<String> mapString();
+	/**
+	 * map the all items from collection to Byte.
+	 * @return the Byte collection service
+	 * @since 1.3.6
+	 */
+	@DependOn(classes ={OperateManager.class, IterateControl.class })
+	CollectionVisitService<Byte> mapByte();
+
+	/**
+	 * merge element service to list collection service
+	 * @return the list collection service
+	 * @since 1.3.6
+	 * @see #separate()
+	 */
+	@Independence
+	CollectionVisitService<List<T>> merge();
+	/**
+	 * separate collection collection-service to element service.
+	 * @return the collection service of target type
+	 * @since 1.3.6
+	 * @see #merge()
+	 */
+	@Independence
+	<R> CollectionVisitService<R> separate();
+
+	//========================= end 1.3.6 =======================================
 	/**
 	 * get the min element by target comparator
 	 * @param com the comparator
@@ -548,13 +609,6 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 
 	//============================================================= 1.2.0 ===================================================
 
-	/*
-	 * observable the visit service.
-	 * @return the visit service.
-	 */
-	/*@Independence
-	ObservableCollectionService<T> observableService();*/
-	
 	/**
 	 * zip the all elements with target visitor .
 	 * <p>that is if 'case' then 'result'</p>

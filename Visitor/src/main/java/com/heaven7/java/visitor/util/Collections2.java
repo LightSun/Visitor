@@ -11,7 +11,7 @@ import java.util.SortedSet;
 
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
-import com.heaven7.java.visitor.collection.operator.Operator;
+//import com.heaven7.java.visitor.collection.operator.Operator;
 /**
  * expand util class of Collections.
  * @author heaven7
@@ -22,7 +22,7 @@ import com.heaven7.java.visitor.collection.operator.Operator;
  */
 public class Collections2 {
 	
-	/**
+	/*
 	 * update the all element if the result of ResultVisitor return not null. 
 	 * @param <T> the element type
 	 * @param <R> the result type
@@ -36,8 +36,8 @@ public class Collections2 {
 	 * @see ListIterator
      * @see Updatable
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T,R> boolean updateAll(Collection<T> src, Object param, int maxLeng, 
+	//@SuppressWarnings("unchecked")
+	/*public static <T,R> boolean updateAll(Collection<T> src, Object param, int maxLeng,
 			ResultVisitor<? super T, T> visitor , Operator<T, R> operator) {
         Throwables.checkNull(src);
         Throwables.checkNull(visitor);
@@ -74,9 +74,9 @@ public class Collections2 {
 			}
 		}
 		return size > 0;
-	}
+	}*/
 	
-	/**
+	/*
 	 * update the element which is assigned by target predicate visitor.
 	 * @param <T> the element type
 	 * @param <R> the result type
@@ -91,7 +91,7 @@ public class Collections2 {
      * @see Updatable
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T,R> boolean update(Collection<T> src, T newT,
+	/*public static <T,R> boolean update(Collection<T> src, T newT,
 			Object param, PredicateVisitor<? super T> predicate, Operator<T, R> operator){
 		boolean isList;
 		Iterator<T> li;
@@ -121,7 +121,7 @@ public class Collections2 {
 		}
 		return false;
 	}
-	
+	*/
 	public static <T> List<T> asList(Collection<T> coll){
 		if(coll instanceof List){
 			return (List<T>) coll;

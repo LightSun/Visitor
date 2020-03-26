@@ -4,7 +4,9 @@ import com.heaven7.java.visitor.*;
 import com.heaven7.java.visitor.anno.DependOn;
 import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
+import com.heaven7.java.visitor.util.Observer;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -16,6 +18,108 @@ import java.util.List;
  * @since 1.1.2
  */
 public interface ListVisitService<T> extends CollectionVisitService<T>{
+
+	@Override
+	ListVisitService<String> mapString();
+	@Override
+	ListVisitService<Float> mapFloat();
+	@Override
+	ListVisitService<Double> mapDouble();
+	@Override
+	ListVisitService<Integer> mapInt();
+	@Override
+	ListVisitService<Byte> mapByte();
+
+	@Override
+	ListVisitService<List<T>> merge();
+
+	@Override
+	<R> ListVisitService<R> separate();
+
+	@Override
+	<T2> ListVisitService<T2> asAnother();
+	@Override
+	<T2> ListVisitService<T2> asAnother(Class<T2> clazz) throws ClassCastException;
+
+	@Override
+	<R> ListVisitService<R> map(ResultVisitor<? super T, R> visitor);
+	@Override
+	<R> ListVisitService<R> map(Object param, ResultVisitor<? super T, R> visitor);
+
+	<R> ListVisitService<R> map(Object param, Comparator<? super R> sort, ResultVisitor<? super T, R> resultVisitor);
+
+	@Override
+	ListVisitService<T> queryList(PredicateVisitor<? super T> predicate);
+	@Override
+	ListVisitService<T> queryList(Object param, PredicateVisitor<? super T> predicate);
+	@Override
+	ListVisitService<T> intersect(Collection<? super T> coll);
+
+	@Override
+	ListVisitService<T> filter(PredicateVisitor<T> predicate);
+	@Override
+	ListVisitService<T> filter(Object param, PredicateVisitor<T> predicate, List<T> dropOut);
+	@Override
+	ListVisitService<T> filter(Object param, PredicateVisitor<T> predicate, int maxCount, List<T> dropOut);
+	@Override
+	ListVisitService<T> filter(Object param, Comparator<? super T> com, PredicateVisitor<T> predicate, int maxCount, List<T> dropOut);
+
+	@Override
+	ListVisitService<T> fire(FireVisitor<T> fireVisitor);
+
+	@Override
+	ListVisitService<T> fire(FireVisitor<T> fireVisitor, ThrowableVisitor throwVisitor);
+
+	@Override
+	ListVisitService<T> fire(Object param, FireVisitor<T> fireVisitor, ThrowableVisitor throwVisitor);
+
+	@Override
+	ListVisitService<T> fireBatch(FireBatchVisitor<T> fireVisitor);
+	@Override
+	ListVisitService<T> fireBatch(FireBatchVisitor<T> fireVisitor, ThrowableVisitor throwVisitor);
+	@Override
+	ListVisitService<T> fireBatch(Object param, FireBatchVisitor<T> fireVisitor, ThrowableVisitor throwVisitor);
+
+	@Override
+	ListVisitService<T> save(Collection<T> out);
+	@Override
+	ListVisitService<T> save(SaveVisitor<T> visitor);
+	@Override
+	ListVisitService<T> save(Collection<T> out, boolean clearBeforeSave);
+
+	@Override
+	ListVisitService<T> addIfNotExist(T newT);
+	@Override
+	ListVisitService<T> addIfNotExist(T newT, Observer<T, Void> observer);
+
+	@Override
+	ListVisitService<T> removeIfExist(T newT);
+
+	@Override
+	ListVisitService<T> removeIfExist(T newT, Observer<T, Void> observer);
+
+	@Override
+	ListVisitService<T> removeRepeat();
+
+	@Override
+	ListVisitService<T> removeRepeat(WeightVisitor<T> weightVisitor);
+
+	@Override
+	ListVisitService<T> removeRepeat(Object param, Comparator<? super T> com);
+
+	@Override
+	ListVisitService<T> removeRepeat(Object param, Comparator<? super T> com, WeightVisitor<T> weightVisitor);
+
+	@Override
+	ListVisitService<T> reset(int flags);
+
+	@Override
+	ListVisitService<T> resetAll();
+
+	@Override
+	<R> ListVisitService<T> zipResult(Object param, ResultVisitor<T, R> visitor, Observer<T, List<R>> observer);
+	@Override
+	ListVisitService<T> zip(Object param, PredicateVisitor<T> visitor, Observer<T, Void> observer);
 
 	/**
 	 * map to another type with index.
