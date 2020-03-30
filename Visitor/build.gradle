@@ -18,18 +18,43 @@ group = 'com.github.LightSun'
 buildscript {
 	repositories {
 		jcenter()
+        mavenCentral()
 		}
 	dependencies {
 		//classpath 'com.novoda:bintray-release:0.9'
 		}
 }
 
-// In this section you declare where to find the dependencies of your project
-repositories {
-    // Use 'jcenter' for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
-    maven { url "https://jitpack.io" }
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }
+}
+
+wrapper {
+    gradleVersion = "4.9.0"
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 // In this section you declare the dependencies for your production and test code
@@ -53,6 +78,14 @@ allprojects {
     tasks.withType(Javadoc) {
         options.addStringOption('Xdoclint:none', '-quiet')
         options.addStringOption('encoding', 'UTF-8')
+    }
+
+    // In this section you declare where to find the dependencies of your project
+    repositories {
+        // Use 'jcenter' for resolving your dependencies.
+        // You can declare any Maven/Ivy/file repository here.
+        jcenter()
+        maven { url "https://jitpack.io" }
     }
 }
 
