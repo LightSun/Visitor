@@ -10,7 +10,7 @@
 // Apply the java plugin to add support for Java
 // https://github.com/LightSun/Visitor.git
 apply plugin: 'java'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'maven'
 
 group = 'com.github.LightSun'
@@ -20,7 +20,7 @@ buildscript {
 		jcenter()
 		}
 	dependencies {
-		classpath 'com.novoda:bintray-release:0.9'
+		//classpath 'com.novoda:bintray-release:0.9'
 		}
 }
 
@@ -56,11 +56,11 @@ allprojects {
     }
 }
 
-publish {
+/*publish {
     userOrg = 'lightsun' //bintray user name
     groupId = 'com.heaven7.java.visitor'
     artifactId = 'Visitor'
     publishVersion = '1.3.5'
     desc = 'this is a lib of visit mode such as, vist list , set ,map and something like rxjava. '
     website = 'https://github.com/LightSun/Visitor'
-}
+}*/

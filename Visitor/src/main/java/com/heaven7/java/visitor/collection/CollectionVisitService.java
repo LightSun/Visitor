@@ -84,6 +84,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	CollectionVisitService<String> mapString();
 	/**
 	 * map the all items from collection to Byte.
+	 * <p>Be careful that the item should impl {@linkplain com.heaven7.java.visitor.item.IByteItem}</p>
 	 * @return the Byte collection service
 	 * @since 1.3.6
 	 */
@@ -92,6 +93,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 
 	/**
 	 * map the all items from collection to Long.
+	 * <p>Be careful that the item should impl {@linkplain com.heaven7.java.visitor.item.ILongItem}</p>
 	 * @return the Long collection service
 	 * @since 1.3.6
 	 */
@@ -99,7 +101,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	CollectionVisitService<Long> mapLong();
 
 	/**
-	 * merge element service to list collection service
+	 * merge element service to list collection service. 'List<T> -> List<List<T>>'
 	 * @return the list collection service
 	 * @since 1.3.6
 	 * @see #separate()
@@ -108,6 +110,7 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	CollectionVisitService<List<T>> merge();
 	/**
 	 * separate collection collection-service to element service.
+	 * 'List<List<T>> ->List<T>'
 	 * @return the collection service of target type
 	 * @since 1.3.6
 	 * @see #merge()
