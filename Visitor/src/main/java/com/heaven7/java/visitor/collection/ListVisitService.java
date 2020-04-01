@@ -6,6 +6,7 @@ import com.heaven7.java.visitor.anno.Independence;
 import com.heaven7.java.visitor.anno.Nullable;
 import com.heaven7.java.visitor.util.Observer;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -292,6 +293,24 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 */
 	@Independence
 	ListVisitService<T> subService(int start, int count);
+
+	/**
+	 * get a sub visit service safely by the target start index and count.
+	 * relative
+	 * @param start the start index of list
+	 * @param count the count of you want
+	 * @return a instance of {@linkplain ListVisitService}
+	 * @since 1.3.6
+	 */
+	@Independence
+	default ListVisitService<T> subServiceSafely(int start, int count){
+		int val = Math.min(start + count, size());
+		//empty
+		if(val == 0){
+			return VisitServices.from(new ArrayList<>());
+		}
+		return subService(start, val);
+	}
 	
 	/**
 	 * return a sub visit service .from current ListVisitService.
@@ -301,6 +320,22 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 */
 	@Independence
 	ListVisitService<T> headService(int count);
+
+	/**
+	 * return a sub visit service safely from current ListVisitService.
+	 * @param count the count from the first element of list
+	 * @return {@linkplain ListVisitService}
+	 * @since 1.3.6
+	 */
+	@Independence
+	default ListVisitService<T> headServiceSafely(int count){
+		int val = Math.min(count, size());
+		//empty
+		if(val == 0){
+			return VisitServices.from(new ArrayList<>());
+		}
+		return headService(val);
+	}
 	
 	/**
 	 * return a sub visit service. from current ListVisitService. 
@@ -314,6 +349,27 @@ public interface ListVisitService<T> extends CollectionVisitService<T>{
 	 */
 	@Independence
 	ListVisitService<T> tailService(int count);
+
+	/**
+	 * return a sub visit service safely from current ListVisitService.
+	 * <ul>
+	 * <li>from index is list.size - count.
+	 *  <li>to index is list.size.
+	 *  </ul>
+	 * @param count the count from the last element of list
+	 * @return {@linkplain ListVisitService}
+	 * @since 1.3.6
+	 */
+	@Independence
+	default ListVisitService<T> tailServiceSafely(int count){
+		final int totalSize = size();
+		count = Math.min(count, totalSize);
+		//empty
+		if(count == 0){
+			return VisitServices.from(new ArrayList<>());
+		}
+		return subService(totalSize - count, totalSize);
+	}
 	
 	/**
 	 * reverse the order of list. this is equal to 
