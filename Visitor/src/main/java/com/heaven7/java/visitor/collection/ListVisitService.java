@@ -20,6 +20,9 @@ import java.util.List;
  */
 public interface ListVisitService<T> extends CollectionVisitService<T>{
 
+	<R> ListVisitService<R> filterMap(PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor);
+	<R> ListVisitService<R> filterMap(PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor, List<T> dropOut);
+	<R> ListVisitService<R> filterMap(Object p,PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor, List<T> dropOut);
 	@Override
 	ListVisitService<String> mapString();
 	@Override

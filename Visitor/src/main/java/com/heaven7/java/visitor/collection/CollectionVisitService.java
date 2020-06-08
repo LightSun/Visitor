@@ -47,6 +47,40 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	 */
 	int VISIT_RULE_UNTIL_FAILED = 13;
 
+	/**
+	 * filter then map to another.
+	 * @param predicate the predicate visitor
+	 * @param mapVisitor the map visitor
+	 * @param <R> the result element type
+	 * @return new service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<R> CollectionVisitService<R> filterMap(PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor);
+	/**
+	 * filter then map to another.
+	 * @param predicate the predicate visitor
+	 * @param mapVisitor the map visitor
+	 * @param dropOut the drop out list. can be null
+	 * @param <R> the result element type
+	 * @return new service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<R> CollectionVisitService<R> filterMap(PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor, List<T> dropOut);
+	/**
+	 * filter then map to another.
+	 * @param p the param
+	 * @param predicate the predicate visitor
+	 * @param mapVisitor the map visitor
+	 * @param dropOut the drop out list. can be null
+	 * @param <R> the result element type
+	 * @return new service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<R> CollectionVisitService<R> filterMap(Object p,PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor, List<T> dropOut);
+
 
 	//========================= start 1.3.6 =====================================
 	/**

@@ -30,6 +30,34 @@ public abstract class AbstractCollectionVisitService<T> implements CollectionVis
     }
 
     @Override
+    public <R> CollectionVisitService<R> filterMap(PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor) {
+        return filterMap(null, predicate, mapVisitor, null);
+    }
+
+    @Override
+    public <R> CollectionVisitService<R> filterMap(PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor, List<T> dropOut) {
+        return filterMap(null, predicate, mapVisitor, dropOut);
+    }
+
+    @Override
+    public <R> CollectionVisitService<R> filterMap(Object p,PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor, List<T> dropOut) {
+        List<R> list = new ArrayList<>();
+        for (T t : get()){
+            if(Predicates.isTrue(predicate.visit(t, p))){
+                R r = mapVisitor.visit(t, p);
+                if(r != null){
+                    list.add(r);
+                }
+            }else {
+                if(dropOut != null){
+                    dropOut.add(t);
+                }
+            }
+        }
+        return VisitServices.from(list);
+    }
+
+    @Override
     public <T2> CollectionVisitService<T2> asAnother() {
         return asAnother(null);
     }

@@ -55,6 +55,118 @@ import java.util.List;
 public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V>> {
 
 	/**
+	 * filter then map
+	 * @param predicate the predicate visitor
+	 * @param valueVisitor the value visitor
+	 * @param <V2> the new value type
+	 * @return new map service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<V2> MapVisitService<K, V2> filterMapValue(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K,V,V2> valueVisitor);
+	/**
+	 * filter then map
+	 * @param predicate the predicate visitor
+	 * @param valueVisitor the value visitor
+	 * @param out the out map
+	 * @param <V2> the new value type
+	 * @return new map service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<V2> MapVisitService<K, V2> filterMapValue(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K,V,V2> valueVisitor, Map<K,V> out);
+	/**
+	 * filter then map
+	 * @param p the param
+	 * @param predicate the predicate visitor
+	 * @param valueVisitor the value visitor
+	 * @param out the out map
+	 * @param <V2> the new value type
+	 * @return new map service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<V2> MapVisitService<K, V2> filterMapValue(Object p, MapPredicateVisitor<K, V> predicate, MapResultVisitor<K,V,V2> valueVisitor, Map<K,V> out);
+
+	/**
+	 * filter then map
+	 * @param predicate the predicate visitor
+	 * @param keyVisitor the key visitor
+	 * @param <K2> the new key type
+	 * @return new map service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<K2> MapVisitService<K2, V> filterMapKey(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K,V,K2> keyVisitor);
+	/**
+	 * filter then map
+	 * @param predicate the predicate visitor
+	 * @param keyVisitor the key visitor
+	 * @param out the out map
+	 * @param <K2> the new key type
+	 * @return new map service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<K2> MapVisitService<K2, V> filterMapKey(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K,V,K2> keyVisitor, Map<K,V> out);
+
+	/**
+	 * filter then map
+	 * @param p the param
+	 * @param predicate the predicate visitor
+	 * @param keyVisitor the key visitor
+	 * @param out the out map
+	 * @param <K2> the new key type
+	 * @return new map service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<K2> MapVisitService<K2, V> filterMapKey(Object p, MapPredicateVisitor<K, V> predicate, MapResultVisitor<K,V,K2> keyVisitor, Map<K,V> out);
+
+	/**
+	 * filter then map
+	 * @param predicate the predicate visitor
+	 * @param keyVisitor the key visitor
+	 * @param valueVisitor the value visitor
+	 * @param <K2> the new key type
+	 * @param <V2> the new value type
+	 * @return new map service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<K2, V2> MapVisitService<K2, V2> filterMap(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K,V,K2> keyVisitor,
+											   MapResultVisitor<K,V,V2> valueVisitor);
+	/**
+	 * filter then map
+	 * @param predicate the predicate visitor
+	 * @param keyVisitor the key visitor
+	 * @param valueVisitor the value visitor
+	 * @param out the out map
+	 * @param <K2> the new key type
+	 * @param <V2> the new value type
+	 * @return new map service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<K2, V2> MapVisitService<K2, V2> filterMap(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K,V,K2> keyVisitor,
+											   MapResultVisitor<K,V,V2> valueVisitor, Map<K,V> out);
+
+	/**
+	 * filter then map
+	 * @param p the param
+	 * @param predicate the predicate visitor
+	 * @param keyVisitor the key visitor
+	 * @param valueVisitor the value visitor
+	 * @param out the out map
+	 * @param <K2> the new key type
+	 * @param <V2> the new value type
+	 * @return new map service
+	 * @since 1.3.8
+	 */
+	@Independence
+	<K2, V2> MapVisitService<K2, V2> filterMap(Object p, MapPredicateVisitor<K, V> predicate, MapResultVisitor<K,V,K2> keyVisitor,
+											   MapResultVisitor<K,V,V2> valueVisitor, Map<K,V> out);
+	/**
 	 * make the map service as another map service.
 	 * @param valueType the target value class
 	 * @param <V2> the target value type
@@ -107,6 +219,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @return the new map service.
 	 * @since 1.2.7
 	 */
+	@Independence
 	<V1, R> MapVisitService<K, R> normalize(Object param, MapVisitService<K, V1> service, NormalizeVisitor<K, V, V1 ,Void, R> visitor);
 	/**
 	 * normalize the services(include current and other services).
@@ -120,6 +233,7 @@ public interface MapVisitService<K, V> extends VisitService<MapVisitService<K, V
 	 * @return the new map service.
 	 * @since 1.2.7
 	 */
+	@Independence
 	<V1, V2, R> MapVisitService<K, R> normalize(Object param, MapVisitService<K, V1> s1, MapVisitService<K, V2> s2, NormalizeVisitor<K, V, V1 ,V2, R> visitor);
 
 	/**

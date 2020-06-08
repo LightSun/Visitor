@@ -33,6 +33,21 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	}
 
 	@Override
+	public <R> ListVisitService<R> filterMap(PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor) {
+		return (ListVisitService<R>) super.filterMap(predicate, mapVisitor);
+	}
+
+	@Override
+	public <R> ListVisitService<R> filterMap(PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor, List<T> dropOut) {
+		return (ListVisitService<R>) super.filterMap(predicate, mapVisitor, dropOut);
+	}
+
+	@Override
+	public <R> ListVisitService<R> filterMap(Object p, PredicateVisitor<T> predicate, ResultVisitor<T, R> mapVisitor, List<T> dropOut) {
+		return (ListVisitService<R>) super.filterMap(p, predicate, mapVisitor, dropOut);
+	}
+
+	@Override
 	public ListVisitService<List<T>> merge() {
 		return (ListVisitService<List<T>>) super.merge();
 	}

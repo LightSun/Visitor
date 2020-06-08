@@ -155,6 +155,92 @@ public abstract class AbstractMapVisitService<K, V> implements MapVisitService<K
 
 
 	@Override
+	public <V2> MapVisitService<K, V2> filterMapValue(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K, V, V2> valueVisitor) {
+		return filterMapValue(null, predicate, valueVisitor, null);
+	}
+
+	@Override
+	public <V2> MapVisitService<K, V2> filterMapValue(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K, V, V2> valueVisitor, Map<K, V> out) {
+		return filterMapValue(null, predicate, valueVisitor, out);
+	}
+
+	@Override
+	public <V2> MapVisitService<K, V2> filterMapValue(Object p, MapPredicateVisitor<K, V> predicate, MapResultVisitor<K, V, V2> valueVisitor, Map<K, V> out) {
+		java.util.Map<K, V2> result = newMap(null);
+		for (KeyValuePair<K, V> pair : get().getKeyValues()) {
+			if(Predicates.isTrue(predicate.visit(pair, p))){
+				V2 v = valueVisitor.visit(pair, p);
+				result.put(pair.getKey(), v);
+			}else{
+				if(out != null){
+					out.put(pair.getKey(), pair.getValue());
+				}
+			}
+		}
+		return VisitServices.from(result);
+	}
+
+	@Override
+	public <K2> MapVisitService<K2, V> filterMapKey(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K, V, K2> keyVisitor, Map<K, V> out) {
+		return filterMapKey(null, predicate, keyVisitor, out);
+	}
+
+	@Override
+	public <K2> MapVisitService<K2, V> filterMapKey(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K, V, K2> keyVisitor) {
+		return filterMapKey(null, predicate, keyVisitor, null);
+	}
+
+	@Override
+	public <K2> MapVisitService<K2, V> filterMapKey(Object p, MapPredicateVisitor<K, V> predicate, MapResultVisitor<K, V, K2> keyVisitor, Map<K, V> out) {
+		java.util.Map<K2, V> result = newMap(null);
+		for (KeyValuePair<K, V> pair : get().getKeyValues()) {
+			if(Predicates.isTrue(predicate.visit(pair, p))){
+				K2 k = keyVisitor.visit(pair, p);
+				if(k != null){
+					result.put(k, pair.getValue());
+				}
+			}else{
+				if(out != null){
+					out.put(pair.getKey(), pair.getValue());
+				}
+			}
+		}
+		return VisitServices.from(result);
+	}
+
+	@Override
+	public <K2, V2> MapVisitService<K2, V2> filterMap(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K, V, K2> keyVisitor,
+													  MapResultVisitor<K, V, V2> valueVisitor, Map<K, V> out) {
+		return filterMap(null, predicate, keyVisitor, valueVisitor, out);
+	}
+
+	@Override
+	public <K2, V2> MapVisitService<K2, V2> filterMap(MapPredicateVisitor<K, V> predicate, MapResultVisitor<K, V, K2> keyVisitor,
+													  MapResultVisitor<K, V, V2> valueVisitor) {
+		return filterMap(null, predicate, keyVisitor, valueVisitor, null);
+	}
+
+	@Override
+	public <K2, V2> MapVisitService<K2, V2> filterMap(Object p, MapPredicateVisitor<K, V> predicate, MapResultVisitor<K, V, K2> keyVisitor,
+													  MapResultVisitor<K, V, V2> valueVisitor, Map<K, V> out) {
+		java.util.Map<K2, V2> result = newMap(null);
+		for (KeyValuePair<K, V> pair : get().getKeyValues()) {
+			if(Predicates.isTrue(predicate.visit(pair, p))){
+				K2 k = keyVisitor.visit(pair, p);
+				if(k != null){
+					V2 v = valueVisitor.visit(pair, p);
+					result.put(k, v);
+				}
+			}else{
+				if(out != null){
+					out.put(pair.getKey(), pair.getValue());
+				}
+			}
+		}
+		return VisitServices.from(result);
+	}
+
+	@Override
 	public <V2> MapVisitService<K, V2> asAnotherValue(Class<V2> valueType) throws ClassCastException {
 		return asAnother(null, valueType);
 	}
