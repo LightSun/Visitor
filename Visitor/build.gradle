@@ -14,11 +14,6 @@ apply plugin: 'java'
 //apply plugin: 'maven'
 //apply plugin: 'maven-publish'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-group = 'com.github.LightSun'
-
 buildscript {
 	repositories{
 		mavenCentral()
@@ -27,6 +22,20 @@ buildscript {
 	dependencies {
 		//classpath 'com.novoda:bintray-release:0.4.0'//0.9
 	}
+}
+
+allprojects {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories{
+    	mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+    }
 }
 
 /*
@@ -78,18 +87,6 @@ dependencies {
   //  compile 'com.heaven7.java.base:Java-base:1.1.0'
 }
 
-repositories {
-    //jcenter()
-    mavenCentral()
-    maven { url "https://jitpack.io" }
-}
-
-allprojects {
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-        options.addStringOption('encoding', 'UTF-8')
-    }
-}
 /*
 publish {
     userOrg = 'lightsun' //bintray user name
