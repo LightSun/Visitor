@@ -152,6 +152,16 @@ public interface CollectionVisitService<T> extends VisitService<CollectionVisitS
 	@Independence
 	<R> CollectionVisitService<R> separate();
 
+	/**
+	 * fission visit the collection from one to more.
+	 * @param param the param
+	 * @param visitor the fission visitor
+	 * @param <R> the result type
+	 * @return this.
+	 * @since 1.3.7
+	 */
+	@Independence
+	<R> CollectionVisitService<R> fission(Object param, FissionVisitor<T, R> visitor);
 	//========================= end 1.3.6 =======================================
 	/**
 	 * get the min element by target comparator

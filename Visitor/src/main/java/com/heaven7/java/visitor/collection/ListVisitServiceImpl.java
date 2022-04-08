@@ -54,6 +54,9 @@ import static com.heaven7.java.visitor.util.Throwables.checkNull;
 	public<R> ListVisitService<R> separate(){
 		return (ListVisitService<R>) super.separate();
 	}
+	public <R> CollectionVisitService<R> fission(Object param, FissionVisitor<T, R> visitor){
+		return (ListVisitService<R>) super.fission(param, visitor);
+	}
 	@Override
 	public ListVisitService<Double> mapDouble() {
 		return (ListVisitService<Double>) super.mapDouble();

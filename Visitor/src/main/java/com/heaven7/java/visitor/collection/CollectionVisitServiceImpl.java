@@ -1,5 +1,6 @@
 package com.heaven7.java.visitor.collection;
 
+import com.heaven7.java.visitor.FissionVisitor;
 import com.heaven7.java.visitor.IterateVisitor;
 import com.heaven7.java.visitor.PredicateVisitor;
 import com.heaven7.java.visitor.ResultVisitor;
@@ -172,7 +173,7 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 			int size = ts.size();
 			try{
 				for (int i = 0; i < size; i++) {
-					Collection<R> t = (Collection<R>) ts.get(0);
+					Collection<R> t = (Collection<R>) ts.get(i);
 					list.addAll(t);
 				}
 			}catch (ClassCastException e){
@@ -184,6 +185,18 @@ public class CollectionVisitServiceImpl<T> extends AbstractCollectionVisitServic
 		}
 	}
 
+	@Override
+	public <R> CollectionVisitService<R> fission(Object param, FissionVisitor<T, R> visitor){
+		List<R> list = new ArrayList<>();
+		ArrayList<T> ts = new ArrayList<>(mCollection);
+		for(int i = 0 ; i < ts.size() ; i ++){
+			List<R> rs = visitor.visit(ts.get(i), param);
+			if(rs != null){
+				list.addAll(rs);
+			}
+		}
+		return VisitServices.from(list);
+	}
 	@Override
 	public int size() {
 		return mCollection.size();
