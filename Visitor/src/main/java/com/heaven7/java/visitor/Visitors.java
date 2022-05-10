@@ -149,6 +149,42 @@ public final class Visitors {
 	public static <K, V> MapResultVisitor<K, V, V> valueMapResultVisitor(){
 		return (MapResultVisitor<K, V, V>) MAP_RESULT_VALUE;
 	}
+
+	/**
+	 * the null visitor
+	 * @param <T> the input type
+	 * @param <R> the extra param type
+	 * @return the null visitor
+	 * @since 1.3.8
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T, R> Visitor<T,R> nullVisitor(){
+		return (Visitor<T, R>) NULL_VISITOR;
+	}
+	/**
+	 * the un-null visitor
+	 * @param <T> the input type
+	 * @param <R> the extra param type
+	 * @return the null visitor
+	 * @since 1.3.8
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T, R> Visitor<T,R> unNullVisitor(){
+		return (Visitor<T, R>) UNNULL_VISITOR;
+	}
+
+	private static final Visitor<Object, Object> NULL_VISITOR = new Visitor<Object, Object>() {
+		@Override
+		public Object visit(Object o) {
+			return o == null;
+		}
+	};
+	private static final Visitor<Object, Object> UNNULL_VISITOR = new Visitor<Object, Object>() {
+		@Override
+		public Object visit(Object o) {
+			return o != null;
+		}
+	};
 	
 	private static final MapResultVisitor<Object, Object, Object> MAP_RESULT_KEY = new MapResultVisitor<Object, Object, Object>() {
 		@Override
